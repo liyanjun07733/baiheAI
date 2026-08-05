@@ -5,7 +5,6 @@ import emailjs from "@emailjs/browser";
 
 export default function Contact() {
   const form = useRef<HTMLFormElement>(null);
-
   const [loading, setLoading] = useState(false);
 
   const sendEmail = async (e: React.FormEvent) => {
@@ -23,11 +22,11 @@ export default function Contact() {
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
       );
 
-      alert("发送成功，我们会尽快联系您！");
+      alert("发送成功，我们会在24小时内联系您！");
       form.current.reset();
     } catch (err) {
       console.error(err);
-      alert("发送失败，请稍后再试。");
+      alert("发送失败，请稍后重试。");
     }
 
     setLoading(false);
@@ -44,55 +43,74 @@ export default function Contact() {
         </p>
 
         <h2 className="text-5xl font-black mt-5">
-          联系我们
+          联系我们 / Contact Us
         </h2>
 
         <p className="text-gray-400 text-xl mt-6">
-          告诉我们您的需求，我们将在24小时内联系您。
+          告诉我们您的需求，我们将在24小时内回复您。
+          <br />
+          Tell us about your project and we'll get back to you within 24 hours.
         </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-12">
 
+        {/* 联系方式 */}
         <div className="space-y-8">
 
           <div>
-            <h3 className="text-xl font-bold mb-2">📱 WhatsApp</h3>
-            <p className="text-gray-400">+66 XXX XXX XXXX</p>
+            <h3 className="text-xl font-bold mb-3">🇹🇭 Thailand</h3>
+            <p className="text-gray-400">📞 +66 964080781</p>
+            <p className="text-gray-400">LINE：liyanjun0773</p>
           </div>
 
           <div>
-            <h3 className="text-xl font-bold mb-2">💬 微信</h3>
-            <p className="text-gray-400">BaiheAI</p>
+            <h3 className="text-xl font-bold mb-3">🇨🇳 China</h3>
+            <p className="text-gray-400">📞 +86 13003137828</p>
+            <p className="text-gray-400">微信①：baiheft</p>
+            <p className="text-gray-400">微信②：13003137828</p>
+            <p className="text-gray-400">公众号：baihefas</p>
           </div>
 
           <div>
-            <h3 className="text-xl font-bold mb-2">📧 Email</h3>
-            <p className="text-gray-400">hello@baiheai.com</p>
+            <h3 className="text-xl font-bold mb-3">🇻🇳 Vietnam</h3>
+            <p className="text-gray-400">Zalo：Liyanjun</p>
           </div>
 
           <div>
-            <h3 className="text-xl font-bold mb-2">📍 Office</h3>
-            <p className="text-gray-400">Bangkok, Thailand</p>
+            <h3 className="text-xl font-bold mb-3">📧 Email</h3>
+            <p className="text-gray-400">liyanjun07733@gmail.com</p>
+            <p className="text-gray-400">liyanjun0773@126.com</p>
+          </div>
+
+          <div>
+            <h3 className="text-xl font-bold mb-3">📍 Office</h3>
+            <p className="text-gray-400">
+              Bangkok, Thailand
+              <br />
+              Serving Clients Worldwide
+            </p>
           </div>
 
         </div>
 
+        {/* 联系表单 */}
         <form
           ref={form}
           onSubmit={sendEmail}
           className="bg-gray-900 border border-gray-800 rounded-3xl p-8 space-y-5"
         >
+
           <input
             name="company"
-            placeholder="公司名称"
+            placeholder="Company / 公司名称"
             required
             className="w-full bg-black border border-gray-700 rounded-xl p-4"
           />
 
           <input
             name="name"
-            placeholder="联系人"
+            placeholder="Name / 联系人"
             required
             className="w-full bg-black border border-gray-700 rounded-xl p-4"
           />
@@ -100,7 +118,7 @@ export default function Contact() {
           <input
             type="email"
             name="email"
-            placeholder="邮箱"
+            placeholder="Email"
             required
             className="w-full bg-black border border-gray-700 rounded-xl p-4"
           />
@@ -108,7 +126,7 @@ export default function Contact() {
           <textarea
             name="message"
             rows={5}
-            placeholder="请输入您的需求..."
+            placeholder="Please describe your project... / 请描述您的需求..."
             required
             className="w-full bg-black border border-gray-700 rounded-xl p-4"
           />
@@ -118,8 +136,12 @@ export default function Contact() {
             disabled={loading}
             className="w-full py-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 font-bold hover:scale-[1.02] transition"
           >
-            {loading ? "发送中..." : "免费咨询"}
+            {loading ? "Sending..." : "免费咨询 / Free Consultation"}
           </button>
+
+          <p className="text-sm text-gray-500 text-center">
+            ✅ Usually reply within 24 hours
+          </p>
 
         </form>
 
