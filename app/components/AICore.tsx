@@ -1,83 +1,31 @@
 export default function AICore() {
   return (
-    <div className="relative flex items-center justify-center w-[500px] h-[500px]">
+    <div className="relative flex h-[390px] w-[390px] items-center justify-center xl:h-[440px] xl:w-[440px]">
+      <div className="absolute h-[430px] w-[430px] rounded-full bg-blue-500/10 blur-[150px] animate-pulse xl:h-[480px] xl:w-[480px]" />
+      <div className="absolute h-[340px] w-[340px] rounded-full bg-cyan-400/10 blur-[110px] xl:h-[390px] xl:w-[390px]" />
 
-      {/* 最外层光晕 */}
-      <div className="absolute w-[520px] h-[520px] rounded-full bg-blue-500/10 blur-[180px] animate-pulse"></div>
-
-      {/* 第二层光晕 */}
-      <div className="absolute w-[420px] h-[420px] rounded-full bg-cyan-400/10 blur-[120px]"></div>
-
-      {/* 外圈 */}
       <div
-        className="absolute w-[430px] h-[430px] rounded-full border border-blue-500/20 animate-spin"
-        style={{ animationDuration: "25s" }}
+        className="absolute h-[360px] w-[360px] rounded-full border border-blue-500/20 xl:h-[410px] xl:w-[410px]"
+        style={{ animation: "spin 25s linear infinite" }}
       />
-
-      {/* 第二圈 */}
       <div
-        className="absolute w-[340px] h-[340px] rounded-full border border-cyan-400/30 animate-spin"
-        style={{
-          animationDuration: "16s",
-          animationDirection: "reverse",
-        }}
+        className="absolute h-[285px] w-[285px] rounded-full border border-cyan-400/30 xl:h-[325px] xl:w-[325px]"
+        style={{ animation: "spin 16s linear infinite reverse" }}
       />
+      <div className="absolute h-[210px] w-[210px] rounded-full border border-blue-300/20 xl:h-[235px] xl:w-[235px]" />
 
-      {/* 第三圈 */}
-      <div className="absolute w-[250px] h-[250px] rounded-full border border-blue-300/20"></div>
-
-      {/* AI 核心 */}
-      <div
-        className="
-        relative
-        flex
-        items-center
-        justify-center
-        w-48
-        h-48
-        rounded-full
-        bg-gradient-to-br
-        from-cyan-300
-        via-blue-500
-        to-blue-900
-        shadow-[0_0_100px_rgba(59,130,246,.8)]
-        animate-pulse
-      "
-      >
-        {/* 内层 */}
-        <div className="w-24 h-24 rounded-full bg-black/70 border border-cyan-300 flex items-center justify-center">
-
-          {/* 能量点 */}
-          <div className="w-6 h-6 rounded-full bg-cyan-200 shadow-[0_0_30px_#67e8f9] animate-ping"></div>
-
+      <div className="relative flex h-40 w-40 items-center justify-center rounded-full bg-gradient-to-br from-cyan-300 via-blue-500 to-blue-900 shadow-[0_0_90px_rgba(59,130,246,.65)] animate-pulse xl:h-44 xl:w-44">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full border border-cyan-300 bg-black/70 xl:h-24 xl:w-24">
+          <div className="h-5 w-5 rounded-full bg-cyan-200 shadow-[0_0_28px_#67e8f9] animate-ping" />
         </div>
       </div>
 
-      {/* 漂浮粒子 */}
-      <div className="absolute top-10 left-20 text-cyan-300 text-2xl animate-pulse">
-        ✦
-      </div>
-
-      <div className="absolute top-20 right-10 text-blue-400 text-xl animate-pulse">
-        ✦
-      </div>
-
-      <div className="absolute bottom-16 left-10 text-cyan-300 text-xl animate-pulse">
-        ✦
-      </div>
-
-      <div className="absolute bottom-10 right-16 text-blue-300 text-2xl animate-pulse">
-        ✦
-      </div>
-
-      <div className="absolute top-32 right-24 w-2 h-2 rounded-full bg-cyan-300"></div>
-
-      <div className="absolute bottom-28 left-24 w-2 h-2 rounded-full bg-blue-400"></div>
-
-      <div className="absolute left-8 top-1/2 w-3 h-3 rounded-full bg-cyan-300 animate-pulse"></div>
-
-      <div className="absolute right-8 top-1/2 w-3 h-3 rounded-full bg-blue-400 animate-pulse"></div>
-
+      <span className="absolute left-12 top-10 text-xl text-cyan-300 animate-pulse">✦</span>
+      <span className="absolute right-10 top-16 text-lg text-blue-400 animate-pulse">✦</span>
+      <span className="absolute bottom-14 left-8 text-lg text-cyan-300 animate-pulse">✦</span>
+      <span className="absolute bottom-8 right-14 text-xl text-blue-300 animate-pulse">✦</span>
+      <span className="absolute left-3 top-1/2 h-2.5 w-2.5 rounded-full bg-cyan-300 animate-pulse" />
+      <span className="absolute right-3 top-1/2 h-2.5 w-2.5 rounded-full bg-blue-400 animate-pulse" />
     </div>
   );
 }

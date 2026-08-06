@@ -1,89 +1,13 @@
-export default function ServicesPage() {
-  const services = [
-    {
-      icon:"🌐",
-      title:"AI 企业官网",
-      items:["品牌官网","多语言","移动端优化","SEO 基础"],
-    },
-    {
-      icon:"📈",
-      title:"AI 海外获客",
-      items:["Google SEO","内容营销","海外品牌","询盘系统"],
-    },
-    {
-      icon:"🤖",
-      title:"AI 自动化",
-      items:["AI 客服","WhatsApp","LINE","CRM 自动化"],
-    },
-    {
-      icon:"🇹🇭",
-      title:"泰国投资咨询",
-      items:["投资方向","市场进入","商业咨询","项目规划"],
-    },
-    {
-      icon:"🏛️",
-      title:"BOI 方向咨询",
-      items:["政策方向","可行性分析","材料准备建议","项目沟通"],
-    },
-    {
-      icon:"🏭",
-      title:"项目落地协助",
-      items:["公司设立流程","商务签证","工作许可","厂房与办公室"],
-    },
-    {
-      icon:"🗣️",
-      title:"翻译与商务陪同",
-      items:["中英泰翻译","文件翻译","商务会议","工厂考察"],
-    },
-    {
-      icon:"🚀",
-      title:"企业数字化升级",
-      items:["AI 官网","自动化运营","品牌建设","持续维护"],
-    },
-  ];
+import Link from "next/link";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
-  return (
-    <main className="min-h-screen bg-black text-white">
-      <section className="mx-auto max-w-6xl px-6 py-24 text-center">
-        <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-cyan-300">
-          OUR SERVICES
-        </span>
-        <h1 className="mt-8 text-5xl font-black md:text-7xl">
-          企业服务中心
-        </h1>
-        <p className="mx-auto mt-8 max-w-3xl text-lg leading-9 text-gray-400">
-          为中国企业进入东南亚市场提供 AI 数字化、市场拓展和项目协助服务。
-        </p>
-      </section>
-
-      <section className="mx-auto grid max-w-7xl gap-6 px-6 pb-24 md:grid-cols-2">
-        {services.map((s)=>(
-          <div key={s.title} className="rounded-3xl border border-white/10 bg-white/[0.03] p-8">
-            <div className="text-5xl">{s.icon}</div>
-            <h2 className="mt-5 text-3xl font-black">{s.title}</h2>
-            <ul className="mt-6 space-y-3 text-gray-300">
-              {s.items.map(i=>(
-                <li key={i}>✓ {i}</li>
-              ))}
-            </ul>
-            <a href="/free-plan" className="mt-8 inline-block rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3 font-bold">
-              免费咨询
-            </a>
-          </div>
-        ))}
-      </section>
-
-      <section className="mx-auto max-w-6xl px-6 pb-24">
-        <div className="rounded-3xl border border-cyan-500/20 bg-cyan-500/5 p-10 text-center">
-          <h2 className="text-3xl font-black">需要定制方案？</h2>
-          <p className="mx-auto mt-5 max-w-2xl leading-8 text-gray-400">
-            告诉我们您的行业、目标市场和项目需求，我们会提供适合当前阶段的建议。
-          </p>
-          <a href="/free-plan" className="mt-8 inline-block rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-8 py-4 font-bold">
-            获取免费 AI 出海方案
-          </a>
-        </div>
-      </section>
-    </main>
-  );
-}
+const services = [
+  ["01","泰国投资与进入策略","市场进入路径、项目可行性、BOI方向与前期风险梳理。",["投资路径梳理","BOI方向咨询","前期风险判断"]],
+  ["02","项目落地与本地资源","协助对接公司设立、场地、签证、工作许可及本地执行资源。",["公司设立流程","厂房/仓库/办公室","签证与工作许可"]],
+  ["03","翻译与商务协同","中泰商务沟通、文件翻译、会议陪同与项目现场支持。",["中英泰翻译","商务陪同","文件与会议支持"]],
+  ["04","AI 官网与海外获客","用多语言官网、内容、客服和自动化建立持续获客基础。",["多语言官网","海外询盘系统","AI客服与自动化"]],
+];
+export default function ServicesPage(){return <><Navbar/><main className="page-enter min-h-screen overflow-hidden bg-[#030711] pt-16 text-white sm:pt-20">
+<section className="relative mx-auto max-w-7xl px-5 pb-14 pt-16 sm:px-6 sm:pb-20 sm:pt-24 lg:px-8"><div className="absolute right-[-12rem] top-0 h-96 w-96 rounded-full bg-cyan-500/10 blur-[120px]"/><div className="relative max-w-4xl reveal-up"><p className="text-xs font-bold tracking-[.32em] text-cyan-300">SERVICES / 企业服务</p><h1 className="mt-6 text-4xl font-black leading-tight sm:text-6xl lg:text-7xl">从进入泰国，<br/><span className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">到真正落地与增长。</span></h1><p className="mt-6 max-w-2xl text-base leading-8 text-slate-400 sm:text-lg">不是卖单一产品，而是围绕企业当前阶段，把咨询、资源、执行与数字化能力组合成可落地方案。</p></div></section>
+<section className="mx-auto max-w-7xl px-5 pb-24 sm:px-6 lg:px-8"><div className="grid gap-4 lg:grid-cols-2">{services.map(([n,t,d,items])=><article key={String(t)} className="glass-card hover-lift rounded-3xl p-6 sm:p-8"><div className="flex items-start justify-between gap-4"><span className="text-sm font-black tracking-[.25em] text-cyan-300">{n}</span><span className="rounded-full border border-white/10 px-3 py-1 text-xs text-slate-500">BaiheAI</span></div><h2 className="mt-8 text-2xl font-black sm:text-3xl">{t}</h2><p className="mt-4 leading-7 text-slate-400">{d}</p><div className="mt-7 grid gap-2 sm:grid-cols-3">{(items as string[]).map(i=><div key={i} className="rounded-2xl border border-white/8 bg-black/25 px-4 py-3 text-sm text-slate-300">✓ {i}</div>)}</div></article>)}</div><div className="mt-8 flex flex-col gap-3 rounded-3xl border border-cyan-400/20 bg-cyan-400/[.05] p-6 sm:flex-row sm:items-center sm:justify-between sm:p-9"><div><h2 className="text-2xl font-black">先判断方向，再决定投入。</h2><p className="mt-2 text-slate-400">提交项目情况，获取一对一初步建议。</p></div><Link href="/free-plan" className="rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 px-7 py-4 text-center font-bold shadow-lg shadow-cyan-500/10 transition hover:scale-[1.02]">免费咨询</Link></div></section></main><Footer/></>}
