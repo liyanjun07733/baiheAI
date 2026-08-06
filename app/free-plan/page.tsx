@@ -1,5 +1,5 @@
 "use client";
-
+import FreePlanFooter from "../components/FreePlanFooter";
 import { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 import Link from "next/link";
@@ -522,6 +522,7 @@ export default function FreePlanPage() {
           </form>
         </section>
       </div>
+      <FreePlanFooter />
     </main>
   );
 }
