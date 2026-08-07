@@ -1,0 +1,6 @@
+这些 CONTENT_INPUT 文件仅供你整理资料，不会出现在网站前台。
+
+真实案例图片：public/cases/
+人员照片：public/team/
+
+你可以直接把填写后的模板和照片发给 ChatGPT，后续会把内容写入 app/data/cases.ts 和 app/data/team.ts。

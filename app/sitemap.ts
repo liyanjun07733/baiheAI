@@ -1,32 +1,23 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://baihediy.com";
+  const baseUrl = "https://www.baihediy.com";
+  const routes = [
+    ["", "weekly", 1],
+    ["/services", "monthly", 0.9],
+    ["/thailand-investment", "monthly", 0.95],
+    ["/cases", "monthly", 0.85],
+    ["/blog", "weekly", 0.9],
+    ["/policies", "weekly", 0.9],
+    ["/resources", "weekly", 0.9],
+    ["/about", "monthly", 0.8],
+    ["/free-plan", "monthly", 0.95],
+  ] as const;
 
-  return [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/#services`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/#cases`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/#contact`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-  ];
+  return routes.map(([path, changeFrequency, priority]) => ({
+    url: `${baseUrl}${path}`,
+    lastModified: new Date(),
+    changeFrequency,
+    priority,
+  }));
 }

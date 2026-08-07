@@ -1,3 +1,66 @@
-import Link from "next/link"; import Navbar from "../components/Navbar"; import Footer from "../components/Footer";
-const values=["中国企业视角","泰国本地协同","咨询与执行结合","AI数字化能力"];
-export default function AboutPage(){return <><Navbar/><main className="page-enter min-h-screen bg-[#030711] pt-16 text-white sm:pt-20"><section className="mx-auto max-w-7xl px-5 py-16 sm:px-6 sm:py-24 lg:px-8"><div className="grid items-center gap-12 lg:grid-cols-[1.15fr_.85fr]"><div className="reveal-up"><p className="text-xs font-bold tracking-[.32em] text-cyan-300">ABOUT BAIHEAI</p><h1 className="mt-6 text-4xl font-black leading-tight sm:text-6xl lg:text-7xl">连接中国企业与<br/><span className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">泰国本地机会。</span></h1><p className="mt-6 max-w-2xl text-base leading-8 text-slate-400 sm:text-lg">BaiheAI 以泰国为核心，协助企业完成前期咨询、资源对接、项目落地与数字化增长。我们更重视真实问题、清晰路径和长期合作。</p></div><div className="glass-card reveal-up-delay rounded-[2rem] p-6 sm:p-8"><p className="text-sm font-bold text-cyan-300">OUR ROLE</p><p className="mt-5 text-2xl font-black leading-relaxed">不是简单中介，也不只是技术外包。</p><p className="mt-4 leading-8 text-slate-400">我们承担“业务翻译器”和“项目连接器”的角色，让需求、资源与执行更顺畅地衔接。</p></div></div></section><section className="mx-auto max-w-7xl px-5 pb-24 sm:px-6 lg:px-8"><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{values.map((v,i)=><div key={v} className="glass-card hover-lift rounded-3xl p-6"><span className="text-sm font-black text-cyan-300">0{i+1}</span><h2 className="mt-8 text-xl font-black">{v}</h2><div className="mt-5 h-px bg-gradient-to-r from-cyan-400/40 to-transparent"/></div>)}</div><div className="mt-12 grid gap-6 lg:grid-cols-2"><div className="rounded-3xl border border-white/10 bg-white/[.025] p-7 sm:p-9"><h2 className="text-3xl font-black">我们擅长处理</h2><div className="mt-6 space-y-4 text-slate-300">{["企业第一次进入泰国，不清楚路径","需要可靠本地资源与商务沟通支持","项目需要官网、获客与自动化协同","希望先低成本验证，再逐步投入"].map(x=><p key={x} className="rounded-2xl border border-white/8 bg-black/25 p-4">✓ {x}</p>)}</div></div><div className="rounded-3xl border border-cyan-400/20 bg-gradient-to-br from-blue-600/15 to-cyan-400/5 p-7 sm:p-9"><p className="text-cyan-300">START WITH A CONVERSATION</p><h2 className="mt-5 text-3xl font-black">先了解项目，再给建议。</h2><p className="mt-4 leading-8 text-slate-400">告诉我们行业、计划与当前难点，我们会从实际可行性出发沟通。</p><Link href="/free-plan" className="mt-8 inline-flex rounded-2xl bg-white px-7 py-4 font-bold text-slate-950 transition hover:scale-[1.02]">预约免费咨询 →</Link></div></div></section></main><Footer/></>}
+import Link from "next/link";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { team } from "../data/team";
+import TeamProfiles from "./TeamProfiles";
+
+const capabilities = [
+  ["泰国项目咨询", "市场进入、项目路径、BOI 方向与前期判断"],
+  ["本地资源协作", "公司设立、财税法务、场地、翻译与商务陪同资源对接"],
+  ["AI 数字化", "企业官网、海外获客、自动化运营与客户沟通系统"],
+  ["长期执行支持", "从前期判断到项目推进与后续数字化运营持续协作"],
+];
+
+export default function AboutPage() {
+  return (
+    <main className="min-h-screen overflow-x-hidden bg-black text-white">
+      <Navbar />
+
+      <section className="mx-auto max-w-7xl px-5 pb-14 pt-32 sm:px-6 md:pt-40">
+        <p className="text-sm font-bold uppercase tracking-[4px] text-cyan-400">ABOUT BAIHEAI</p>
+        <h1 className="mt-4 max-w-5xl break-words text-4xl font-black leading-tight sm:text-5xl md:text-6xl">
+          连接中国企业与泰国本地资源
+        </h1>
+        <p className="mt-6 max-w-3xl text-base leading-8 text-gray-400 sm:text-lg">
+          BaiheAI 以泰国为重点，结合商业咨询、本地资源协作与 AI 数字化能力，帮助中国企业更清晰地判断市场进入路径，并提高项目落地与海外运营效率。
+        </p>
+      </section>
+
+      <section className="mx-auto grid max-w-7xl gap-4 px-5 pb-20 sm:px-6 md:grid-cols-2">
+        {capabilities.map(([title, desc]) => (
+          <article key={title} className="min-w-0 rounded-3xl border border-white/10 bg-white/[0.035] p-6 sm:p-8">
+            <h2 className="break-words text-2xl font-black">{title}</h2>
+            <p className="mt-4 break-words leading-8 text-gray-400">{desc}</p>
+          </article>
+        ))}
+      </section>
+
+      {team.length > 0 && (
+        <section id="team" className="mx-auto scroll-mt-28 max-w-7xl px-5 pb-24 sm:px-6">
+          <div className="mb-8 max-w-3xl">
+            <p className="text-sm font-bold uppercase tracking-[4px] text-cyan-400">OUR PEOPLE</p>
+            <h2 className="mt-3 text-3xl font-black sm:text-4xl">团队与专业顾问</h2>
+            <p className="mt-4 leading-8 text-gray-400">
+              根据项目需求，由不同领域顾问参与咨询、沟通与执行。点击人员卡片中的“查看详细能力”，可了解服务领域与专业能力。
+            </p>
+          </div>
+          <TeamProfiles members={team} />
+        </section>
+      )}
+
+      <section className="mx-auto max-w-7xl px-5 pb-24 sm:px-6">
+        <div className="rounded-3xl border border-cyan-500/20 bg-cyan-500/[0.05] p-7 sm:p-10">
+          <h2 className="text-3xl font-black">有具体项目需要判断？</h2>
+          <p className="mt-4 max-w-2xl leading-8 text-gray-400">
+            先告诉我们行业、计划地区、投资阶段和目前卡点，我们再判断适合从哪一步开始。
+          </p>
+          <Link href="/free-plan" className="mt-7 inline-block rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-4 font-bold">
+            提交项目需求
+          </Link>
+        </div>
+      </section>
+
+      <Footer />
+    </main>
+  );
+}

@@ -1,3 +1,50 @@
-import Link from "next/link"; import Navbar from "../components/Navbar"; import Footer from "../components/Footer";
-const cases=[{tag:"制造业 / Thailand",title:"中国制造企业进入泰国",desc:"围绕市场展示、客户咨询、本地沟通和项目推进，建立清晰的对外窗口与执行路径。",items:["多语言品牌官网","LINE / WhatsApp 咨询入口","本地资源沟通框架"]},{tag:"酒店旅游 / Digital",title:"酒店品牌国际化升级",desc:"重新整理品牌表达与客户旅程，让海外客户更容易理解、咨询和转化。",items:["多语言内容结构","AI客服入口","移动端体验优化"]},{tag:"国际贸易 / Growth",title:"贸易企业海外获客",desc:"从官网、内容和询盘承接入手，建立可持续迭代的海外获客基础。",items:["SEO内容框架","询盘表单与自动回复","持续运营建议"]}];
-export default function CasesPage(){return <><Navbar/><main className="page-enter min-h-screen bg-[#030711] pt-16 text-white sm:pt-20"><section className="mx-auto max-w-7xl px-5 py-16 sm:px-6 sm:py-24 lg:px-8"><p className="text-xs font-bold tracking-[.32em] text-cyan-300">CASES / 项目案例</p><h1 className="mt-6 max-w-4xl text-4xl font-black leading-tight sm:text-6xl lg:text-7xl">每个项目都从<br/><span className="bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">真实商业问题开始。</span></h1><p className="mt-6 max-w-2xl leading-8 text-slate-400">以下内容展示我们擅长的项目方向。正式案例将随着客户授权持续更新。</p></section><section className="mx-auto max-w-7xl space-y-5 px-5 pb-24 sm:px-6 lg:px-8">{cases.map((c,i)=><article key={c.title} className="glass-card hover-lift grid gap-8 rounded-[2rem] p-6 sm:p-9 lg:grid-cols-[.75fr_1.25fr]"><div><span className="text-sm font-bold text-cyan-300">0{i+1} · {c.tag}</span><h2 className="mt-5 text-3xl font-black sm:text-4xl">{c.title}</h2></div><div><p className="text-base leading-8 text-slate-400">{c.desc}</p><div className="mt-6 grid gap-3 sm:grid-cols-3">{c.items.map(x=><div key={x} className="rounded-2xl border border-white/8 bg-black/30 p-4 text-sm text-slate-300">{x}</div>)}</div><Link href="/free-plan" className="mt-7 inline-flex text-sm font-bold text-cyan-300 transition hover:translate-x-1">咨询类似项目 →</Link></div></article>)}<div className="rounded-[2rem] border border-blue-400/20 bg-blue-500/[.06] p-8 text-center sm:p-12"><h2 className="text-3xl font-black">你的项目，可以从一次清晰梳理开始。</h2><Link href="/free-plan" className="mt-7 inline-flex rounded-2xl bg-gradient-to-r from-blue-600 to-cyan-500 px-8 py-4 font-bold">获取初步方案</Link></div></section></main><Footer/></>}
+import Link from "next/link";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { cases } from "../data/cases";
+
+export default function CasesPage() {
+  return (
+    <main className="min-h-screen overflow-x-hidden bg-black text-white">
+      <Navbar />
+      <section className="mx-auto max-w-7xl px-5 pb-12 pt-32 sm:px-6 md:pt-40">
+        <p className="text-sm font-bold uppercase tracking-[4px] text-cyan-400">CASE STUDIES</p>
+        <h1 className="mt-4 max-w-5xl text-4xl font-black leading-tight sm:text-5xl md:text-6xl">项目案例与落地方法</h1>
+        <p className="mt-6 max-w-3xl text-base leading-8 text-gray-400 sm:text-lg">
+          展示 BaiheAI 在泰国市场进入、项目落地、AI 数字化与海外获客方向的方法与案例。真实客户信息仅在获得授权后公开。
+        </p>
+      </section>
+
+      <section className="mx-auto grid max-w-7xl gap-5 px-5 pb-24 sm:px-6 md:grid-cols-2 xl:grid-cols-3">
+        {cases.map((item, index) => (
+          <Link
+            key={item.slug}
+            href={`/cases/${item.slug}`}
+            className="group min-w-0 rounded-3xl border border-white/10 bg-white/[0.035] p-6 transition duration-500 hover:-translate-y-1 hover:border-cyan-500/40 hover:bg-white/[0.055]"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <span className="text-xs font-bold uppercase tracking-[3px] text-cyan-400">CASE {String(index + 1).padStart(2, "0")}</span>
+              <div className="flex flex-wrap gap-2">
+                {item.isDemo && <span className="rounded-full border border-amber-400/20 bg-amber-400/[0.06] px-3 py-1 text-xs text-amber-200/80">方法示例</span>}
+                <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-gray-400">{item.market}</span>
+              </div>
+            </div>
+            {item.cover && <img src={item.cover} alt={item.title} className="mt-5 aspect-[16/10] w-full rounded-2xl object-cover" />}
+            <h2 className="mt-6 break-words text-2xl font-black leading-tight">{item.title}</h2>
+            <p className="mt-2 text-sm text-gray-500">{item.industry}</p>
+            <p className="mt-5 break-words leading-7 text-gray-400">{item.summary}</p>
+            {item.services && (
+              <div className="mt-5 flex flex-wrap gap-2">
+                {item.services.slice(0, 4).map((service) => (
+                  <span key={service} className="rounded-full border border-white/10 bg-white/[0.025] px-3 py-1 text-xs text-gray-400">{service}</span>
+                ))}
+              </div>
+            )}
+            <div className="mt-7 text-sm font-bold text-cyan-300 transition group-hover:translate-x-1">查看项目详情 →</div>
+          </Link>
+        ))}
+      </section>
+      <Footer />
+    </main>
+  );
+}

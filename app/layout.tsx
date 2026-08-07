@@ -14,65 +14,48 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "BaiheAI | AI赋能企业出海东南亚",
+    default: "BaiheAI | 泰国投资落地与企业出海服务",
     template: "%s | BaiheAI",
   },
-
   description:
-    "BaiheAI 帮助中国企业利用 AI 官网、AI 获客、AI 自动化运营和海外品牌建设，快速进入泰国、越南、马来西亚、新加坡等东南亚市场。",
-
+    "BaiheAI 帮助中国企业进入泰国及东南亚市场，提供泰国投资咨询、BOI 方向、项目落地、本地资源对接，以及 AI 官网、海外获客与自动化运营服务。",
   keywords: [
     "BaiheAI",
+    "泰国投资咨询",
+    "BOI",
+    "泰国公司设立",
+    "泰国工作许可",
+    "泰国商务签证",
+    "东南亚市场",
     "AI官网",
     "AI获客",
     "AI自动化",
-    "AI客服",
-    "AI Website",
-    "AI Automation",
-    "Lead Generation",
-    "Thailand AI",
-    "Vietnam AI",
-    "Malaysia AI",
-    "Singapore AI",
-    "东南亚市场",
     "海外品牌",
   ],
-
-  authors: [
-    {
-      name: "BaiheAI",
-    },
-  ],
-
+  authors: [{ name: "BaiheAI" }],
   creator: "BaiheAI",
-
   publisher: "BaiheAI",
-
   applicationName: "BaiheAI",
-
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
     apple: "/favicon.ico",
   },
-
   openGraph: {
-    title: "BaiheAI | AI赋能企业出海东南亚",
+    title: "BaiheAI | 泰国投资落地与企业出海服务",
     description:
-      "帮助中国企业利用 AI 官网、AI 获客、AI 自动化运营，快速进入东南亚市场。",
+      "帮助中国企业进入泰国及东南亚市场，提供咨询、资源对接、项目落地与 AI 数字化服务。",
     url: "https://www.baihediy.com",
     siteName: "BaiheAI",
     locale: "zh_CN",
     type: "website",
   },
-
   twitter: {
     card: "summary_large_image",
-    title: "BaiheAI | AI赋能企业出海东南亚",
+    title: "BaiheAI | 泰国投资落地与企业出海服务",
     description:
-      "帮助中国企业利用 AI 官网、AI 获客、AI 自动化运营，快速进入东南亚市场。",
+      "帮助中国企业进入泰国及东南亚市场，提供咨询、资源对接、项目落地与 AI 数字化服务。",
   },
-
   robots: {
     index: true,
     follow: true,
@@ -85,9 +68,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" data-scroll-behavior="smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-black text-white antialiased`}
       >
         {children}
       </body>
