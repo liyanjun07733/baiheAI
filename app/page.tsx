@@ -10,6 +10,7 @@ import Process from "./components/Process";
 import LatestInsights from "./components/LatestInsights";
 import FAQ from "./components/FAQ";
 import HomeCTA from "./components/HomeCTA";
+import HomeShareCTA from "./components/HomeShareCTA";
 import Footer from "./components/Footer";
 
 export default function Home() {
@@ -27,6 +28,7 @@ export default function Home() {
         <Process />
         <LatestInsights />
         <FAQ />
+        <HomeShareCTA />
         <HomeCTA />
         <Footer />
       </main>
