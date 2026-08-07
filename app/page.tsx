@@ -11,6 +11,7 @@ import LatestInsights from "./components/LatestInsights";
 import FAQ from "./components/FAQ";
 import HomeCTA from "./components/HomeCTA";
 import HomeShareCTA from "./components/HomeShareCTA";
+import SearchGuides from "./components/SearchGuides";
 import Footer from "./components/Footer";
 import SiteSchema from "./components/SiteSchema";
 
@@ -43,6 +44,7 @@ export default function Home() {
         <Testimonials />
         <Process />
         <LatestInsights />
+        <SearchGuides />
         <FAQ />
         <HomeShareCTA />
         <HomeCTA />
