@@ -77,8 +77,8 @@ export default function ResourceBrowser({ files }: { files: ResourceFile[] }) {
 
   return (
     <div className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#070c14] shadow-2xl shadow-black/20">
-      <div className="grid min-h-[650px] lg:grid-cols-2">
-        <aside className="flex min-h-[380px] flex-col border-b border-white/10 bg-[#070b12] lg:min-h-[650px] lg:border-b-0 lg:border-r">
+      <div className="grid lg:min-h-[650px] lg:grid-cols-2">
+        <aside className="flex min-h-[320px] flex-col border-b border-white/10 bg-[#070b12] lg:min-h-[650px] lg:border-b-0 lg:border-r">
           <div className="border-b border-white/10 p-4">
             <div className="flex items-center justify-between gap-3">
               <div>
@@ -101,7 +101,7 @@ export default function ResourceBrowser({ files }: { files: ResourceFile[] }) {
             </label>
           </div>
 
-          <div className="max-h-[470px] flex-1 overflow-y-auto overscroll-contain lg:max-h-[570px]">
+          <div className="max-h-[360px] flex-1 overflow-y-auto overscroll-contain sm:max-h-[420px] lg:max-h-[570px]">
             {visibleFiles.length > 0 ? (
               <div className="divide-y divide-white/[0.055]">
                 {visibleFiles.map((file) => {
@@ -149,7 +149,7 @@ export default function ResourceBrowser({ files }: { files: ResourceFile[] }) {
           </div>
         </aside>
 
-        <section className="flex min-h-[520px] min-w-0 flex-col bg-[#0a1019] lg:min-h-[650px]">
+        <section className="flex min-h-[360px] min-w-0 flex-col bg-[#0a1019] sm:min-h-[430px] lg:min-h-[650px]">
           {selected ? (
             <>
               <div className="flex flex-col gap-3 border-b border-white/10 bg-[#0b111b] px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
@@ -177,14 +177,14 @@ export default function ResourceBrowser({ files }: { files: ResourceFile[] }) {
               <div className="relative flex-1 overflow-hidden bg-[#0a1019]">
                 {selected.type === "PDF" ? (
                   <>
-                    <div className="flex min-h-[500px] items-center justify-center bg-[#0a1019] p-6 text-center md:hidden">
+                    <div className="flex min-h-[300px] items-center justify-center bg-[#0a1019] p-5 text-center md:hidden">
                       <div className="max-w-sm">
                         <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl border border-red-400/20 bg-red-400/10 text-sm font-black text-red-300">
                           PDF
                         </div>
                         <h3 className="mt-6 text-xl font-black text-white">已选择此资料</h3>
                         <p className="mt-3 text-sm leading-7 text-slate-400">
-                          微信内置浏览器对 PDF 在线预览支持不稳定。这里不会自动打开或下载文件；需要保存时，请点击上方“下载文件”。
+                          当前已选择这份 PDF 资料。微信内置浏览器不稳定支持 PDF 内嵌预览，因此手机端先显示资料信息；只有你主动点击上方“下载文件”时才会请求下载。
                         </p>
                       </div>
                     </div>
@@ -224,7 +224,7 @@ export default function ResourceBrowser({ files }: { files: ResourceFile[] }) {
               </div>
             </>
           ) : (
-            <div className="flex min-h-[520px] items-center justify-center bg-[#0a1019] p-8 text-center">
+            <div className="flex min-h-[340px] items-center justify-center bg-[#0a1019] p-6 text-center sm:min-h-[420px] lg:min-h-[520px]">
               <div className="max-w-md">
                 <div className="text-5xl">📚</div>
                 <h2 className="mt-5 text-2xl font-black text-white">请选择左侧资料</h2>

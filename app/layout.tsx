@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.baihediy.com"),
   title: {
     default: "BaiheAI | 泰国投资落地与企业出海服务",
     template: "%s | BaiheAI",
@@ -49,12 +50,21 @@ export const metadata: Metadata = {
     siteName: "BaiheAI",
     locale: "zh_CN",
     type: "website",
+    images: [
+      {
+        url: "/wechat-share.jpg",
+        width: 1200,
+        height: 630,
+        alt: "BaiheAI 泰国投资落地与企业出海服务",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "BaiheAI | 泰国投资落地与企业出海服务",
     description:
       "帮助中国企业进入泰国及东南亚市场，提供咨询、资源对接、项目落地与 AI 数字化服务。",
+    images: ["/wechat-share.jpg"],
   },
   robots: {
     index: true,

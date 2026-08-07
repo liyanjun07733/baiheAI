@@ -9,5 +9,5 @@ export default function Page(){return <><Navbar/><main className="min-h-screen b
 <section className="rounded-3xl border border-white/10 bg-white/[.03] p-7"><h2 className="text-2xl font-black">第三步：再决定是否进入申请准备</h2><p className="mt-4 leading-8 text-slate-400">如果初步匹配，再进一步准备公司资料、项目说明、财务数据、设备与工艺资料等。具体所需资料取决于项目类别和主管部门要求。</p></section>
 </div>
 <div className="mt-10 rounded-3xl border border-amber-400/20 bg-amber-400/[.05] p-6 text-sm leading-7 text-amber-100/80">提示：本页用于项目方向梳理，不构成法律、税务或官方审批意见。正式申请前应以 BOI 当期公告和主管部门要求为准。</div>
-<div className="mt-10 flex flex-wrap gap-3"><a href="https://www.boi.go.th/index.php?language=en&page=guides" target="_blank" rel="noreferrer" className="rounded-xl bg-white px-5 py-3 font-bold text-slate-950">BOI 官方指南 ↗</a><Link href="/resources" className="rounded-xl border border-white/15 px-5 py-3 font-bold">下载项目清单</Link></div>
+<div className="mt-10 flex flex-wrap gap-3"><Link href="/policies/boi-official" className="rounded-xl bg-white px-5 py-3 font-bold text-slate-950">BOI 官方指南入口 →</Link><Link href="/resources" className="rounded-xl border border-white/15 px-5 py-3 font-bold">下载项目清单</Link></div>
 </article></main><Footer/></>}
