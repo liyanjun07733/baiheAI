@@ -64,7 +64,7 @@ function TextPreview({ file }: { file: ResourceFile }) {
 }
 
 export default function ResourceBrowser({ files }: { files: ResourceFile[] }) {
-  const [selectedName, setSelectedName] = useState(files[0]?.name ?? "");
+  const [selectedName, setSelectedName] = useState("");
   const [filter, setFilter] = useState("");
 
   const visibleFiles = useMemo(() => {
@@ -73,7 +73,7 @@ export default function ResourceBrowser({ files }: { files: ResourceFile[] }) {
     return files.filter((file) => file.name.toLowerCase().includes(keyword));
   }, [files, filter]);
 
-  const selected = files.find((file) => file.name === selectedName) ?? files[0];
+  const selected = files.find((file) => file.name === selectedName);
 
   return (
     <div className="overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#070c14] shadow-2xl shadow-black/20">
@@ -176,16 +176,29 @@ export default function ResourceBrowser({ files }: { files: ResourceFile[] }) {
 
               <div className="relative flex-1 overflow-hidden bg-[#0a1019]">
                 {selected.type === "PDF" ? (
-                  <div className="h-full bg-[#0a1019] p-3 sm:p-4 lg:p-5">
-                    <div className="h-[540px] overflow-hidden rounded-2xl border border-white/[0.08] bg-[#111827] shadow-xl shadow-black/30 lg:h-full lg:min-h-[565px]">
-                      <iframe
-                        key={selected.href}
-                        src={`${selected.href}#view=FitH`}
-                        title={selected.name}
-                        className="h-full w-full border-0 bg-[#111827]"
-                      />
+                  <>
+                    <div className="flex min-h-[500px] items-center justify-center bg-[#0a1019] p-6 text-center md:hidden">
+                      <div className="max-w-sm">
+                        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl border border-red-400/20 bg-red-400/10 text-sm font-black text-red-300">
+                          PDF
+                        </div>
+                        <h3 className="mt-6 text-xl font-black text-white">已选择此资料</h3>
+                        <p className="mt-3 text-sm leading-7 text-slate-400">
+                          微信内置浏览器对 PDF 在线预览支持不稳定。这里不会自动打开或下载文件；需要保存时，请点击上方“下载文件”。
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                    <div className="hidden h-full bg-[#0a1019] p-3 sm:p-4 md:block lg:p-5">
+                      <div className="h-[540px] overflow-hidden rounded-2xl border border-white/[0.08] bg-[#111827] shadow-xl shadow-black/30 lg:h-full lg:min-h-[565px]">
+                        <iframe
+                          key={selected.href}
+                          src={`${selected.href}#view=FitH`}
+                          title={selected.name}
+                          className="h-full w-full border-0 bg-[#111827]"
+                        />
+                      </div>
+                    </div>
+                  </>
                 ) : imageTypes.has(selected.type) ? (
                   <div className="flex h-full min-h-[500px] items-center justify-center overflow-auto bg-[#0a1019] p-5 sm:p-7">
                     <div className="rounded-2xl border border-white/[0.08] bg-[#0e1623] p-3 shadow-xl shadow-black/30">
@@ -212,10 +225,12 @@ export default function ResourceBrowser({ files }: { files: ResourceFile[] }) {
             </>
           ) : (
             <div className="flex min-h-[520px] items-center justify-center bg-[#0a1019] p-8 text-center">
-              <div>
-                <div className="text-5xl">📂</div>
-                <h2 className="mt-5 text-2xl font-black">暂无可阅读资料</h2>
-                <p className="mt-3 text-slate-500">资料更新后会在这里显示。</p>
+              <div className="max-w-md">
+                <div className="text-5xl">📚</div>
+                <h2 className="mt-5 text-2xl font-black text-white">请选择左侧资料</h2>
+                <p className="mt-3 leading-7 text-slate-500">
+                  点击文件名后再显示对应内容。进入本页面时不会自动打开或下载任何文件。
+                </p>
               </div>
             </div>
           )}
