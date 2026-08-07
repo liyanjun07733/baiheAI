@@ -60,6 +60,18 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <section className="mx-auto max-w-7xl px-5 pb-20 sm:px-6">
+        <div className="rounded-3xl border border-cyan-400/20 bg-cyan-400/[0.05] p-6 sm:flex sm:items-center sm:justify-between sm:gap-8 sm:p-8">
+          <div>
+            <h2 className="text-2xl font-black text-white">顾问能力之外，更重要的是合作边界透明</h2>
+            <p className="mt-2 max-w-3xl leading-7 text-gray-400">查看 BaiheAI 的案例公开原则、审批说明、专业第三方边界与双方责任。</p>
+          </div>
+          <Link href="/trust" className="mt-5 block shrink-0 rounded-xl border border-cyan-400/25 bg-cyan-400/[0.08] px-6 py-3.5 text-center font-black text-cyan-200 sm:mt-0">
+            查看合作原则 →
+          </Link>
+        </div>
+      </section>
+
       <Footer />
     </main>
   );

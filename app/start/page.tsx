@@ -44,7 +44,8 @@ export default function StartPage() {
                 BaiheAI 面向准备进入泰国及东南亚市场的中国企业，提供投资咨询、BOI 方向、项目落地、本地资源对接，以及 AI 数字化与海外获客支持。
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <Link href="/free-plan" className="rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3.5 text-center font-black text-white">免费咨询项目方向</Link>
+                <Link href="/consultation" className="rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3.5 text-center font-black text-white">1 分钟项目需求诊断</Link>
+                <Link href="/free-plan" className="rounded-xl border border-cyan-400/25 bg-cyan-400/[0.06] px-6 py-3.5 text-center font-bold text-cyan-200">提交详细项目需求</Link>
                 <Link href="/resources" className="rounded-xl border border-cyan-400/20 bg-cyan-400/[0.06] px-6 py-3.5 text-center font-bold text-cyan-200">查看免费资料</Link>
                 <Link href="/policies" className="rounded-xl border border-white/15 bg-white/[0.035] px-6 py-3.5 text-center font-bold text-slate-200">查看政策实操</Link>
               </div>

@@ -15,6 +15,14 @@ export default function CasesPage() {
         </p>
       </section>
 
+      <section className="mx-auto max-w-7xl px-5 pb-8 sm:px-6">
+        <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.05] p-5 text-sm leading-7 text-amber-100/80">
+          <strong className="text-amber-200">案例公开说明：</strong>
+          当前页面包含项目方法示例，示例均在卡片和详情中明确标识。未获得客户授权的名称、图片、评价与经营数据不会作为真实案例公开。
+          <Link href="/trust" className="ml-2 font-bold text-cyan-300 hover:text-cyan-200">查看合作与公开原则 →</Link>
+        </div>
+      </section>
+
       <section className="mx-auto grid max-w-7xl gap-5 px-5 pb-24 sm:px-6 md:grid-cols-2 xl:grid-cols-3">
         {cases.map((item, index) => (
           <Link

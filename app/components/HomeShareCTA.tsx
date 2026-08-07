@@ -9,7 +9,10 @@ export default function HomeShareCTA() {
           <h2 className="mt-3 text-2xl font-black text-white sm:text-3xl">第一次了解 BaiheAI？从这里快速开始</h2>
           <p className="mt-3 text-sm leading-7 text-slate-400 sm:text-base">核心服务、顾问、免费政策资料和咨询入口集中在一个页面，方便查看和转发。</p>
         </div>
-        <Link href="/start" className="inline-flex shrink-0 items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3.5 font-black text-white transition hover:scale-[1.02]">进入快速服务入口 →</Link>
+        <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
+          <Link href="/consultation" className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3.5 font-black text-white transition hover:scale-[1.02]">1 分钟需求诊断 →</Link>
+          <Link href="/start" className="inline-flex items-center justify-center rounded-xl border border-cyan-400/20 bg-cyan-400/[0.06] px-6 py-3.5 font-black text-cyan-200 transition hover:border-cyan-400/35">快速服务入口</Link>
+        </div>
       </div>
     </section>
   );
