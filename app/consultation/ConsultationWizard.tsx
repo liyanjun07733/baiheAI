@@ -194,7 +194,7 @@ export default function ConsultationWizard() {
               可以多选。先按真实需求选择，不需要判断应该找哪一种服务。
             </p>
 
-            <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-6 grid gap-3 sm:mt-7 sm:grid-cols-2 lg:grid-cols-3">
               {needs.map((item) => {
                 const active = selectedNeeds.includes(item.id);
 
@@ -202,20 +202,36 @@ export default function ConsultationWizard() {
                   <button
                     key={item.id}
                     type="button"
+                    aria-pressed={active}
                     onClick={() => toggleNeed(item.id)}
-                    className={`rounded-2xl border p-4 text-left transition ${
+                    className={`relative min-h-[112px] w-full overflow-hidden rounded-2xl border-2 p-4 pr-12 text-left transition-all duration-200 active:scale-[0.99] sm:min-h-[118px] sm:p-5 sm:pr-14 ${
                       active
-                        ? "border-cyan-400/60 bg-cyan-400/[0.11] shadow-lg shadow-cyan-500/5"
-                        : "border-white/10 bg-[#07101d] hover:border-cyan-400/30"
+                        ? "border-sky-500 bg-gradient-to-br from-sky-200 via-cyan-100 to-emerald-200 shadow-[0_14px_34px_rgba(14,165,233,0.20)] ring-2 ring-sky-400/35"
+                        : "border-slate-200 bg-white shadow-sm hover:border-sky-300 hover:bg-sky-50/70"
                     }`}
                   >
+                    {active && (
+                      <span className="absolute right-3 top-3 inline-flex h-8 min-w-8 items-center justify-center rounded-full bg-sky-600 px-2 text-sm font-black text-white shadow-lg sm:right-4 sm:top-4">
+                        ✓
+                      </span>
+                    )}
+
                     <div className="flex items-start gap-3">
-                      <span className="text-2xl">{item.icon}</span>
+                      <span className={`text-2xl transition-transform duration-200 ${active ? "scale-110" : ""}`}>
+                        {item.icon}
+                      </span>
                       <div>
-                        <h3 className="font-black text-white">{item.title}</h3>
-                        <p className="mt-2 text-sm leading-6 text-slate-400">
+                        <h3 className={`font-black ${active ? "text-sky-950" : "text-slate-900"}`}>
+                          {item.title}
+                        </h3>
+                        <p className={`mt-2 text-sm leading-6 ${active ? "font-medium text-sky-900/80" : "text-slate-500"}`}>
                           {item.desc}
                         </p>
+                        {active && (
+                          <span className="mt-3 inline-flex rounded-full bg-white/75 px-2.5 py-1 text-xs font-black text-sky-700 shadow-sm">
+                            已选择
+                          </span>
+                        )}
                       </div>
                     </div>
                   </button>
@@ -242,14 +258,20 @@ export default function ConsultationWizard() {
                 <button
                   key={item}
                   type="button"
+                  aria-pressed={stage === item}
                   onClick={() => setStage(item)}
-                  className={`rounded-2xl border px-5 py-4 text-left font-bold transition ${
+                  className={`relative min-h-[64px] rounded-2xl border-2 px-5 py-4 pr-14 text-left font-black transition-all duration-200 active:scale-[0.99] ${
                     stage === item
-                      ? "border-cyan-400/60 bg-cyan-400/[0.11] text-cyan-200"
-                      : "border-white/10 bg-[#07101d] text-slate-200 hover:border-cyan-400/30"
+                      ? "border-sky-500 bg-gradient-to-r from-sky-200 via-cyan-100 to-emerald-100 text-sky-950 shadow-[0_12px_28px_rgba(14,165,233,0.18)] ring-2 ring-sky-400/30"
+                      : "border-slate-200 bg-white text-slate-800 shadow-sm hover:border-sky-300 hover:bg-sky-50/70"
                   }`}
                 >
-                  {item}
+                  <span>{item}</span>
+                  {stage === item && (
+                    <span className="absolute right-4 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-sky-600 text-sm font-black text-white shadow-md">
+                      ✓
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
@@ -273,14 +295,20 @@ export default function ConsultationWizard() {
                 <button
                   key={item}
                   type="button"
+                  aria-pressed={timeframe === item}
                   onClick={() => setTimeframe(item)}
-                  className={`rounded-2xl border px-5 py-4 text-left font-bold transition ${
+                  className={`relative min-h-[64px] rounded-2xl border-2 px-5 py-4 pr-14 text-left font-black transition-all duration-200 active:scale-[0.99] ${
                     timeframe === item
-                      ? "border-cyan-400/60 bg-cyan-400/[0.11] text-cyan-200"
-                      : "border-white/10 bg-[#07101d] text-slate-200 hover:border-cyan-400/30"
+                      ? "border-emerald-500 bg-gradient-to-r from-emerald-200 via-cyan-100 to-sky-200 text-emerald-950 shadow-[0_12px_28px_rgba(16,185,129,0.18)] ring-2 ring-emerald-400/30"
+                      : "border-slate-200 bg-white text-slate-800 shadow-sm hover:border-emerald-300 hover:bg-emerald-50/70"
                   }`}
                 >
-                  {item}
+                  <span>{item}</span>
+                  {timeframe === item && (
+                    <span className="absolute right-4 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-emerald-600 text-sm font-black text-white shadow-md">
+                      ✓
+                    </span>
+                  )}
                 </button>
               ))}
             </div>

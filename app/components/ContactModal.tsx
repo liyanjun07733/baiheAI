@@ -73,6 +73,7 @@ export default function ContactModal({
   return (
     <div
       className="
+        modal-overlay
         fixed
         inset-0
         z-[9999]

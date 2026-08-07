@@ -15,7 +15,7 @@ export default function AICore() {
       <div className="absolute h-[210px] w-[210px] rounded-full border border-blue-300/20 xl:h-[235px] xl:w-[235px]" />
 
       <div className="relative flex h-40 w-40 items-center justify-center rounded-full bg-gradient-to-br from-cyan-300 via-blue-500 to-blue-900 shadow-[0_0_90px_rgba(59,130,246,.65)] animate-pulse xl:h-44 xl:w-44">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full border border-cyan-300 bg-black/70 xl:h-24 xl:w-24">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full border border-cyan-300 ai-core-dark xl:h-24 xl:w-24">
           <div className="h-5 w-5 rounded-full bg-cyan-200 shadow-[0_0_28px_#67e8f9] animate-ping" />
         </div>
       </div>
