@@ -5,7 +5,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
+      disallow: ["/api/", "/search"],
     },
-    sitemap: "https://baihediy.com/sitemap.xml",
+    sitemap: "https://www.baihediy.com/sitemap.xml",
+    host: "https://www.baihediy.com",
   };
 }

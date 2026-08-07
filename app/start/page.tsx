@@ -8,6 +8,7 @@ export const metadata = {
   title: "中国企业进入泰国｜BaiheAI 服务入口",
   description:
     "泰国投资咨询、BOI 方向、工厂与项目落地、本地资源对接、免费资料与 AI 数字化服务入口。",
+  alternates: { canonical: "https://www.baihediy.com/start" },
   openGraph: {
     title: "中国企业进入泰国｜BaiheAI",
     description: "泰国投资、BOI、项目落地、本地资源对接与 AI 数字化服务。",
