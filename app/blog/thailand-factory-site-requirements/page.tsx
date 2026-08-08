@@ -5,11 +5,11 @@ import SeoArticle from "../../components/SeoArticle";
 import ArticleJsonLd from "../../components/ArticleJsonLd";
 
 export const metadata: Metadata = {
-  title: "在泰国找厂房前，先把这 10 个参数准备好",
+  title: "泰国厂房选址：找厂房前必须确认的 10 个关键参数",
   description: "面积、电力、层高、装卸、消防、用水和物流等关键参数决定厂房是否真正适合项目。",
   alternates: { canonical: "https://www.baihediy.com/blog/thailand-factory-site-requirements" },
   openGraph: {
-    title: "在泰国找厂房前，先把这 10 个参数准备好",
+    title: "泰国厂房选址：找厂房前必须确认的 10 个关键参数",
     description: "面积、电力、层高、装卸、消防、用水和物流等关键参数决定厂房是否真正适合项目。",
     url: "https://www.baihediy.com/blog/thailand-factory-site-requirements",
     type: "article",
@@ -22,14 +22,14 @@ export default function Page() {
     <>
       <Navbar />
       <ArticleJsonLd
-        title="在泰国找厂房前，先把这 10 个参数准备好"
+        title="泰国厂房选址：找厂房前必须确认的 10 个关键参数"
         description="面积、电力、层高、装卸、消防、用水和物流等关键参数决定厂房是否真正适合项目。"
         url="https://www.baihediy.com/blog/thailand-factory-site-requirements"
       />
       <main className="min-h-screen bg-[#f8fcff] px-5 pb-20 pt-32 text-slate-950">
         <SeoArticle
           eyebrow="FACTORY SITE"
-          title="在泰国找厂房前，先把这 10 个参数准备好"
+          title="泰国厂房选址：找厂房前必须确认的 10 个关键参数"
           intro="先看厂房照片再决定项目，是很多企业选址时最容易走弯路的方式。正确顺序是先把生产需求变成参数，再去筛选区域、工业园和具体厂房。"
           sections={[
             { title: "最先明确的生产参数", bullets: ["预计建筑面积和仓储面积。", "设备尺寸、重量、层高和地面承重要求。", "最大用电负荷、用水量、排水和压缩空气需求。"] },

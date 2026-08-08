@@ -5,11 +5,11 @@ import SeoArticle from "../../components/SeoArticle";
 import ArticleJsonLd from "../../components/ArticleJsonLd";
 
 export const metadata: Metadata = {
-  title: "委托泰国现场验厂，最终报告应该至少包含什么？",
+  title: "泰国验厂报告应该包含什么？现场验厂报告内容清单",
   description: "无法亲自赴泰时，现场照片、视频、生产能力、质量、仓储和异常记录应形成可追溯报告。",
   alternates: { canonical: "https://www.baihediy.com/blog/thailand-factory-audit-report-content" },
   openGraph: {
-    title: "委托泰国现场验厂，最终报告应该至少包含什么？",
+    title: "泰国验厂报告应该包含什么？现场验厂报告内容清单",
     description: "无法亲自赴泰时，现场照片、视频、生产能力、质量、仓储和异常记录应形成可追溯报告。",
     url: "https://www.baihediy.com/blog/thailand-factory-audit-report-content",
     type: "article",
@@ -22,14 +22,14 @@ export default function Page() {
     <>
       <Navbar />
       <ArticleJsonLd
-        title="委托泰国现场验厂，最终报告应该至少包含什么？"
+        title="泰国验厂报告应该包含什么？现场验厂报告内容清单"
         description="无法亲自赴泰时，现场照片、视频、生产能力、质量、仓储和异常记录应形成可追溯报告。"
         url="https://www.baihediy.com/blog/thailand-factory-audit-report-content"
       />
       <main className="min-h-screen bg-[#f8fcff] px-5 pb-20 pt-32 text-slate-950">
         <SeoArticle
           eyebrow="FACTORY AUDIT"
-          title="委托泰国现场验厂，最终报告应该至少包含什么？"
+          title="泰国验厂报告应该包含什么？现场验厂报告内容清单"
           intro="客户委托当地团队去工厂现场，并不是“帮忙拍几张照片”就结束。真正有价值的现场验厂，应让委托方在不在现场的情况下，也能理解工厂真实情况和需要继续确认的问题。"
           sections={[
             { title: "基础信息核实", bullets: ["工厂名称、地址、联系人和现场区域。", "生产、仓储、办公等主要区域是否与前期资料一致。"] },

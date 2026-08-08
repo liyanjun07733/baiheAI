@@ -5,11 +5,11 @@ import SeoArticle from "../../components/SeoArticle";
 import ArticleJsonLd from "../../components/ArticleJsonLd";
 
 export const metadata: Metadata = {
-  title: "去泰国投资一定要申请 BOI 吗？先判断这几个问题",
+  title: "泰国 BOI vs 非 BOI：企业投资到底该不该申请 BOI？",
   description: "BOI 不是所有项目都必须申请，先根据业务活动、投资内容和项目目标判断是否值得进一步评估。",
   alternates: { canonical: "https://www.baihediy.com/blog/thailand-boi-vs-non-boi" },
   openGraph: {
-    title: "去泰国投资一定要申请 BOI 吗？先判断这几个问题",
+    title: "泰国 BOI vs 非 BOI：企业投资到底该不该申请 BOI？",
     description: "BOI 不是所有项目都必须申请，先根据业务活动、投资内容和项目目标判断是否值得进一步评估。",
     url: "https://www.baihediy.com/blog/thailand-boi-vs-non-boi",
     type: "article",
@@ -22,14 +22,14 @@ export default function Page() {
     <>
       <Navbar />
       <ArticleJsonLd
-        title="去泰国投资一定要申请 BOI 吗？先判断这几个问题"
+        title="泰国 BOI vs 非 BOI：企业投资到底该不该申请 BOI？"
         description="BOI 不是所有项目都必须申请，先根据业务活动、投资内容和项目目标判断是否值得进一步评估。"
         url="https://www.baihediy.com/blog/thailand-boi-vs-non-boi"
       />
       <main className="min-h-screen bg-[#f8fcff] px-5 pb-20 pt-32 text-slate-950">
         <SeoArticle
           eyebrow="BOI"
-          title="去泰国投资一定要申请 BOI 吗？先判断这几个问题"
+          title="泰国 BOI vs 非 BOI：企业投资到底该不该申请 BOI？"
           intro="很多企业把“去泰国投资”和“申请 BOI”直接画等号。实际上是否适合 BOI，需要结合项目活动、产品工艺、投资额、设备、人员和长期计划判断。"
           sections={[
             { title: "先看项目本身", bullets: ["企业在泰国实际要做什么业务活动。", "产品、工艺、设备和投资内容是否清晰。", "项目未来的人员结构、出口和客户计划。"] },

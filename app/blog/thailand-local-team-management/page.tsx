@@ -5,11 +5,11 @@ import SeoArticle from "../../components/SeoArticle";
 import ArticleJsonLd from "../../components/ArticleJsonLd";
 
 export const metadata: Metadata = {
-  title: "泰国工厂落地后，中方团队和本地员工怎么减少信息断层？",
+  title: "泰国工厂团队管理：中方团队与本地员工如何高效协作",
   description: "用流程、双语资料、任务记录和知识库降低跨语言与人员流动带来的管理损耗。",
   alternates: { canonical: "https://www.baihediy.com/blog/thailand-local-team-management" },
   openGraph: {
-    title: "泰国工厂落地后，中方团队和本地员工怎么减少信息断层？",
+    title: "泰国工厂团队管理：中方团队与本地员工如何高效协作",
     description: "用流程、双语资料、任务记录和知识库降低跨语言与人员流动带来的管理损耗。",
     url: "https://www.baihediy.com/blog/thailand-local-team-management",
     type: "article",
@@ -22,14 +22,14 @@ export default function Page() {
     <>
       <Navbar />
       <ArticleJsonLd
-        title="泰国工厂落地后，中方团队和本地员工怎么减少信息断层？"
+        title="泰国工厂团队管理：中方团队与本地员工如何高效协作"
         description="用流程、双语资料、任务记录和知识库降低跨语言与人员流动带来的管理损耗。"
         url="https://www.baihediy.com/blog/thailand-local-team-management"
       />
       <main className="min-h-screen bg-[#f8fcff] px-5 pb-20 pt-32 text-slate-950">
         <SeoArticle
           eyebrow="OPERATIONS"
-          title="泰国工厂落地后，中方团队和本地员工怎么减少信息断层？"
+          title="泰国工厂团队管理：中方团队与本地员工如何高效协作"
           intro="工厂真正落地后，新的问题才开始出现：中方管理人员、本地员工、供应商和客户之间的信息如果只存在微信群、口头沟通和个人电脑里，经验很难沉淀，也容易在人员变化后丢失。"
           sections={[
             { title: "先把工作流程固定下来", bullets: ["关键岗位建立清晰SOP和责任边界。", "异常处理要记录原因、措施、负责人和验证结果。"] },
