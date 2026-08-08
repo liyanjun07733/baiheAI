@@ -3,6 +3,15 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 const posts=[
+  ['Factory Audit','泰国验厂服务：工厂验厂辅导与客户委托现场验厂','既帮助工厂准备客户验厂，也支持客户无法赴泰时委托现场考察。','/factory-audit'],
+  ['Factory Audit','泰国工厂客户验厂前怎么准备？','现场、资料、人员、流程与沟通的验厂前准备清单。','/blog/thailand-factory-audit-preparation'],
+  ['Factory Audit','没有时间去泰国验厂怎么办？','了解客户委托当地团队进行供应商现场考察的执行方式与边界。','/blog/thailand-customer-commissioned-factory-audit'],
+  ['Supplier','泰国供应商验厂看什么？','采购方考察供应商时可使用的现场检查框架。','/blog/thailand-supplier-factory-inspection-checklist'],
+  ['Factory','中国企业去泰国建厂流程怎么梳理？','从前期判断、投资路径、场地到设备与投产准备。','/blog/thailand-factory-setup-process'],
+  ['BOI','泰国 BOI 申请前需要判断什么？','正式申请前先把项目、设备、人员和时间计划梳理清楚。','/blog/thailand-boi-application-conditions'],
+  ['Location','泰国工业园怎么选？','从客户、物流、用工、基础设施和总成本比较选址。','/blog/thailand-industrial-estate-selection-guide'],
+  ['Risk','中国企业投资泰国常见风险','建厂与落地前重点检查信息、场地、审批、合作与时间风险。','/blog/thailand-investment-risks'],
+  ['Guide','中国企业投资泰国第一次考察清单','第一次赴泰考察前应准备的项目、场地、政策与决策信息。','/blog/chinese-company-thailand-investment-guide'],
   ['Company','泰国公司注册流程与材料清单','公司注册条件、股东董事资料、注册流程及后续税务与社保前期梳理。','/blog/thailand-company-registration-guide'],
   ['Work Permit','泰国 Non-B 与 Work Permit 办理指南','雇主资质、员工材料、WP3、Non-B 申请与入境后的工作许可流程。','/blog/thailand-non-b-work-permit-guide'],
   ['Thailand','中国企业进入泰国前，先把这 6 个问题想清楚','从行业、客户、投资方式、场地、人员到本地资源，建立第一轮判断框架。','/policies'],

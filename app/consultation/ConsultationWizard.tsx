@@ -43,10 +43,16 @@ const needs: Need[] = [
     desc: "需要商务签证、工作签证、工作许可等方向支持。",
   },
   {
-    id: "factory-audit",
+    id: "factory-audit-prep",
     icon: "✅",
-    title: "客户验厂 / 工厂审核",
-    desc: "客户来厂审核、供应商验厂、现场考察、资料准备、陪同沟通与整改事项。",
+    title: "工厂验厂辅导",
+    desc: "我的工厂要迎接客户验厂，需要现场、资料、流程、沟通与整改准备。",
+  },
+  {
+    id: "factory-audit-buyer",
+    icon: "🔎",
+    title: "委托泰国现场验厂",
+    desc: "我没有时间亲自到泰国，希望委托当地团队去供应商或工厂现场考察并记录。",
   },
   {
     id: "language",
@@ -127,6 +133,8 @@ export default function ConsultationWizard() {
       "faq-page": "FAQ 页面",
       trust: "信任与边界页面",
       start: "开始咨询页",
+      "factory-audit": "泰国验厂服务页",
+      "factory-audit-bottom": "泰国验厂服务页底部",
     };
 
     setEntrySource(source ? sourceLabels[source] || source : "直接访问");
