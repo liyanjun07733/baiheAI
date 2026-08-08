@@ -10,7 +10,7 @@ type Result = {
   description: string;
 };
 
-export default function SiteSearch({ mobile = false }: { mobile?: boolean }) {
+export default function SiteSearch({ mobile = false, compact = false }: { mobile?: boolean; compact?: boolean }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Result[]>([]);
@@ -74,7 +74,7 @@ export default function SiteSearch({ mobile = false }: { mobile?: boolean }) {
   return (
     <div
       ref={boxRef}
-      className={`relative ${mobile ? "w-full" : "w-[155px] 2xl:w-[210px]"}`}
+      className={`relative ${mobile ? "w-full" : compact ? "w-[145px] 2xl:w-[205px]" : "w-[155px] 2xl:w-[210px]"}`}
     >
       <form onSubmit={submit} className="relative">
         <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">
@@ -84,12 +84,12 @@ export default function SiteSearch({ mobile = false }: { mobile?: boolean }) {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           onFocus={() => query.trim() && setOpen(true)}
-          placeholder={mobile ? "搜索 BOI、签证、厂房…" : "搜索站内内容"}
+          placeholder={mobile && compact ? "搜索站内" : mobile ? "搜索 BOI、签证、厂房…" : "搜索站内内容"}
           aria-label="站内搜索"
-          className="h-10 w-full rounded-xl border border-white/10 bg-white/[0.05] pl-9 pr-8 text-sm text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-400/40 focus:bg-white/[0.075]"
+          className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 pl-9 pr-8 text-sm font-medium text-slate-900 outline-none transition placeholder:text-slate-400 hover:border-sky-200 hover:bg-white focus:border-sky-400 focus:bg-white focus:ring-2 focus:ring-sky-100"
         />
         {loading && (
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 animate-pulse text-xs text-cyan-300">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 animate-pulse text-xs text-sky-600">
             •••
           </span>
         )}
@@ -97,8 +97,10 @@ export default function SiteSearch({ mobile = false }: { mobile?: boolean }) {
 
       {open && (
         <div
-          className={`absolute z-[80] mt-2 overflow-hidden rounded-2xl border border-white/10 bg-[#07101d]/98 p-2 shadow-2xl shadow-black/50 backdrop-blur-2xl ${
-            mobile ? "left-0 right-0" : "right-0 w-[360px]"
+          className={`z-[80] mt-2 overflow-hidden rounded-2xl border border-slate-200 bg-white/98 p-2 shadow-2xl shadow-slate-900/15 backdrop-blur-2xl ${
+            mobile
+              ? "fixed left-3 right-3 top-[58px] sm:left-auto sm:right-6 sm:top-[72px] sm:w-[420px]"
+              : "absolute right-0 w-[380px]"
           }`}
         >
           {results.length > 0 ? (
@@ -108,13 +110,13 @@ export default function SiteSearch({ mobile = false }: { mobile?: boolean }) {
                   type="button"
                   key={`${result.href}-${result.title}`}
                   onClick={() => goTo(result.href)}
-                  className="block w-full rounded-xl px-4 py-3 text-left transition hover:bg-white/[0.07]"
+                  className="block w-full rounded-xl px-4 py-3 text-left transition hover:bg-sky-50"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="rounded-md bg-cyan-400/10 px-2 py-1 text-[10px] font-bold text-cyan-300">
+                    <span className="rounded-md bg-sky-100 px-2 py-1 text-[10px] font-bold text-sky-700">
                       {result.category}
                     </span>
-                    <span className="min-w-0 truncate text-sm font-bold text-white">
+                    <span className="min-w-0 truncate text-sm font-bold text-slate-950">
                       {result.title}
                     </span>
                   </div>
@@ -126,7 +128,7 @@ export default function SiteSearch({ mobile = false }: { mobile?: boolean }) {
               <button
                 type="button"
                 onClick={() => router.push(`/search?q=${encodeURIComponent(query.trim())}`)}
-                className="mt-1 w-full rounded-xl border border-white/10 px-4 py-3 text-center text-xs font-bold text-slate-300 transition hover:border-cyan-400/30 hover:text-cyan-300"
+                className="mt-1 w-full rounded-xl border border-slate-200 px-4 py-3 text-center text-xs font-bold text-slate-600 transition hover:border-sky-300 hover:text-sky-700"
               >
                 查看全部搜索结果 →
               </button>
