@@ -3,6 +3,16 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 const posts=[
+  ["Factory Cost","去泰国建厂，前期到底要准备哪些成本？","从场地、设备、人员、许可、物流和投产准备拆解泰国建厂前期成本。","/blog/thailand-factory-cost-breakdown"],
+  ["Factory Site","在泰国找厂房前，先把这 10 个参数准备好","面积、电力、层高、装卸、消防、用水和物流等关键参数决定厂房是否真正适合项目。","/blog/thailand-factory-site-requirements"],
+  ["BOI","去泰国投资一定要申请 BOI 吗？先判断这几个问题","BOI 不是所有项目都必须申请，先根据业务活动、投资内容和项目目标判断是否值得进一步评估。","/blog/thailand-boi-vs-non-boi"],
+  ["Company","泰国注册公司前，预算里不要只算注册费","公司设立只是开始，办公地址、财税、人员、银行和后续运营成本都应提前纳入预算。","/blog/thailand-company-registration-cost-items"],
+  ["Work Permit","中国员工去泰国工作，公司端要提前准备什么？","外籍员工办理工作相关手续前，雇主公司、岗位、材料和实际工作安排都需要同步准备。","/blog/thailand-work-permit-employer-requirements"],
+  ["Factory Audit","委托泰国现场验厂，最终报告应该至少包含什么？","无法亲自赴泰时，现场照片、视频、生产能力、质量、仓储和异常记录应形成可追溯报告。","/blog/thailand-factory-audit-report-content"],
+  ["Supplier","找泰国供应商时，现场最值得警惕的 8 类信号","从厂房、设备、订单、质量、仓储和沟通一致性识别供应商现场风险。","/blog/thailand-supplier-verification-red-flags"],
+  ["Timeline","中国企业落地泰国，项目时间表应该怎么排？","把公司、政策、场地、设备、人员和投产准备放到同一张时间表，减少互相等待。","/blog/thailand-investment-timeline"],
+  ["Utilities","泰国厂房考察时，水电气和基础设施怎么检查？","设备能放进去不等于能生产，电力、排水、消防、网络和装卸能力要在签约前核对。","/blog/thailand-factory-utilities-checklist"],
+  ["Operations","泰国工厂落地后，中方团队和本地员工怎么减少信息断层？","用流程、双语资料、任务记录和知识库降低跨语言与人员流动带来的管理损耗。","/blog/thailand-local-team-management"],
   ['Factory Audit','泰国验厂服务：工厂验厂辅导与客户委托现场验厂','既帮助工厂准备客户验厂，也支持客户无法赴泰时委托现场考察。','/factory-audit'],
   ['Factory Audit','泰国工厂客户验厂前怎么准备？','现场、资料、人员、流程与沟通的验厂前准备清单。','/blog/thailand-factory-audit-preparation'],
   ['Factory Audit','没有时间去泰国验厂怎么办？','了解客户委托当地团队进行供应商现场考察的执行方式与边界。','/blog/thailand-customer-commissioned-factory-audit'],
