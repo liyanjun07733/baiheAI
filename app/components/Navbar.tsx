@@ -48,7 +48,7 @@ export default function Navbar() {
         <div className="hidden shrink-0 items-center gap-2 xl:flex">
           <SiteSearch compact />
           <Link
-            href="/free-plan"
+            href="/consultation?from=nav"
             className="whitespace-nowrap rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-3.5 py-2.5 text-sm font-black text-white shadow-[0_8px_24px_rgba(14,165,233,.18)] transition hover:-translate-y-0.5 2xl:px-4"
           >
             免费咨询
@@ -85,11 +85,11 @@ export default function Navbar() {
                 </Link>
               ))}
               <Link
-                href="/free-plan"
+                href="/consultation?from=mobile-menu"
                 onClick={() => setMenuOpen(false)}
                 className="col-span-2 mt-1 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-3.5 text-center font-black text-white"
               >
-                免费获取企业落地建议
+                1 分钟项目需求诊断
               </Link>
             </nav>
           </div>

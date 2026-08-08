@@ -63,12 +63,15 @@ export default function Hero() {
             ))}
           </div>
 
-          <div className="mt-7 grid grid-cols-1 gap-3 sm:mt-9 sm:flex sm:flex-row">
-            <Link href="/free-plan" className="rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-4 text-center text-sm font-black text-white shadow-[0_12px_28px_rgba(14,165,233,.20)] transition hover:-translate-y-0.5 sm:px-7 sm:text-base">
-              免费获取企业落地建议
+          <div className="mt-7 grid grid-cols-1 gap-3 sm:mt-9 sm:flex sm:flex-row sm:flex-wrap">
+            <Link href="/consultation?from=hero" className="rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-4 text-center text-sm font-black text-white shadow-[0_12px_28px_rgba(14,165,233,.20)] transition hover:-translate-y-0.5 sm:px-7 sm:text-base">
+              1 分钟项目需求诊断
             </Link>
-            <Link href="/thailand-investment" className="rounded-xl border border-slate-300 bg-white px-6 py-4 text-center text-sm font-black text-slate-800 shadow-sm transition hover:border-sky-300 hover:bg-sky-50 hover:text-sky-700 sm:px-7 sm:text-base">
-              了解泰国投资服务
+            <Link href="/free-plan" className="rounded-xl border border-slate-300 bg-white px-6 py-4 text-center text-sm font-black text-slate-800 shadow-sm transition hover:border-sky-300 hover:bg-sky-50 hover:text-sky-700 sm:px-7 sm:text-base">
+              提交详细项目需求
+            </Link>
+            <Link href="/thailand-investment" className="flex items-center justify-center px-2 py-2 text-sm font-black text-sky-700 transition hover:text-sky-900 sm:text-base">
+              了解泰国投资服务 →
             </Link>
           </div>
 

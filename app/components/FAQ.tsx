@@ -31,6 +31,11 @@ const faqs = [
       "可以协助梳理面积、位置、产业配套、物流、预算等条件，并连接相应本地资源。最终租赁、购买、许可与合同事项需要企业结合专业意见自行确认。",
   },
   {
+    question: "可以提供客户验厂或工厂审核前的咨询支持吗？",
+    answer:
+      "可以。BaiheAI 可根据企业和客户的验厂场景，协助梳理验厂前准备清单、资料与现场流程、客户沟通、翻译陪同、问题记录及后续改进事项。我们提供的是咨询与协作支持，不替代客户、认证机构或第三方审核机构的正式审核结论。",
+  },
+  {
     question: "不会泰语，也没有泰国团队怎么办？",
     answer:
       "可根据项目需要提供泰语 / 英语商务支持、文件沟通、商务陪同及本地资源协作，减少企业前期多方沟通的成本。",
@@ -122,7 +127,7 @@ export default function FAQ() {
               <Link href="/faq" className="rounded-xl border border-white/15 bg-white/[0.05] px-6 py-3.5 text-center font-bold text-white">
                 查看完整 FAQ
               </Link>
-              <Link href="/consultation" className="rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3.5 text-center font-black text-white">
+              <Link href="/consultation?from=home-faq" className="rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-6 py-3.5 text-center font-black text-white">
                 1 分钟需求诊断
               </Link>
             </div>

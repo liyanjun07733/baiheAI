@@ -32,6 +32,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/blog/ai-lead-generation-thailand`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${base}/blog/thailand-factory-due-diligence`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${base}/blog/china-company-thailand-market-entry`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${base}/blog/thailand-company-registration-guide`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${base}/blog/thailand-non-b-work-permit-guide`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${base}/cases`, lastModified: now, changeFrequency: "monthly", priority: 0.75 },
     { url: `${base}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },

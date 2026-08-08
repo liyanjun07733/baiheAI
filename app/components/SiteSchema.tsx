@@ -5,7 +5,7 @@ export default function SiteSchema() {
     name: "BaiheAI",
     url: "https://www.baihediy.com",
     description:
-      "面向中国企业提供泰国投资咨询、BOI方向与申请支持、公司与项目落地、本地资源对接及AI数字化服务。",
+      "面向中国企业提供泰国投资咨询、BOI方向与申请支持、公司与项目落地、客户验厂咨询、本地资源对接及AI数字化服务。",
     areaServed: [
       { "@type": "Country", name: "Thailand" },
       { "@type": "Place", name: "Southeast Asia" },
@@ -15,6 +15,8 @@ export default function SiteSchema() {
       "泰国BOI",
       "泰国公司注册",
       "泰国建厂",
+      "客户验厂咨询",
+      "工厂审核前准备与现场支持",
       "泰国工作许可",
       "中国企业出海泰国",
       "企业数字化",

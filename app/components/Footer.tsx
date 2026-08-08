@@ -7,7 +7,7 @@ const serviceLinks = [
   { label: "泰国投资咨询", href: "/thailand-investment" },
   { label: "企业服务中心", href: "/services" },
   { label: "AI 官网与获客", href: "/services" },
-  { label: "免费项目诊断", href: "/free-plan" },
+  { label: "1 分钟项目诊断", href: "/consultation?from=footer" },
 ];
 
 const companyLinks = [

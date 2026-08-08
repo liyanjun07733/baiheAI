@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import emailjs from "@emailjs/browser";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Need = {
   id: string;
@@ -41,6 +41,12 @@ const needs: Need[] = [
     icon: "🛂",
     title: "签证 / 工作许可",
     desc: "需要商务签证、工作签证、工作许可等方向支持。",
+  },
+  {
+    id: "factory-audit",
+    icon: "✅",
+    title: "客户验厂 / 工厂审核",
+    desc: "客户来厂审核、供应商验厂、现场考察、资料准备、陪同沟通与整改事项。",
   },
   {
     id: "language",
@@ -93,10 +99,38 @@ export default function ConsultationWizard() {
   const [copied, setCopied] = useState(false);
   const [contactName, setContactName] = useState("");
   const [company, setCompany] = useState("");
+  const [contactChannel, setContactChannel] = useState("微信");
   const [contactMethod, setContactMethod] = useState("");
   const [contactEmail, setContactEmail] = useState("");
+  const [consent, setConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [entrySource, setEntrySource] = useState("直接访问");
+
+  useEffect(() => {
+    const source = new URLSearchParams(window.location.search).get("from");
+
+    const sourceLabels: Record<string, string> = {
+      nav: "PC 顶部导航",
+      "mobile-menu": "手机导航菜单",
+      hero: "首页首屏",
+      "home-cta": "首页底部 CTA",
+      footer: "网站 Footer",
+      "mobile-bar": "手机底部固定栏",
+      "mobile-contact-sheet": "手机联系顾问面板",
+      cases: "案例中心",
+      "home-faq": "首页 FAQ",
+      process: "首页服务流程",
+      "home-share": "首页分享入口",
+      services: "服务中心",
+      packages: "服务方案页",
+      "faq-page": "FAQ 页面",
+      trust: "信任与边界页面",
+      start: "开始咨询页",
+    };
+
+    setEntrySource(source ? sourceLabels[source] || source : "直接访问");
+  }, []);
 
   const selectedTitles = useMemo(
     () =>
@@ -109,16 +143,18 @@ export default function ConsultationWizard() {
   const summary = useMemo(() => {
     return [
       "【BaiheAI 项目需求摘要】",
+      `来源入口：${entrySource}`,
       `需求：${selectedTitles.length ? selectedTitles.join("、") : "未选择"}`,
       `项目阶段：${stage || "未选择"}`,
       `计划时间：${timeframe || "未选择"}`,
       `补充说明：${note.trim() || "暂无"}`,
       `联系人：${contactName.trim() || "未填写"}`,
       `公司：${company.trim() || "未填写"}`,
-      `首选联系方式：${contactMethod.trim() || "未填写"}`,
+      `首选联系渠道：${contactChannel}`,
+      `联系方式：${contactMethod.trim() || "未填写"}`,
       `邮箱：${contactEmail.trim() || "未填写"}`,
     ].join("\n");
-  }, [selectedTitles, stage, timeframe, note, contactName, company, contactMethod, contactEmail]);
+  }, [selectedTitles, stage, timeframe, note, contactName, company, contactChannel, contactMethod, contactEmail, entrySource]);
 
   const whatsappHref = useMemo(
     () => `https://wa.me/8613003137828?text=${encodeURIComponent(summary)}`,
@@ -184,7 +220,12 @@ export default function ConsultationWizard() {
     }
 
     if (!contactMethod.trim()) {
-      alert("请至少留下一个可以联系到您的方式，例如微信、手机、WhatsApp 或 LINE。");
+      alert("请填写您选择的联系方式。");
+      return;
+    }
+
+    if (!consent) {
+      alert("请先勾选同意我们仅将这些信息用于本次项目沟通。");
       return;
     }
 
@@ -421,21 +462,57 @@ export default function ConsultationWizard() {
                 />
               </label>
 
-              <label className="block sm:col-span-2">
+              <div className="sm:col-span-2">
                 <span className="text-sm font-black text-slate-800">
-                  微信 / 手机 / WhatsApp / LINE <span className="text-rose-500">*</span>
+                  首选联系方式 <span className="text-rose-500">*</span>
                 </span>
+
+                <div className="mt-2 grid grid-cols-4 gap-2">
+                  {["微信", "手机", "WhatsApp", "LINE"].map((item) => {
+                    const active = contactChannel === item;
+
+                    return (
+                      <button
+                        key={item}
+                        type="button"
+                        aria-pressed={active}
+                        onClick={() => {
+                          setContactChannel(item);
+                          setContactMethod("");
+                        }}
+                        className={`min-h-11 rounded-xl border-2 px-2 py-2 text-xs font-black transition active:scale-[0.98] sm:text-sm ${
+                          active
+                            ? "border-sky-500 bg-sky-100 text-sky-900 ring-2 ring-sky-200"
+                            : "border-slate-200 bg-white text-slate-600"
+                        }`}
+                      >
+                        {active ? "✓ " : ""}
+                        {item}
+                      </button>
+                    );
+                  })}
+                </div>
+
                 <input
                   value={contactMethod}
                   onChange={(event) => setContactMethod(event.target.value)}
-                  placeholder="请填写至少一种能联系到您的方式"
-                  autoComplete="tel"
-                  className="mt-2 min-h-12 w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-base text-slate-950 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
+                  placeholder={
+                    contactChannel === "微信"
+                      ? "请输入微信号"
+                      : contactChannel === "手机"
+                        ? "请输入手机号码"
+                        : contactChannel === "WhatsApp"
+                          ? "请输入 WhatsApp 号码"
+                          : "请输入 LINE ID 或号码"
+                  }
+                  autoComplete={contactChannel === "手机" || contactChannel === "WhatsApp" ? "tel" : "off"}
+                  className="mt-3 min-h-12 w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-base text-slate-950 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
                 />
+
                 <p className="mt-2 text-xs leading-5 text-slate-500">
-                  这是最重要的一项。没有联系方式，我们无法知道应该联系谁。
+                  只需选择一种最方便的联系方式即可，不必全部填写。
                 </p>
-              </label>
+              </div>
 
               <label className="block sm:col-span-2">
                 <span className="text-sm font-black text-slate-800">
@@ -454,6 +531,18 @@ export default function ConsultationWizard() {
 
             {!submitted ? (
               <>
+                <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <input
+                    type="checkbox"
+                    checked={consent}
+                    onChange={(event) => setConsent(event.target.checked)}
+                    className="mt-0.5 h-5 w-5 shrink-0 accent-sky-600"
+                  />
+                  <span className="text-xs leading-5 text-slate-600 sm:text-sm">
+                    我同意 BaiheAI 仅将以上信息用于本次项目咨询与联系，不用于无关营销。
+                  </span>
+                </label>
+
                 <button
                   type="button"
                   onClick={submitDiagnosis}
@@ -462,9 +551,11 @@ export default function ConsultationWizard() {
                 >
                   {submitting ? "正在提交..." : "提交诊断并让顾问联系我"}
                 </button>
-                <p className="mt-3 text-center text-xs leading-5 text-slate-500">
-                  提交后，项目摘要和您填写的联系方式会一起发送给 BaiheAI。
-                </p>
+                <div className="mt-3 grid grid-cols-3 gap-2 text-center text-[11px] font-bold text-slate-500 sm:text-xs">
+                  <span className="rounded-xl bg-slate-50 px-2 py-2">✓ 不公开资料</span>
+                  <span className="rounded-xl bg-slate-50 px-2 py-2">✓ 不要求先付款</span>
+                  <span className="rounded-xl bg-slate-50 px-2 py-2">✓ 顾问人工查看</span>
+                </div>
               </>
             ) : (
               <div className="mt-6 rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-5 text-center">
@@ -549,8 +640,10 @@ export default function ConsultationWizard() {
                 setNote("");
                 setContactName("");
                 setCompany("");
+                setContactChannel("微信");
                 setContactMethod("");
                 setContactEmail("");
+                setConsent(false);
                 setSubmitted(false);
               }}
               className="rounded-xl border border-white/10 px-5 py-3 text-sm font-bold text-slate-300"

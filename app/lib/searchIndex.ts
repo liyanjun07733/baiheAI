@@ -36,6 +36,20 @@ export const searchIndex: SearchEntry[] = [
     keywords: ["政策", "泰国政策", "BOI政策", "BOI申请", "优惠政策", "公司注册", "公司设立", "签证", "商务签证", "工作签证", "工作许可", "work permit", "厂房", "实操", "流程", "材料"],
   },
   {
+    title: "泰国公司注册流程与材料清单",
+    href: "/blog/thailand-company-registration-guide",
+    category: "泰国公司",
+    description: "泰国公司注册条件、股东董事材料、标准注册流程、税务社保与银行开户前期整理。",
+    keywords: ["泰国公司注册", "泰国注册公司", "DBD", "股东", "董事", "注册资本", "注册地址", "VAT", "公司材料"],
+  },
+  {
+    title: "泰国 Non-B 工作签证与 Work Permit 办理指南",
+    href: "/blog/thailand-non-b-work-permit-guide",
+    category: "签证与工作许可",
+    description: "Non-B、Work Permit、WP3、雇主资质与员工材料的前期办理路径整理。",
+    keywords: ["Non-B", "Work Permit", "工作签证", "工作许可", "WP3", "e-Visa", "泰国劳工部", "外籍员工"],
+  },
+  {
     title: "免费资料下载",
     href: "/resources",
     category: "资料",

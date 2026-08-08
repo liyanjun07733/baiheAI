@@ -75,7 +75,7 @@ export default function Process() {
               <h3 className="text-2xl font-black text-white">先判断，再投入。</h3>
               <p className="mt-2 max-w-2xl leading-7 text-gray-400">如果项目还在早期，先做需求诊断，不必一次购买所有服务。</p>
             </div>
-            <Link href="/consultation" className="w-full shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-7 py-4 text-center font-black text-white sm:w-auto">
+            <Link href="/consultation?from=process" className="w-full shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-7 py-4 text-center font-black text-white sm:w-auto">
               开始项目诊断 →
             </Link>
           </div>

@@ -69,6 +69,23 @@ export default function ResourcesPage() {
           </div>
         </section>
 
+        <section className="mx-auto max-w-[1500px] px-4 pb-8 sm:px-6 lg:px-8">
+          <div className="grid gap-4 md:grid-cols-2">
+            <Link href="/blog/thailand-company-registration-guide" className="rounded-3xl border border-sky-200 bg-white p-6 text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-sky-300 hover:shadow-lg">
+              <p className="text-xs font-black uppercase tracking-[.22em] text-sky-600">NEW GUIDE</p>
+              <h2 className="mt-3 text-2xl font-black">泰国公司注册流程与材料清单</h2>
+              <p className="mt-3 text-sm leading-7 text-slate-600">网页直接阅读，也可在下方资料列表下载 PDF 保存或转发。</p>
+              <span className="mt-5 inline-flex font-black text-sky-700">阅读网页 →</span>
+            </Link>
+            <Link href="/blog/thailand-non-b-work-permit-guide" className="rounded-3xl border border-emerald-200 bg-white p-6 text-slate-900 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-lg">
+              <p className="text-xs font-black uppercase tracking-[.22em] text-emerald-600">NEW GUIDE</p>
+              <h2 className="mt-3 text-2xl font-black">Non-B 与 Work Permit 办理指南</h2>
+              <p className="mt-3 text-sm leading-7 text-slate-600">整理雇主资质、员工材料、WP3、Non-B 与入境后的工作许可路径。</p>
+              <span className="mt-5 inline-flex font-black text-emerald-700">阅读网页 →</span>
+            </Link>
+          </div>
+        </section>
+
         <section className="mx-auto max-w-[1500px] px-4 pb-10 sm:px-6 lg:px-8">
           <ResourceBrowser files={files} />
         </section>

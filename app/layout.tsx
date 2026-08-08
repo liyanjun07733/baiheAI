@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import MobileLeadBar from "./components/MobileLeadBar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -83,6 +84,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} bg-black text-white antialiased`}
       >
         {children}
+        <MobileLeadBar />
       </body>
     </html>
   );

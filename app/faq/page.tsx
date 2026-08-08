@@ -83,7 +83,7 @@ export default function FAQPage() {
               <h2 className="text-2xl font-black">您的情况不在 FAQ 里？</h2>
               <p className="mt-2 text-gray-400">用 1 分钟把项目情况整理出来，再进入具体沟通。</p>
             </div>
-            <Link href="/consultation" className="mt-5 block shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-7 py-4 text-center font-black text-white sm:mt-0">
+            <Link href="/consultation?from=faq-page" className="mt-5 block shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-7 py-4 text-center font-black text-white sm:mt-0">
               开始需求诊断 →
             </Link>
           </div>

@@ -25,7 +25,7 @@ const packages = [
       "优先事项与下一步建议",
     ],
     cta: "先做 1 分钟诊断",
-    href: "/consultation",
+    href: "/consultation?from=packages",
   },
   {
     tag: "LANDING",
@@ -92,7 +92,7 @@ export default function PackagesPage() {
 
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
               <Link
-                href="/consultation"
+                href="/consultation?from=packages"
                 className="rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-7 py-4 font-black text-white"
               >
                 1 分钟项目需求诊断
@@ -201,7 +201,7 @@ export default function PackagesPage() {
               </p>
             </div>
             <Link
-              href="/consultation"
+              href="/consultation?from=packages"
               className="mt-5 block shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-7 py-4 text-center font-black text-white sm:mt-0"
             >
               开始项目诊断 →

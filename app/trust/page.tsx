@@ -87,7 +87,7 @@ export default function TrustPage() {
               <h2 className="text-2xl font-black">准备讨论您的实际项目？</h2>
               <p className="mt-2 text-gray-400">先把需求、阶段和时间整理清楚，我们再进入具体沟通。</p>
             </div>
-            <Link href="/consultation" className="mt-5 block shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-7 py-4 text-center font-black text-white sm:mt-0">
+            <Link href="/consultation?from=trust" className="mt-5 block shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-7 py-4 text-center font-black text-white sm:mt-0">
               1 分钟需求诊断 →
             </Link>
           </div>

@@ -3,6 +3,8 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 const posts=[
+  ['Company','泰国公司注册流程与材料清单','公司注册条件、股东董事资料、注册流程及后续税务与社保前期梳理。','/blog/thailand-company-registration-guide'],
+  ['Work Permit','泰国 Non-B 与 Work Permit 办理指南','雇主资质、员工材料、WP3、Non-B 申请与入境后的工作许可流程。','/blog/thailand-non-b-work-permit-guide'],
   ['Thailand','中国企业进入泰国前，先把这 6 个问题想清楚','从行业、客户、投资方式、场地、人员到本地资源，建立第一轮判断框架。','/policies'],
   ['BOI','BOI 项目应该怎样做前期判断？','先准备哪些企业与项目资料，哪些问题适合在正式申请前确认。','/policies'],
   ['Factory','在泰国找厂房前需要准备什么？','区域、面积、用电、物流、人员和预算，是进入场地筛选前最基本的信息。','/policies'],
