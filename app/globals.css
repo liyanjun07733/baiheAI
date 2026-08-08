@@ -117,7 +117,26 @@ body::after {
 .text-cyan-200, .text-cyan-300, .text-cyan-400 { color: #0369a1 !important; }
 .text-blue-300, .text-blue-400 { color: #2563eb !important; }
 .text-green-300, .text-green-400 { color: #047857 !important; }
-.text-amber-100\/80, .text-amber-200 { color: #92400e !important; }
+/* V7.9.2 readability fix: remove pale yellow/amber text on light backgrounds. */
+.text-amber-100,
+.text-amber-100\/70,
+.text-amber-100\/80,
+.text-amber-100\/85,
+.text-amber-200,
+.text-amber-200\/80,
+.text-amber-300,
+.text-yellow-100,
+.text-yellow-200,
+.text-yellow-300,
+.text-yellow-400 {
+  color: #334155 !important;
+}
+
+.text-amber-900,
+.text-yellow-800,
+.text-yellow-900 {
+  color: #0f172a !important;
+}
 
 [class*="border-white/"],
 .border-gray-700,
