@@ -2,6 +2,7 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import BusinessBridge from "./components/BusinessBridge";
 import ThailandFocus from "./components/ThailandFocus";
+import WorkScenarios from "./components/WorkScenarios";
 import ConsultingApproach from "./components/ConsultingApproach";
 import TeamPreview from "./components/TeamPreview";
 import Cases from "./components/Cases";
@@ -38,6 +39,7 @@ export default function Home() {
         <Hero />
         <BusinessBridge />
         <ThailandFocus />
+        <WorkScenarios />
         <ConsultingApproach />
         <TeamPreview />
         <Cases />
