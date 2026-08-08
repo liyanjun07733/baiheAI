@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import emailjs from "@emailjs/browser";
 import { useMemo, useState } from "react";
 
 type Need = {
@@ -90,6 +91,12 @@ export default function ConsultationWizard() {
   const [timeframe, setTimeframe] = useState("");
   const [note, setNote] = useState("");
   const [copied, setCopied] = useState(false);
+  const [contactName, setContactName] = useState("");
+  const [company, setCompany] = useState("");
+  const [contactMethod, setContactMethod] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const selectedTitles = useMemo(
     () =>
@@ -106,8 +113,12 @@ export default function ConsultationWizard() {
       `项目阶段：${stage || "未选择"}`,
       `计划时间：${timeframe || "未选择"}`,
       `补充说明：${note.trim() || "暂无"}`,
+      `联系人：${contactName.trim() || "未填写"}`,
+      `公司：${company.trim() || "未填写"}`,
+      `首选联系方式：${contactMethod.trim() || "未填写"}`,
+      `邮箱：${contactEmail.trim() || "未填写"}`,
     ].join("\n");
-  }, [selectedTitles, stage, timeframe, note]);
+  }, [selectedTitles, stage, timeframe, note, contactName, company, contactMethod, contactEmail]);
 
   const whatsappHref = useMemo(
     () => `https://wa.me/8613003137828?text=${encodeURIComponent(summary)}`,
@@ -164,6 +175,43 @@ export default function ConsultationWizard() {
 
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1800);
+  };
+
+  const submitDiagnosis = async () => {
+    if (!contactName.trim()) {
+      alert("请填写您的姓名或称呼。");
+      return;
+    }
+
+    if (!contactMethod.trim()) {
+      alert("请至少留下一个可以联系到您的方式，例如微信、手机、WhatsApp 或 LINE。");
+      return;
+    }
+
+    if (submitting) return;
+
+    setSubmitting(true);
+
+    try {
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        {
+          company: company.trim() || "未填写",
+          name: contactName.trim(),
+          email: contactEmail.trim() || "未提供邮箱",
+          message: summary,
+        },
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+      );
+
+      setSubmitted(true);
+    } catch (error) {
+      console.error(error);
+      alert("提交失败，请稍后再试。您也可以使用下方 WhatsApp、LINE 或邮件直接联系我们。");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -330,73 +378,145 @@ export default function ConsultationWizard() {
 
         {step === 4 && (
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.28em] text-cyan-400">
-              RESULT
+            <p className="text-xs font-black uppercase tracking-[0.28em] text-sky-600">
+              STEP 04 · CONTACT
             </p>
-            <h2 className="mt-3 text-2xl font-black sm:text-3xl">
-              您的项目需求已经整理好了
+            <h2 className="mt-3 text-2xl font-black text-slate-950 sm:text-3xl">
+              留下联系方式，我们才能找到您
             </h2>
-            <p className="mt-3 leading-7 text-slate-400">
-              下一步不用重复解释。复制下面的摘要，或进入详细需求表继续提交即可。
+            <p className="mt-3 leading-7 text-slate-600">
+              前面的诊断只是帮您整理需求。请至少留下姓名和一种联系方式，提交后 BaiheAI 才能根据您的项目情况与您联系。
             </p>
 
-            <div className="mt-7 rounded-2xl border border-cyan-400/20 bg-cyan-400/[0.06] p-5">
-              <pre className="whitespace-pre-wrap break-words font-sans text-sm leading-7 text-slate-200">
+            <div className="mt-6 rounded-2xl border border-sky-200 bg-gradient-to-br from-sky-50 to-emerald-50 p-4 sm:p-5">
+              <pre className="whitespace-pre-wrap break-words font-sans text-sm leading-7 text-slate-700">
                 {summary}
               </pre>
             </div>
+
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <label className="block">
+                <span className="text-sm font-black text-slate-800">
+                  姓名 / 称呼 <span className="text-rose-500">*</span>
+                </span>
+                <input
+                  value={contactName}
+                  onChange={(event) => setContactName(event.target.value)}
+                  placeholder="例如：李先生"
+                  autoComplete="name"
+                  className="mt-2 min-h-12 w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-base text-slate-950 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-sm font-black text-slate-800">
+                  公司名称（可不填）
+                </span>
+                <input
+                  value={company}
+                  onChange={(event) => setCompany(event.target.value)}
+                  placeholder="例如：XX 制造有限公司"
+                  autoComplete="organization"
+                  className="mt-2 min-h-12 w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-base text-slate-950 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+                />
+              </label>
+
+              <label className="block sm:col-span-2">
+                <span className="text-sm font-black text-slate-800">
+                  微信 / 手机 / WhatsApp / LINE <span className="text-rose-500">*</span>
+                </span>
+                <input
+                  value={contactMethod}
+                  onChange={(event) => setContactMethod(event.target.value)}
+                  placeholder="请填写至少一种能联系到您的方式"
+                  autoComplete="tel"
+                  className="mt-2 min-h-12 w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-base text-slate-950 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200"
+                />
+                <p className="mt-2 text-xs leading-5 text-slate-500">
+                  这是最重要的一项。没有联系方式，我们无法知道应该联系谁。
+                </p>
+              </label>
+
+              <label className="block sm:col-span-2">
+                <span className="text-sm font-black text-slate-800">
+                  邮箱（可不填）
+                </span>
+                <input
+                  type="email"
+                  value={contactEmail}
+                  onChange={(event) => setContactEmail(event.target.value)}
+                  placeholder="name@example.com"
+                  autoComplete="email"
+                  className="mt-2 min-h-12 w-full rounded-xl border-2 border-slate-200 bg-white px-4 py-3 text-base text-slate-950 outline-none transition focus:border-sky-500 focus:ring-2 focus:ring-sky-200"
+                />
+              </label>
+            </div>
+
+            {!submitted ? (
+              <>
+                <button
+                  type="button"
+                  onClick={submitDiagnosis}
+                  disabled={submitting}
+                  className="mt-6 min-h-14 w-full rounded-xl bg-gradient-to-r from-sky-600 to-emerald-500 px-6 py-4 text-base font-black text-white shadow-lg shadow-sky-500/15 transition active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {submitting ? "正在提交..." : "提交诊断并让顾问联系我"}
+                </button>
+                <p className="mt-3 text-center text-xs leading-5 text-slate-500">
+                  提交后，项目摘要和您填写的联系方式会一起发送给 BaiheAI。
+                </p>
+              </>
+            ) : (
+              <div className="mt-6 rounded-2xl border-2 border-emerald-300 bg-emerald-50 p-5 text-center">
+                <div className="text-3xl">✓</div>
+                <h3 className="mt-2 text-xl font-black text-emerald-900">已成功提交</h3>
+                <p className="mt-2 text-sm leading-6 text-emerald-800">
+                  我们已经收到您的项目需求和联系方式，会根据您填写的信息与您联系。
+                </p>
+              </div>
+            )}
 
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
               <button
                 type="button"
                 onClick={copySummary}
-                className="rounded-xl border border-cyan-400/25 bg-cyan-400/[0.08] px-5 py-3.5 font-black text-cyan-200 transition hover:bg-cyan-400/[0.13]"
+                className="rounded-xl border border-sky-200 bg-sky-50 px-5 py-3.5 font-black text-sky-700 transition hover:bg-sky-100"
               >
                 {copied ? "已复制 ✓" : "复制需求摘要"}
               </button>
 
               <Link
                 href="/free-plan"
-                className="rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-3.5 text-center font-black text-white"
+                className="rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-center font-black text-slate-800 transition hover:border-sky-300 hover:text-sky-700"
               >
-                提交详细项目需求
+                填写更详细项目资料
               </Link>
             </div>
 
-            <div className="mt-7 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-6 grid gap-3 sm:grid-cols-3">
               <a
                 href={whatsappHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-xl border border-green-500/20 bg-green-500/[0.07] px-4 py-3 text-center text-sm font-bold text-green-300"
+                className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-center text-sm font-bold text-emerald-700 transition hover:bg-emerald-100"
               >
-                带摘要打开 WhatsApp
+                WhatsApp 联系
               </a>
               <a
                 href="https://line.me/ti/p/~liyanjun0773"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-xl border border-green-500/20 bg-green-500/[0.07] px-4 py-3 text-center text-sm font-bold text-green-300"
+                className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-center text-sm font-bold text-emerald-700 transition hover:bg-emerald-100"
               >
                 LINE 联系
               </a>
               <a
                 href={emailHref}
-                className="rounded-xl border border-cyan-400/20 bg-cyan-400/[0.06] px-4 py-3 text-center text-sm font-bold text-cyan-200"
+                className="rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-center text-sm font-bold text-sky-700 transition hover:bg-sky-100"
               >
-                邮件发送摘要
+                邮件联系
               </a>
-              <Link
-                href="/packages"
-                className="rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-center text-sm font-bold text-slate-200"
-              >
-                查看合作方式
-              </Link>
             </div>
-
-            <p className="mt-4 text-xs leading-6 text-slate-500">
-              WhatsApp 与邮件按钮会自动带上您刚刚生成的项目需求摘要，发送前仍可自行修改内容。
-            </p>
           </div>
         )}
 
@@ -427,6 +547,11 @@ export default function ConsultationWizard() {
                 setStage("");
                 setTimeframe("");
                 setNote("");
+                setContactName("");
+                setCompany("");
+                setContactMethod("");
+                setContactEmail("");
+                setSubmitted(false);
               }}
               className="rounded-xl border border-white/10 px-5 py-3 text-sm font-bold text-slate-300"
             >

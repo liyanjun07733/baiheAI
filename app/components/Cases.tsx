@@ -168,10 +168,10 @@ export default function Cases() {
 
                 <div className="relative mt-8 border-t border-white/10 pt-5">
                   <a
-                    href="#contact"
+                    href="/consultation"
                     className="inline-flex items-center gap-2 font-semibold text-blue-400 transition-all duration-300 group-hover:translate-x-1 group-hover:text-cyan-300"
                   >
-                    获取类似解决方案
+                    免费获取解决方案
                     <span>→</span>
                   </a>
                 </div>
@@ -194,10 +194,10 @@ export default function Cases() {
             </div>
 
             <a
-              href="#contact"
+              href="/consultation"
               className="w-full shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-7 py-4 text-center font-bold text-white transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-cyan-500/20 sm:w-auto"
             >
-              免费获取案例方案
+              免费获取方案
             </a>
           </div>
         </FadeUp>

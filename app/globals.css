@@ -185,3 +185,32 @@ main > section:nth-of-type(even) { background-color: rgba(241, 248, 253, .55); }
 
 .modal-overlay { background: rgba(15, 23, 42, .42) !important; }
 .modal-overlay > div { background: #fff !important; }
+
+
+/* V7.6.3 Contact link interaction */
+@media (hover: hover) and (pointer: fine) {
+  a[href^="tel:"],
+  a[href^="mailto:"] {
+    transition: color 180ms ease, text-decoration-color 180ms ease, opacity 180ms ease;
+  }
+
+  a[href^="tel:"]:hover,
+  a[href^="mailto:"]:hover {
+    color: #0284c7 !important;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  a[href*="wa.me"],
+  a[href*="line.me"] {
+    transition: color 180ms ease, border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  a[href*="wa.me"]:hover,
+  a[href*="line.me"]:hover {
+    color: #047857 !important;
+    border-color: rgba(16, 185, 129, 0.45) !important;
+    background-color: rgba(16, 185, 129, 0.08) !important;
+    box-shadow: 0 8px 22px rgba(16, 185, 129, 0.12);
+  }
+}
