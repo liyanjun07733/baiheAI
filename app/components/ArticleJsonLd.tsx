@@ -4,34 +4,46 @@ type ArticleJsonLdProps = {
   url: string;
   datePublished?: string;
   dateModified?: string;
+  image?: string | string[];
 };
 
 export default function ArticleJsonLd({
   title,
   description,
   url,
-  datePublished = "2026-08-07",
-  dateModified = "2026-08-07",
+  datePublished,
+  dateModified,
+  image,
 }: ArticleJsonLdProps) {
   const article = {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     headline: title,
     description,
-    mainEntityOfPage: url,
-    datePublished,
-    dateModified,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": url,
+    },
     inLanguage: "zh-CN",
     author: {
       "@type": "Organization",
+      "@id": "https://www.baihediy.com/#organization",
       name: "BaiheAI",
       url: "https://www.baihediy.com",
     },
     publisher: {
       "@type": "Organization",
+      "@id": "https://www.baihediy.com/#organization",
       name: "BaiheAI",
       url: "https://www.baihediy.com",
     },
+    ...(datePublished ? { datePublished } : {}),
+    ...(dateModified ? { dateModified } : {}),
+    ...(image
+      ? {
+          image: Array.isArray(image) ? image : [image],
+        }
+      : {}),
   };
 
   const breadcrumb = {

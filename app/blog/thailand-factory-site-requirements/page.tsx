@@ -25,6 +25,8 @@ export default function Page() {
         title="泰国厂房选址：找厂房前必须确认的 10 个关键参数"
         description="面积、电力、层高、装卸、消防、用水和物流等关键参数决定厂房是否真正适合项目。"
         url="https://www.baihediy.com/blog/thailand-factory-site-requirements"
+        datePublished="2026-08-07"
+        dateModified="2026-08-09"
       />
       <main className="min-h-screen bg-[#f8fcff] px-5 pb-20 pt-32 text-slate-950">
         <SeoArticle
