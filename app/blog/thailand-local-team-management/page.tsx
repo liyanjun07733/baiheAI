@@ -37,6 +37,23 @@ export default function Page() {
             { title: "跨语言沟通", bullets: ["关键SOP和表单优先做中泰双语或中英双语。", "技术名词建立统一词表，减少同一事项多种翻译。"] },
             { title: "进一步可以引入 AI", bullets: ["AI基于企业自己的资料回答新人和员工问题。", "历史问题有记录时，可以快速查到以前如何解决。", "AI回答应有资料来源，找不到依据时应提示人工确认。"] }
           ]}
+          relatedLinks={[
+            {
+              title: "中国员工去泰国工作，公司端要提前准备什么？",
+              desc: "继续查看雇主公司、岗位、材料、工作地点和人员到岗时间等准备事项。",
+              href: "/blog/thailand-work-permit-employer-requirements",
+            },
+            {
+              title: "中国企业落地泰国，项目时间表应该怎么排？",
+              desc: "把人员、公司、场地、设备和投产准备放到同一张时间表，减少团队到岗与项目进度脱节。",
+              href: "/blog/thailand-investment-timeline",
+            },
+            {
+              title: "泰国注册公司前，预算里不要只算注册费",
+              desc: "继续了解公司设立后的人员、财税、行政和持续运营准备，让团队管理与公司运营条件保持一致。",
+              href: "/blog/thailand-company-registration-cost-items",
+            },
+          ]}
           note="本文用于企业前期商业判断与项目梳理，不替代法律、税务、工程、认证或政府主管机构意见。涉及正式审批、认证、合同与合规事项时，应根据具体项目核对最新官方要求并取得相应专业意见。"
         />
       </main>
