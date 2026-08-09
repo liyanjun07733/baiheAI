@@ -28,6 +28,8 @@ export default function Page() {
         title="泰国验厂报告应该包含什么？现场验厂报告内容清单"
         description="无法亲自赴泰时，现场照片、视频、生产能力、质量、仓储和异常记录应形成可追溯报告。"
         url="https://www.baihediy.com/blog/thailand-factory-audit-report-content"
+        datePublished="2026-08-07"
+        dateModified="2026-08-09"
       />
 
       <main className="min-h-screen bg-[#f8fcff] px-5 pb-20 pt-32 text-slate-950">

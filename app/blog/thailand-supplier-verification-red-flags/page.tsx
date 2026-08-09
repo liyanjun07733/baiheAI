@@ -25,6 +25,8 @@ export default function Page() {
         title="找泰国供应商时，现场最值得警惕的 8 类信号"
         description="从厂房、设备、订单、质量、仓储和沟通一致性识别供应商现场风险。"
         url="https://www.baihediy.com/blog/thailand-supplier-verification-red-flags"
+        datePublished="2026-08-07"
+        dateModified="2026-08-09"
       />
       <main className="min-h-screen bg-[#f8fcff] px-5 pb-20 pt-32 text-slate-950">
         <SeoArticle

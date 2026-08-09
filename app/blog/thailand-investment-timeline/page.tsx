@@ -25,6 +25,8 @@ export default function Page() {
         title="中国企业落地泰国，项目时间表应该怎么排？"
         description="把公司、政策、场地、设备、人员和投产准备放到同一张时间表，减少互相等待。"
         url="https://www.baihediy.com/blog/thailand-investment-timeline"
+        datePublished="2026-08-07"
+        dateModified="2026-08-09"
       />
       <main className="min-h-screen bg-[#f8fcff] px-5 pb-20 pt-32 text-slate-950">
         <SeoArticle

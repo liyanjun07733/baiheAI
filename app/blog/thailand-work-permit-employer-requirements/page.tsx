@@ -25,6 +25,8 @@ export default function Page() {
         title="中国员工去泰国工作，公司端要提前准备什么？"
         description="外籍员工办理工作相关手续前，雇主公司、岗位、材料和实际工作安排都需要同步准备。"
         url="https://www.baihediy.com/blog/thailand-work-permit-employer-requirements"
+        datePublished="2026-08-07"
+        dateModified="2026-08-09"
       />
       <main className="min-h-screen bg-[#f8fcff] px-5 pb-20 pt-32 text-slate-950">
         <SeoArticle

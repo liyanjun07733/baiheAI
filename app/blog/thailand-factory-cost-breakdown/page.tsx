@@ -25,6 +25,8 @@ export default function Page() {
         title="去泰国建厂，前期到底要准备哪些成本？"
         description="从场地、设备、人员、许可、物流和投产准备拆解泰国建厂前期成本。"
         url="https://www.baihediy.com/blog/thailand-factory-cost-breakdown"
+        datePublished="2026-08-07"
+        dateModified="2026-08-09"
       />
       <main className="min-h-screen bg-[#f8fcff] px-5 pb-20 pt-32 text-slate-950">
         <SeoArticle

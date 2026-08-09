@@ -25,6 +25,8 @@ export default function Page() {
         title="泰国厂房考察时，水电气和基础设施怎么检查？"
         description="设备能放进去不等于能生产，电力、排水、消防、网络和装卸能力要在签约前核对。"
         url="https://www.baihediy.com/blog/thailand-factory-utilities-checklist"
+        datePublished="2026-08-07"
+        dateModified="2026-08-09"
       />
       <main className="min-h-screen bg-[#f8fcff] px-5 pb-20 pt-32 text-slate-950">
         <SeoArticle

@@ -25,6 +25,8 @@ export default function Page() {
         title="泰国工厂团队管理：中方团队与本地员工如何高效协作"
         description="用流程、双语资料、任务记录和知识库降低跨语言与人员流动带来的管理损耗。"
         url="https://www.baihediy.com/blog/thailand-local-team-management"
+        datePublished="2026-08-07"
+        dateModified="2026-08-09"
       />
       <main className="min-h-screen bg-[#f8fcff] px-5 pb-20 pt-32 text-slate-950">
         <SeoArticle

@@ -25,6 +25,8 @@ export default function Page() {
         title="泰国注册公司前，预算里不要只算注册费"
         description="公司设立只是开始，办公地址、财税、人员、银行和后续运营成本都应提前纳入预算。"
         url="https://www.baihediy.com/blog/thailand-company-registration-cost-items"
+        datePublished="2026-08-07"
+        dateModified="2026-08-09"
       />
       <main className="min-h-screen bg-[#f8fcff] px-5 pb-20 pt-32 text-slate-950">
         <SeoArticle

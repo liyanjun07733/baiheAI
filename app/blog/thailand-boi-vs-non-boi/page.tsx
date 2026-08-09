@@ -25,6 +25,8 @@ export default function Page() {
         title="泰国 BOI vs 非 BOI：企业投资到底该不该申请 BOI？"
         description="BOI 不是所有项目都必须申请，先根据业务活动、投资内容和项目目标判断是否值得进一步评估。"
         url="https://www.baihediy.com/blog/thailand-boi-vs-non-boi"
+        datePublished="2026-08-07"
+        dateModified="2026-08-09"
       />
       <main className="min-h-screen bg-[#f8fcff] px-5 pb-20 pt-32 text-slate-950">
         <SeoArticle
