@@ -60,7 +60,7 @@ export default function Page() {
           sources={[
             {
               title: "e-WorkPermit — Thailand Department of Employment",
-              href: "https://eworkpermit.doe.go.th/Home",
+              href: "https://eworkpermit.doe.go.th/",
               publisher: "Department of Employment, Ministry of Labour",
             },
             {
