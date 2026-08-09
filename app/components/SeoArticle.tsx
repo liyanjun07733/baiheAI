@@ -6,15 +6,22 @@ type Section = {
   bullets?: string[];
 };
 
+type RelatedLink = {
+  title: string;
+  desc: string;
+  href: string;
+};
+
 type SeoArticleProps = {
   eyebrow: string;
   title: string;
   intro: string;
   sections: Section[];
   note?: string;
+  relatedLinks?: RelatedLink[];
 };
 
-const relatedLinks = [
+const defaultRelatedLinks: RelatedLink[] = [
   {
     title: "泰国投资咨询",
     desc: "先梳理投资、BOI、公司落地与建厂前期问题。",
@@ -38,7 +45,13 @@ export default function SeoArticle({
   intro,
   sections,
   note,
+  relatedLinks,
 }: SeoArticleProps) {
+  const linksToShow =
+    relatedLinks && relatedLinks.length > 0
+      ? relatedLinks
+      : defaultRelatedLinks;
+
   return (
     <article className="mx-auto max-w-5xl px-6 py-12 text-slate-900 md:py-16">
       <nav
@@ -48,15 +61,21 @@ export default function SeoArticle({
         <Link href="/" className="transition hover:text-blue-600">
           首页
         </Link>
+
         <span>/</span>
+
         <Link
           href="/content-center"
           className="transition hover:text-blue-600"
         >
           内容中心
         </Link>
+
         <span>/</span>
-        <span className="max-w-[70vw] truncate text-slate-700">{title}</span>
+
+        <span className="max-w-[70vw] truncate text-slate-700">
+          {title}
+        </span>
       </nav>
 
       <header>
@@ -144,13 +163,15 @@ export default function SeoArticle({
         </h2>
 
         <div className="mt-5 grid gap-4 md:grid-cols-3">
-          {relatedLinks.map((item) => (
+          {linksToShow.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md"
             >
-              <h3 className="font-bold text-slate-950">{item.title}</h3>
+              <h3 className="font-bold text-slate-950">
+                {item.title}
+              </h3>
 
               <p className="mt-2 text-sm leading-6 text-slate-600">
                 {item.desc}
@@ -165,7 +186,9 @@ export default function SeoArticle({
       </section>
 
       <section className="mt-14 rounded-3xl border border-blue-200 bg-blue-50 p-6 md:p-8">
-        <p className="text-sm font-semibold text-blue-600">NEXT STEP</p>
+        <p className="text-sm font-semibold text-blue-600">
+          NEXT STEP
+        </p>
 
         <h2 className="mt-2 text-2xl font-bold text-slate-950">
           准备进入泰国市场？先把关键问题梳理清楚
