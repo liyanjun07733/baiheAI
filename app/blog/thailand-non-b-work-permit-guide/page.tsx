@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 const officialLinks = [
   ["泰国电子签证系统（e-Visa）", "https://www.thaievisa.go.th/", "在线申请各类泰国签证。"],
   ["泰国电子入境卡（TDAC）", "https://tdac.immigration.go.th", "资料注明自2025年5月1日起，外国旅客入境泰国前需提前填写。"],
-  ["e-Work Permit", "https://e-workpermit.doe.go.th/", "泰国劳工部工作许可线上系统。"],
+  ["e-Work Permit", "https://eworkpermit.doe.go.th/", "泰国劳工部工作许可线上系统。"],
   ["泰国劳工部", "https://www.mol.go.th/", "工作签证、雇佣法规及外籍员工管理政策信息。"],
 ];
 
