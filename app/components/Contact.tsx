@@ -19,15 +19,69 @@ export default function Contact() {
 
     try {
 
-      await emailjs.sendForm(
+      const formData = new FormData(form.current);
+
+      const company = String(formData.get("company") || "").trim();
+      const name = String(formData.get("name") || "").trim();
+      const email = String(formData.get("email") || "").trim();
+      const message = String(formData.get("message") || "").trim();
+
+      const emailTask = emailjs.sendForm(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
         process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
         form.current,
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
       );
 
-      alert("发送成功，我们会在24小时内联系您！");
-      form.current.reset();
+      const databaseTask = fetch("/api/miniapp-lead", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          company,
+          contact: email,
+          need: message,
+          stage: null,
+          timeline: null,
+          budget: null,
+          blocker: null,
+          resultTitle: null,
+          resultAdvice: null,
+        }),
+      }).then(async (res) => {
+        const data = await res.json().catch(() => null);
+
+        if (!res.ok || !data?.ok) {
+          throw new Error(data?.message || "保存客户资料失败");
+        }
+
+        return data;
+      });
+
+      const [emailResult, databaseResult] = await Promise.allSettled([
+        emailTask,
+        databaseTask,
+      ]);
+
+      if (emailResult.status === "rejected") {
+        console.error("EmailJS submit failed:", emailResult.reason);
+      }
+
+      if (databaseResult.status === "rejected") {
+        console.error("Lead database submit failed:", databaseResult.reason);
+      }
+
+      if (
+        emailResult.status === "fulfilled" ||
+        databaseResult.status === "fulfilled"
+      ) {
+        alert("发送成功，我们会在24小时内联系您！");
+        form.current.reset();
+      } else {
+        alert("发送失败，请稍后重试。");
+      }
 
     } catch (err) {
 

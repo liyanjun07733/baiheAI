@@ -76,14 +76,23 @@ export default async function AdminLeadsPage() {
             </p>
           </div>
 
-          <form action="/api/admin/logout" method="POST">
-            <button
-              type="submit"
-              className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:bg-white/10"
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="/api/admin/leads/export"
+              className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
             >
-              退出登录
-            </button>
-          </form>
+              导出 Excel
+            </a>
+
+            <form action="/api/admin/logout" method="POST">
+              <button
+                type="submit"
+                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:bg-white/10"
+              >
+                退出登录
+              </button>
+            </form>
+          </div>
         </div>
 
         {leads.length === 0 ? (
@@ -127,7 +136,7 @@ export default async function AdminLeadsPage() {
                   <Info label="项目阶段" value={lead.stage} />
                   <Info label="启动时间" value={lead.timeline} />
                   <Info label="投入规模" value={lead.budget} />
-                  <Info label="主要障碍" value={lead.blocker} />
+                  <Info label="补充说明 / 主要障碍" value={lead.blocker} />
                 </div>
 
                 {(lead.result_title || lead.result_advice) && (

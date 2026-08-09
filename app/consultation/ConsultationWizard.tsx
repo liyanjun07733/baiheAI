@@ -242,6 +242,8 @@ export default function ConsultationWizard() {
     setSubmitting(true);
 
     try {
+      // 先保持原来的 EmailJS 提交流程不变。
+      // 只有邮件发送成功后，才额外尝试写入 Neon 客户后台。
       await emailjs.send(
         process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
         process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
@@ -254,8 +256,45 @@ export default function ConsultationWizard() {
         process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
       );
 
+      // Neon 只是附加留资：即使数据库保存失败，也不影响原来的邮件成功流程。
+      try {
+        const response = await fetch("/api/miniapp-lead", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: contactName.trim(),
+            company: company.trim() || null,
+            contact: `${contactChannel}：${contactMethod.trim()}${
+              contactEmail.trim() ? ` / 邮箱：${contactEmail.trim()}` : ""
+            }`,
+            need: selectedTitles.length
+              ? selectedTitles.join("、")
+              : "未选择",
+            stage: stage || null,
+            timeline: timeframe || null,
+            budget: null,
+            blocker: note.trim() || null,
+            resultTitle: `网站项目诊断 · ${entrySource}`,
+            resultAdvice: summary,
+          }),
+        });
+
+        if (!response.ok) {
+          const data = await response.json().catch(() => null);
+          console.error(
+            "Lead database submit failed:",
+            data?.message || `HTTP ${response.status}`
+          );
+        }
+      } catch (databaseError) {
+        console.error("Lead database submit failed:", databaseError);
+      }
+
       setSubmitted(true);
     } catch (error) {
+      // 原有邮件发送失败逻辑保留。
       console.error(error);
       alert("提交失败，请稍后再试。您也可以使用下方 WhatsApp、LINE 或邮件直接联系我们。");
     } finally {
