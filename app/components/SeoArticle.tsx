@@ -12,6 +12,12 @@ type RelatedLink = {
   href: string;
 };
 
+type SourceLink = {
+  title: string;
+  href: string;
+  publisher?: string;
+};
+
 type SeoArticleProps = {
   eyebrow: string;
   title: string;
@@ -19,6 +25,8 @@ type SeoArticleProps = {
   sections: Section[];
   note?: string;
   relatedLinks?: RelatedLink[];
+  lastUpdated?: string;
+  sources?: SourceLink[];
 };
 
 const defaultRelatedLinks: RelatedLink[] = [
@@ -46,6 +54,8 @@ export default function SeoArticle({
   sections,
   note,
   relatedLinks,
+  lastUpdated,
+  sources,
 }: SeoArticleProps) {
   const linksToShow =
     relatedLinks && relatedLinks.length > 0
@@ -90,6 +100,12 @@ export default function SeoArticle({
         <p className="mt-6 max-w-4xl text-lg leading-8 text-slate-600">
           {intro}
         </p>
+
+        {lastUpdated && (
+          <p className="mt-4 text-sm text-slate-500">
+            最后更新：{lastUpdated}
+          </p>
+        )}
 
         <div className="mt-8 flex flex-wrap gap-3 text-sm">
           <Link
@@ -151,6 +167,38 @@ export default function SeoArticle({
         <div className="mt-10 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm leading-7 text-amber-900">
           {note}
         </div>
+      )}
+
+      {sources && sources.length > 0 && (
+        <section className="mt-10 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-500">
+            SOURCES
+          </p>
+
+          <h2 className="mt-2 text-2xl font-bold text-slate-950">
+            参考来源
+          </h2>
+
+          <ul className="mt-5 space-y-3">
+            {sources.map((source) => (
+              <li key={source.href}>
+                <a
+                  href={source.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-medium text-blue-700 underline decoration-blue-200 underline-offset-4 transition hover:text-blue-600"
+                >
+                  {source.title}
+                </a>
+                {source.publisher && (
+                  <span className="ml-2 text-sm text-slate-500">
+                    · {source.publisher}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       <section className="mt-14">

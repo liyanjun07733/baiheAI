@@ -37,6 +37,7 @@ export default function Page() {
           eyebrow="FACTORY AUDIT"
           title="泰国验厂报告应该包含什么？现场验厂报告内容清单"
           intro="客户委托当地团队去工厂现场，并不是“帮忙拍几张照片”就结束。真正有价值的现场验厂，应让委托方在不在现场的情况下，也能理解工厂真实情况和需要继续确认的问题。"
+          lastUpdated="2026-08-09"
           sections={[
             {
               title: "基础信息核实",
