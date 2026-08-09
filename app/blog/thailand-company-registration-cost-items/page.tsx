@@ -57,6 +57,23 @@ export default function Page() {
               href: "/thailand-investment",
             },
           ]}
+          sources={[
+            {
+              title: "DBD Online Services / Business Registration",
+              href: "https://www.dbd.go.th/en/hotService/online_service",
+              publisher: "Department of Business Development (DBD)",
+            },
+            {
+              title: "Value Added Tax (VAT)",
+              href: "https://www.rd.go.th/english/6043.html",
+              publisher: "The Revenue Department",
+            },
+            {
+              title: "Employer Registration Form (SSO 1-01)",
+              href: "https://catalog.sso.go.th/th/dataset/dataset-11_01",
+              publisher: "Social Security Office (SSO)",
+            },
+          ]}
           note="本文用于企业前期商业判断与项目梳理，不替代法律、税务、工程、认证或政府主管机构意见。涉及正式审批、认证、合同与合规事项时，应根据具体项目核对最新官方要求并取得相应专业意见。"
         />
       </main>

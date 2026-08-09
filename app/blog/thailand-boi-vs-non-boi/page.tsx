@@ -57,6 +57,23 @@ export default function Page() {
               href: "/thailand-investment",
             },
           ]}
+          sources={[
+            {
+              title: "Eligible Activities for Investment Promotion",
+              href: "https://www.boi.go.th/index.php?language=en&page=eligible_activities_biz",
+              publisher: "Thailand Board of Investment (BOI)",
+            },
+            {
+              title: "Investment Promotion Criteria",
+              href: "https://www.boi.go.th/index.php?language=en&page=criteria_for_project_approval",
+              publisher: "Thailand Board of Investment (BOI)",
+            },
+            {
+              title: "Checklist of Documents for Applications",
+              href: "https://www.boi.go.th/index.php?language=en&page=doc_for_apply",
+              publisher: "Thailand Board of Investment (BOI)",
+            },
+          ]}
           note="本文用于企业前期商业判断与项目梳理，不替代法律、税务、工程、认证或政府主管机构意见。涉及正式审批、认证、合同与合规事项时，应根据具体项目核对最新官方要求并取得相应专业意见。"
         />
       </main>
