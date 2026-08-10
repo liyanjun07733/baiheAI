@@ -19,7 +19,7 @@ const journey = [
   },
   { no: "03", title: "土地 / 厂房尽调", desc: "用途、电力、污水、道路、消防、扩建空间，签约前逐项确认。", href: "/thailand-investment/factory-due-diligence", status: "已上线" },
   { no: "04", title: "IEAT / BOI路径", desc: "不追求“优惠最多”，只判断哪些政策真的适合你的项目。", href: "/thailand-investment/ieat-boi-path", status: "已上线" },
-  { no: "05", title: "设计与报批", desc: "从生产工艺倒推厂房设计，避免建完才发现用途或许可不匹配。", status: "整理中" },
+  { no: "05", title: "设计与报批", desc: "从生产工艺倒推厂房设计，避免建完才发现用途或许可不匹配。", href: "/thailand-investment/factory-design-approval", status: "已上线" },
   { no: "06", title: "施工与现场管理", desc: "承包商、材料、安保、变更、工期，很多损失都发生在这一段。", status: "整理中" },
   { no: "07", title: "设备进场与验收", desc: "电力、消防、设备基础、测试与正式生产之间还有一段距离。", status: "整理中" },
   { no: "08", title: "泰国员工招聘", desc: "工资只是第一层，还要看区域劳动力、通勤和管理方式。", status: "整理中" },
