@@ -21,7 +21,7 @@ const journey = [
   { no: "04", title: "IEAT / BOI路径", desc: "不追求“优惠最多”，只判断哪些政策真的适合你的项目。", href: "/thailand-investment/ieat-boi-path", status: "已上线" },
   { no: "05", title: "设计与报批", desc: "从生产工艺倒推厂房设计，避免建完才发现用途或许可不匹配。", href: "/thailand-investment/factory-design-approval", status: "已上线" },
   { no: "06", title: "施工与现场管理", desc: "承包商、材料、安保、变更、工期，很多损失都发生在这一段。", href: "/thailand-investment/factory-construction-management", status: "已上线" },
-  { no: "07", title: "设备进场与验收", desc: "电力、消防、设备基础、测试与正式生产之间还有一段距离。", status: "整理中" },
+  { no: "07", title: "设备进场与验收", desc: "电力、消防、设备基础、BOI机器进口、安装调试与正式生产之间还有一段距离。", href: "/thailand-investment/factory-equipment-commissioning", status: "已上线" },
   { no: "08", title: "泰国员工招聘", desc: "工资只是第一层，还要看区域劳动力、通勤和管理方式。", status: "整理中" },
   { no: "09", title: "中国员工与工作许可", desc: "Non-B、Work Permit、BOI/IEAT便利不能用一句“4:1”概括。", status: "整理中" },
   { no: "10", title: "正式生产与运营", desc: "加班、园区规则、环保、安全、供应链和日常合规才是真正的长期成本。", status: "整理中" },
