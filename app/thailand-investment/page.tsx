@@ -9,6 +9,7 @@ const journey = [
     desc: "先决定是用现金换速度，还是用长期投入换自主性。",
     href: "/thailand-investment/factory-rent-or-build",
     status: "已上线",
+    caseLabel: "",
   },
   {
     no: "02",
@@ -16,15 +17,16 @@ const journey = [
     desc: "园区外、IEAT、BOI不能混成一个概念，先看项目真正需要什么。",
     href: "/thailand-investment/factory-location",
     status: "已上线",
+    caseLabel: "",
   },
-  { no: "03", title: "土地 / 厂房尽调", desc: "用途、电力、污水、道路、消防、扩建空间，签约前逐项确认。", href: "/thailand-investment/factory-due-diligence", status: "已上线" },
-  { no: "04", title: "IEAT / BOI路径", desc: "不追求“优惠最多”，只判断哪些政策真的适合你的项目。", href: "/thailand-investment/ieat-boi-path", status: "已上线" },
-  { no: "05", title: "设计与报批", desc: "从生产工艺倒推厂房设计，避免建完才发现用途或许可不匹配。", href: "/thailand-investment/factory-design-approval", status: "已上线" },
-  { no: "06", title: "施工与现场管理", desc: "承包商、材料、安保、变更、工期，很多损失都发生在这一段。", href: "/thailand-investment/factory-construction-management", status: "已上线" },
-  { no: "07", title: "设备进场与验收", desc: "电力、消防、设备基础、BOI机器进口、安装调试与正式生产之间还有一段距离。", href: "/thailand-investment/factory-equipment-commissioning", status: "已上线" },
-  { no: "08", title: "泰国员工招聘", desc: "工资只是第一层，还要看区域劳动力、通勤和管理方式。", status: "整理中" },
-  { no: "09", title: "中国员工与工作许可", desc: "Non-B、Work Permit、BOI/IEAT便利不能用一句“4:1”概括。", status: "整理中" },
-  { no: "10", title: "正式生产与运营", desc: "加班、园区规则、环保、安全、供应链和日常合规才是真正的长期成本。", status: "整理中" },
+  { no: "03", title: "土地 / 厂房尽调", desc: "用途、电力、污水、道路、消防、扩建空间，签约前逐项确认。", href: "/thailand-investment/factory-due-diligence", status: "已上线", caseLabel: "" },
+  { no: "04", title: "IEAT / BOI路径", desc: "不追求“优惠最多”，只判断哪些政策真的适合你的项目。", href: "/thailand-investment/ieat-boi-path", status: "已上线", caseLabel: "政策误区：IEAT与BOI不是二选一" },
+  { no: "05", title: "设计与报批", desc: "从生产工艺倒推厂房设计，避免建完才发现用途或许可不匹配。", href: "/thailand-investment/factory-design-approval", status: "已上线", caseLabel: "真实案例：厂房前楼隔成宿舍后才发现用途问题" },
+  { no: "06", title: "施工与现场管理", desc: "承包商、材料、安保、变更、工期，很多损失都发生在这一段。", href: "/thailand-investment/factory-construction-management", status: "已上线", caseLabel: "真实案例：AMATA City Chonburi 2 施工期电缆被盗" },
+  { no: "07", title: "设备进场与验收", desc: "电力、消防、设备基础、BOI机器进口、安装调试与正式生产之间还有一段距离。", href: "/thailand-investment/factory-equipment-commissioning", status: "已上线", caseLabel: "" },
+  { no: "08", title: "泰国员工招聘", desc: "工资只是第一层，还要看区域劳动力、通勤和管理方式。", status: "整理中", caseLabel: "" },
+  { no: "09", title: "中国员工与工作许可", desc: "Non-B、Work Permit、BOI/IEAT便利不能用一句“4:1”概括。", status: "整理中", caseLabel: "" },
+  { no: "10", title: "正式生产与运营", desc: "加班、园区规则、环保、安全、供应链和日常合规才是真正的长期成本。", status: "整理中", caseLabel: "" },
 ];
 
 export default function ThailandInvestmentPage() {
@@ -72,11 +74,49 @@ export default function ThailandInvestmentPage() {
                   </div>
                   <h3 className="mt-7 text-2xl font-black tracking-tight">{item.title}</h3>
                   <p className="mt-3 leading-7 text-slate-600">{item.desc}</p>
+                  {item.caseLabel && (
+                    <div className="mt-5 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-black leading-6 text-rose-700">
+                      🔴 {item.caseLabel}
+                    </div>
+                  )}
                   {ready && <div className="mt-6 text-sm font-black text-sky-700">进入这一步 →</div>}
                 </div>
               );
               return ready ? <Link key={item.no} href={item.href!}>{content}</Link> : <div key={item.no}>{content}</div>;
             })}
+          </div>
+
+          <div className="mt-12 rounded-[2rem] border border-rose-200 bg-white p-6 shadow-[0_14px_40px_rgba(225,29,72,.06)] sm:p-8">
+            <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+              <div>
+                <p className="text-xs font-black tracking-[.2em] text-rose-600">REAL PROJECT CASES</p>
+                <h2 className="mt-2 text-3xl font-black tracking-tight">真实项目经历，不藏在文章最下面</h2>
+              </div>
+              <p className="max-w-xl text-sm leading-7 text-slate-500">这些不是网上拼出来的“案例模板”，而是我们实际项目中遇到过、并需要结合园区规则和现行政策重新核实的问题。</p>
+            </div>
+
+            <div className="mt-7 grid gap-4 lg:grid-cols-3">
+              <Link href="/thailand-investment/factory-construction-management" className="rounded-2xl border border-rose-100 bg-rose-50/60 p-5 transition hover:-translate-y-1 hover:border-rose-300">
+                <div className="text-xs font-black text-rose-700">施工现场 · 春武里</div>
+                <h3 className="mt-3 text-xl font-black leading-8">AMATA City Chonburi 2：施工期电缆被盗</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">从变压器到低压柜的电缆被剪走。真正的损失不是铜线，而是重新采购、重新施工和工期等待。</p>
+                <div className="mt-4 text-sm font-black text-rose-700">看完整案例 →</div>
+              </Link>
+
+              <Link href="/thailand-investment/factory-design-approval" className="rounded-2xl border border-rose-100 bg-rose-50/60 p-5 transition hover:-translate-y-1 hover:border-rose-300">
+                <div className="text-xs font-black text-rose-700">建筑用途 · IEAT项目经历</div>
+                <h3 className="mt-3 text-xl font-black leading-8">厂房前楼隔成宿舍，建完才发现真正的问题在“用途”</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">自己的厂房，不等于里面任何空间都可以随意改成住宿。先建后问，往往比审批本身贵得多。</p>
+                <div className="mt-4 text-sm font-black text-rose-700">看完整案例 →</div>
+              </Link>
+
+              <Link href="/thailand-investment/ieat-boi-path" className="rounded-2xl border border-rose-100 bg-rose-50/60 p-5 transition hover:-translate-y-1 hover:border-rose-300">
+                <div className="text-xs font-black text-rose-700">政策判断 · IEAT / BOI</div>
+                <h3 className="mt-3 text-xl font-black leading-8">政策好，不代表对每一个项目都好</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">IEAT、BOI、园区外不是简单的“谁优惠更多”，而是不同项目在土地、审批、税收和持续合规上的取舍。</p>
+                <div className="mt-4 text-sm font-black text-rose-700">看政策路径 →</div>
+              </Link>
+            </div>
           </div>
 
           <div className="mt-10 rounded-[2rem] border border-amber-200 bg-amber-50 p-6 sm:p-8">
