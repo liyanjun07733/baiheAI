@@ -17,7 +17,7 @@ const journey = [
     href: "/thailand-investment/factory-location",
     status: "已上线",
   },
-  { no: "03", title: "土地 / 厂房尽调", desc: "用途、电力、污水、道路、消防、扩建空间，签约前逐项确认。", status: "整理中" },
+  { no: "03", title: "土地 / 厂房尽调", desc: "用途、电力、污水、道路、消防、扩建空间，签约前逐项确认。", href: "/thailand-investment/factory-due-diligence", status: "已上线" },
   { no: "04", title: "IEAT / BOI路径", desc: "不追求“优惠最多”，只判断哪些政策真的适合你的项目。", status: "整理中" },
   { no: "05", title: "设计与报批", desc: "从生产工艺倒推厂房设计，避免建完才发现用途或许可不匹配。", status: "整理中" },
   { no: "06", title: "施工与现场管理", desc: "承包商、材料、安保、变更、工期，很多损失都发生在这一段。", status: "整理中" },
