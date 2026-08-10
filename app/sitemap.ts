@@ -12,6 +12,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/trust`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     { url: `${base}/faq`, lastModified: now, changeFrequency: "monthly", priority: 0.85 },
     { url: `${base}/thailand-investment`, lastModified: now, changeFrequency: "weekly", priority: 0.95 },
+    { url: `${base}/thailand-investment/factory-rent-or-build`, lastModified: now, changeFrequency: "monthly", priority: 0.92 },
+    { url: `${base}/thailand-investment/factory-location`, lastModified: now, changeFrequency: "monthly", priority: 0.92 },
     { url: `${base}/services`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${base}/factory-audit`, lastModified: now, changeFrequency: "weekly", priority: 0.95 },
     { url: `${base}/policies`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
