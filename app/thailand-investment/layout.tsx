@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
-
 export const metadata: Metadata = {
-  title: '中国企业投资泰国指南｜BOI・建厂・公司落地｜BaiheAI',
-  description: '面向中国企业梳理泰国投资、BOI、公司设立、工厂与项目落地、本地资源及常见风险。',
+  title: "中国企业泰国建厂实战指南｜从租厂、选址到投产用工｜BaiheAI",
+  description: "按真实项目顺序梳理中国企业泰国投资建厂：租厂或自建、选址、IEAT与BOI、尽调、设计施工、设备、泰国员工、中国员工与正式投产，并结合真实项目案例说明风险。",
   alternates: { canonical: "https://www.baihediy.com/thailand-investment" },
 };
-
-export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return children;
-}
+export default function Layout({ children }: Readonly<{ children: React.ReactNode }>) { return children; }

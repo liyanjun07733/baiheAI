@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import InvestmentArticle from "../_components/InvestmentArticle";
 import { articles } from "../data";
 
-const data = articles["factory-construction-management"];
+const data = articles["factory-production-operations"];
 export const metadata: Metadata = {
   title: `${data.title}｜BaiheAI`,
   description: data.deck,
-  alternates: { canonical: "https://www.baihediy.com/thailand-investment/factory-construction-management" },
+  alternates: { canonical: "https://www.baihediy.com/thailand-investment/factory-production-operations" },
 };
 export default function Page(){ return <InvestmentArticle data={data}/>; }
