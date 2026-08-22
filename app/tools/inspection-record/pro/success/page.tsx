@@ -9,19 +9,23 @@ export default function QC01PurchaseSuccessPage() {
         </div>
 
         <div className="mt-6 text-xs font-bold tracking-[0.16em] text-blue-600">
-          SANDBOX CHECKOUT SUCCESS
+          沙盒付款成功 / SANDBOX CHECKOUT SUCCESS
         </div>
-        <h1 className="mt-3 text-3xl font-black">测试付款成功</h1>
+        <h1 className="mt-3 text-3xl font-black">测试付款成功 / Test Payment Successful</h1>
         <p className="mt-4 text-sm leading-7 text-slate-600">
           这是 Paddle Sandbox 测试环境，本次交易不会产生真实扣款。
-          目前我们只验证“商品页 → Paddle 结账 → 成功页”是否正常。
+          目前我们只验证“商品页 → Paddle 结账 → 成功页”是否正常。<br />
+          This is the Paddle Sandbox environment. No real charge is made.
+          We are only validating the flow from product page to Paddle Checkout and the success page.
         </p>
 
         <div className="mt-7 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-left">
-          <div className="text-sm font-black text-slate-900">ZIP 自动交付尚未启用</div>
+          <div className="text-sm font-black text-slate-900">ZIP 自动交付尚未启用 / ZIP Delivery Not Yet Enabled</div>
           <p className="mt-2 text-sm leading-6 text-slate-600">
             下一阶段会通过 Paddle Webhook 验证真实付款成功后，再生成受保护的 ZIP 下载入口。
-            在那之前，这个成功页不会直接公开 Professional Package 下载地址。
+            在那之前，这个成功页不会直接公开 Professional Package 下载地址。<br />
+            The next stage will verify successful payment through a Paddle webhook before generating a protected ZIP download link.
+            Until then, this success page does not expose the Professional Package download URL.
           </p>
         </div>
 
@@ -30,13 +34,13 @@ export default function QC01PurchaseSuccessPage() {
             href="/tools/inspection-record/pro"
             className="rounded-xl bg-[#0f2747] px-5 py-3 text-sm font-bold text-white"
           >
-            返回专业版商品页
+            返回专业版商品页 / Back to Product
           </Link>
           <Link
             href="/tools"
             className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700"
           >
-            返回 Factory Tools
+            返回 Factory Tools / Back to Store
           </Link>
         </div>
       </div>
