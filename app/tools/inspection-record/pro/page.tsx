@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PaddleBuyButton from "./PaddleBuyButton";
 
 export const metadata: Metadata = {
   title: "QC-01 Professional Edition｜通用智能检验记录专业版｜BaiheAI",
   description:
     "BaiheAI QC-01 Professional Edition：面向工厂长期质量记录、AQL抽样、查询、打印与追溯的本地专业工具。",
   alternates: {
-    canonical: "https://www.baihediy.com/tools/inspection-record/pro",
+    canonical: "https://tools.baihediy.com/tools/inspection-record/pro",
   },
 };
 
@@ -116,21 +117,15 @@ export default function QC01ProPage() {
                 </div>
               </div>
 
-              <div className="mt-7 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-5">
-                <div className="text-xs font-bold tracking-[0.14em] text-amber-300">PURCHASE STATUS</div>
-                <div className="mt-2 font-black">支付系统接入中</div>
+              <div className="mt-7 rounded-2xl border border-white/10 bg-white/5 p-5">
+                <div className="text-xs font-bold tracking-[0.14em] text-blue-300">DIGITAL DELIVERY</div>
+                <div className="mt-2 font-black">预制软件 · ZIP 数字交付</div>
                 <p className="mt-2 text-sm leading-6 text-slate-300">
-                  商品页已经先开放展示。价格、付款与自动下载入口将在支付系统完成后启用。
+                  商品在购买前已经开发完成。付款成功后提供对应 Professional Package 的数字下载入口。
                 </p>
               </div>
 
-              <button
-                type="button"
-                disabled
-                className="mt-5 w-full cursor-not-allowed rounded-xl bg-white/10 px-5 py-3.5 text-sm font-black text-slate-300"
-              >
-                购买入口 · 准备中
-              </button>
+              <PaddleBuyButton />
 
               <Link
                 href="/tools/inspection-record"
@@ -271,7 +266,7 @@ export default function QC01ProPage() {
             </p>
             <p>
               <b className="text-slate-900">更新：</b>
-              同一产品的小版本优化会在商品页标注版本号；重大新增模块或企业定制不视为免费小版本更新。
+              同一产品的小版本优化会在商品页标注版本号；重大新版本或单独发布的新模块不视为免费小版本更新。
             </p>
             <p>
               <b className="text-slate-900">退款：</b>
@@ -285,30 +280,28 @@ export default function QC01ProPage() {
         <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 md:p-7">
           <div className="text-sm font-black text-slate-900">购买前请阅读 / Before Purchase</div>
           <p className="mt-2 text-xs leading-6 text-slate-500">
-            正式支付上线后，在线订单计划由 Paddle.com 作为 Merchant of Record 处理。付款前请确认产品说明、价格、数字交付方式和适用政策。
+            付款前请确认产品功能、版本、US$9.90 一次购买价格、ZIP 数字交付内容以及适用政策。正式支付启用后，结账页面会在付款前显示最终金额和适用税费。
           </p>
           <div className="mt-4 flex flex-wrap gap-4 text-sm">
-            <Link href="/terms" className="font-semibold text-blue-700 hover:underline">服务条款 Terms</Link>
-            <Link href="/privacy" className="font-semibold text-blue-700 hover:underline">隐私政策 Privacy</Link>
-            <Link href="/refund-policy" className="font-semibold text-blue-700 hover:underline">退款政策 Refunds</Link>
+            <Link href="/tools/legal/terms" className="font-semibold text-blue-700 hover:underline">服务条款 Terms</Link>
+            <Link href="/tools/legal/privacy" className="font-semibold text-blue-700 hover:underline">隐私政策 Privacy</Link>
+            <Link href="/tools/legal/refund-policy" className="font-semibold text-blue-700 hover:underline">退款政策 Refunds</Link>
           </div>
         </div>
       </section>
 
       <section className="border-t border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-12 md:px-8">
-          <div className="rounded-3xl bg-[#0f2747] px-7 py-8 text-white md:flex md:items-center md:justify-between md:px-9">
-            <div>
-              <div className="text-xs font-bold tracking-[0.16em] text-blue-300">NEED CUSTOMIZATION?</div>
-              <h2 className="mt-2 text-xl font-black">需要公司Logo、客户专用标准、特殊字段或流程？</h2>
-              <p className="mt-2 text-sm text-slate-300">标准 Professional Edition 之外，可以按企业流程进行第二阶段定制。</p>
+          <div className="rounded-3xl bg-[#0f2747] px-7 py-8 text-white md:px-9">
+            <div className="text-xs font-bold tracking-[0.16em] text-blue-300">PRE-BUILT SOFTWARE PRODUCT</div>
+            <h2 className="mt-2 text-xl font-black">QC-01 Professional Edition 是已经完成开发的标准数字软件产品。</h2>
+            <p className="mt-2 text-sm leading-7 text-slate-300">
+              本商品页价格仅对应这里列出的标准软件和数字交付内容。本 Factory Tools 商店不销售广告、营销、商业咨询或定制软件开发服务。
+            </p>
+            <div className="mt-5 flex flex-wrap gap-4 text-sm font-semibold">
+              <Link href="/tools/support" className="text-white underline underline-offset-4">Product Support</Link>
+              <Link href="/tools" className="text-white underline underline-offset-4">Software Catalog</Link>
             </div>
-            <Link
-              href="/services"
-              className="mt-5 inline-flex rounded-xl bg-white px-5 py-3 text-sm font-black text-slate-950 md:mt-0"
-            >
-              查看企业定制服务
-            </Link>
           </div>
         </div>
       </section>
