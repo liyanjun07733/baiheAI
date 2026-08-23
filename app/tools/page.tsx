@@ -166,6 +166,47 @@ export default function ToolsPage() {
         </div>
       </section>
 
+      <section id="software" className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-20">
+        <div className="grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-end">
+          <div>
+            <div className="text-xs font-black tracking-[0.2em] text-blue-600">FACTORY SOFTWARE</div>
+            <h2 className="mt-3 text-3xl font-black">知识解决“怎么做”，工具解决“每天怎么快一点”</h2>
+            <p className="mt-4 text-sm leading-7 text-slate-600">
+              免费在线版用于快速判断和计算；Professional Edition 用于长期记录、查询、打印、追溯和企业内部使用。
+            </p>
+            <Link
+              href="/tools/knowledge"
+              className="mt-6 inline-flex rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 hover:border-blue-200 hover:text-blue-700"
+            >
+              进入完整知识库 →
+            </Link>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {products.map((product) => (
+              <article key={product.code} className="flex min-h-[320px] flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
+                <div className="flex items-start justify-between">
+                  <span className="text-xs font-black text-blue-600">{product.code}</span>
+                  <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700">{product.status}</span>
+                </div>
+                <h3 className="mt-5 text-lg font-black">{product.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-slate-600">{product.desc}</p>
+                <div className="mt-auto space-y-2 pt-6">
+                  <Link href={product.freeHref} className="flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-3 text-sm font-black text-white hover:bg-blue-700">
+                    免费在线使用
+                  </Link>
+                  {product.proHref ? (
+                    <Link href={product.proHref} className="flex w-full items-center justify-center rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-black text-amber-800 hover:bg-amber-100">
+                      查看专业版
+                    </Link>
+                  ) : null}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section id="knowledge" className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-20">
         <div className="max-w-3xl">
           <div className="text-xs font-black tracking-[0.2em] text-blue-600">KNOWLEDGE SYSTEM</div>
@@ -226,46 +267,7 @@ export default function ToolsPage() {
         </div>
       </section>
 
-      <section id="software" className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-20">
-        <div className="grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-end">
-          <div>
-            <div className="text-xs font-black tracking-[0.2em] text-blue-600">FACTORY SOFTWARE</div>
-            <h2 className="mt-3 text-3xl font-black">知识解决“怎么做”，工具解决“每天怎么快一点”</h2>
-            <p className="mt-4 text-sm leading-7 text-slate-600">
-              免费在线版用于快速判断和计算；Professional Edition 用于长期记录、查询、打印、追溯和企业内部使用。
-            </p>
-            <Link
-              href="/tools/knowledge"
-              className="mt-6 inline-flex rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 hover:border-blue-200 hover:text-blue-700"
-            >
-              进入完整知识库 →
-            </Link>
-          </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            {products.map((product) => (
-              <article key={product.code} className="flex min-h-[320px] flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div className="flex items-start justify-between">
-                  <span className="text-xs font-black text-blue-600">{product.code}</span>
-                  <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700">{product.status}</span>
-                </div>
-                <h3 className="mt-5 text-lg font-black">{product.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-slate-600">{product.desc}</p>
-                <div className="mt-auto space-y-2 pt-6">
-                  <Link href={product.freeHref} className="flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-3 text-sm font-black text-white hover:bg-blue-700">
-                    免费在线使用
-                  </Link>
-                  {product.proHref ? (
-                    <Link href={product.proHref} className="flex w-full items-center justify-center rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-black text-amber-800 hover:bg-amber-100">
-                      查看专业版
-                    </Link>
-                  ) : null}
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
 
       <section className="border-y border-slate-200 bg-white">
         <div className="mx-auto max-w-7xl px-6 py-16 md:px-8">
