@@ -76,30 +76,50 @@ const categories = [
   },
 ];
 
-const products = [
+type ProductCard = {
+  code: string;
+  title: string;
+  desc: string;
+  status: "Professional Edition" | "Free Online";
+  priceText?: string;
+  version?: string;
+  freeHref?: string;
+  proHref?: string;
+};
+
+const products: ProductCard[] = [
   {
     code: "QC-01",
     title: "通用智能检验记录",
-    desc: "AQL抽样、进料/过程/成品记录、查询、统计与打印。",
+    desc: "AQL 抽样、进料 / 过程 / 成品检验记录、历史查询、统计、打印与追溯。",
+    status: "Professional Edition",
+    priceText: "US$9.90",
+    version: "V2.1",
     freeHref: "/tools/inspection-record",
     proHref: "/tools/inspection-record/pro",
+  },
+  {
+    code: "PM-01",
+    title: "生产订单管理",
+    desc: "客户、商品、员工资料，以及订单录入、生产录入、进度跟踪、产量统计、查询与进度看板。",
     status: "Professional Edition",
+    priceText: "US$9.90",
+    version: "V1.0",
+    proHref: "/tools/product/pm01",
   },
   {
     code: "QC-02",
     title: "单产品智能验货报告",
-    desc: "单产品验货、照片、不良记录、结果判定和PDF输出。",
-    freeHref: "/tools/inspection-report",
-    proHref: "",
+    desc: "单产品验货、照片、不良记录、结果判定和 PDF 输出。",
     status: "Free Online",
+    freeHref: "/tools/inspection-report",
   },
   {
     code: "QA-01",
     title: "智能质量判定",
     desc: "风险等级、系统性判断、Hard Stop 和改善行动计划。",
-    freeHref: "/tools/quality-decision",
-    proHref: "",
     status: "Free Online",
+    freeHref: "/tools/quality-decision",
   },
 ];
 
@@ -167,43 +187,109 @@ export default function ToolsPage() {
       </section>
 
       <section id="software" className="mx-auto max-w-7xl px-6 py-16 md:px-8 md:py-20">
-        <div className="grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-end">
-          <div>
-            <div className="text-xs font-black tracking-[0.2em] text-blue-600">FACTORY SOFTWARE</div>
-            <h2 className="mt-3 text-3xl font-black">知识解决“怎么做”，工具解决“每天怎么快一点”</h2>
+        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-3xl">
+            <div className="text-xs font-black tracking-[0.2em] text-blue-600">
+              FACTORY SOFTWARE
+            </div>
+            <h2 className="mt-3 text-3xl font-black">
+              知识解决“怎么做”，工具解决“每天怎么快一点”
+            </h2>
             <p className="mt-4 text-sm leading-7 text-slate-600">
               免费在线版用于快速判断和计算；Professional Edition 用于长期记录、查询、打印、追溯和企业内部使用。
             </p>
-            <Link
-              href="/tools/knowledge"
-              className="mt-6 inline-flex rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 hover:border-blue-200 hover:text-blue-700"
-            >
-              进入完整知识库 →
-            </Link>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            {products.map((product) => (
-              <article key={product.code} className="flex min-h-[320px] flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-                <div className="flex items-start justify-between">
-                  <span className="text-xs font-black text-blue-600">{product.code}</span>
-                  <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700">{product.status}</span>
+          <Link
+            href="/tools/knowledge"
+            className="inline-flex shrink-0 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 hover:border-blue-200 hover:text-blue-700"
+          >
+            进入完整知识库 →
+          </Link>
+        </div>
+
+        <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          {products.map((product) => {
+            const isProfessional = product.status === "Professional Edition";
+
+            return (
+              <article
+                key={product.code}
+                className="flex min-h-[350px] flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <span className="text-xs font-black tracking-[0.08em] text-blue-600">
+                    {product.code}
+                  </span>
+
+                  <span
+                    className={
+                      isProfessional
+                        ? "rounded-full border border-amber-200 bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-amber-800"
+                        : "rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-[11px] font-bold text-blue-700"
+                    }
+                  >
+                    {product.status}
+                  </span>
                 </div>
-                <h3 className="mt-5 text-lg font-black">{product.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-slate-600">{product.desc}</p>
+
+                <h3 className="mt-5 text-lg font-black text-slate-950">
+                  {product.title}
+                </h3>
+
+                <p className="mt-3 text-sm leading-6 text-slate-600">
+                  {product.desc}
+                </p>
+
+                <div className="mt-5 rounded-2xl bg-slate-50 px-4 py-3">
+                  {isProfessional ? (
+                    <div className="flex items-end justify-between gap-3">
+                      <div>
+                        <div className="text-[11px] font-semibold text-slate-400">
+                          Professional Edition
+                        </div>
+                        <div className="mt-1 text-lg font-black text-slate-950">
+                          {product.priceText}
+                        </div>
+                      </div>
+                      <div className="text-xs font-bold text-slate-500">
+                        {product.version}
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div className="text-[11px] font-semibold text-slate-400">
+                        Online Tool
+                      </div>
+                      <div className="mt-1 text-sm font-black text-slate-800">
+                        免费在线使用
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <div className="mt-auto space-y-2 pt-6">
-                  <Link href={product.freeHref} className="flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-3 text-sm font-black text-white hover:bg-blue-700">
-                    免费在线使用
-                  </Link>
+                  {product.freeHref ? (
+                    <Link
+                      href={product.freeHref}
+                      className="flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-3 text-sm font-black text-white transition hover:bg-blue-700"
+                    >
+                      免费在线使用
+                    </Link>
+                  ) : null}
+
                   {product.proHref ? (
-                    <Link href={product.proHref} className="flex w-full items-center justify-center rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-black text-amber-800 hover:bg-amber-100">
-                      查看专业版
+                    <Link
+                      href={product.proHref}
+                      className="flex w-full items-center justify-center rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-black text-amber-800 transition hover:bg-amber-100"
+                    >
+                      查看 / 购买专业版
                     </Link>
                   ) : null}
                 </div>
               </article>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </section>
 
