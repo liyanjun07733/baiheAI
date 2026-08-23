@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default function SupportPage() {
-  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "";
+  const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || "liyanjun0773@126.com";
 
   return (
     <main className="min-h-screen bg-[#f7f9fc] text-slate-950">
@@ -37,12 +37,7 @@ export default function SupportPage() {
                   {supportEmail}
                 </a>
               </>
-            ) : (
-              <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-800">
-                正式上线前请设置 NEXT_PUBLIC_SUPPORT_EMAIL。<br />
-                Please configure NEXT_PUBLIC_SUPPORT_EMAIL before live launch.
-              </div>
-            )}
+            ) : null}
           </div>
 
           <div className="rounded-3xl border border-slate-200 bg-white p-7 shadow-sm">

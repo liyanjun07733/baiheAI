@@ -130,7 +130,7 @@ export default function PaddleBuyButton() {
           disabled
           className="mt-5 w-full cursor-not-allowed rounded-xl bg-amber-300/70 px-5 py-3.5 text-sm font-black text-slate-800"
         >
-          正式支付配置中 · US$9.90
+          支付暂不可用 · US$9.90
         </button>
         <p className="mt-2 text-center text-xs text-slate-400">
           Live checkout configuration required.

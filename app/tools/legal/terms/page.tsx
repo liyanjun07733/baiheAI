@@ -47,8 +47,8 @@ const sections = [
   {
     cnTitle:"7. 价格与付款",
     enTitle:"Pricing and Payment",
-    cn:"商品页显示产品价格。QC-01 Professional Edition 当前标示为 US$9.90 一次购买，不是订阅。正式启用 Paddle Checkout 后，Paddle 将作为 Merchant of Record 处理通过 Paddle 的在线交易。适用税费和最终金额会在付款前显示。",
-    en:"Product pages show the applicable product price. QC-01 Professional Edition is currently listed at US$9.90 as a one-time purchase, not a subscription. When Paddle Checkout is enabled, Paddle acts as Merchant of Record for transactions processed through Paddle. Applicable taxes and the final amount are shown before payment."
+    cn:"商品页显示产品价格。QC-01 Professional Edition 当前标示为 US$9.90 一次购买，不是订阅。Paddle 作为 Merchant of Record 处理通过 Paddle 的在线交易。适用税费和最终金额会在付款前显示。",
+    en:"Product pages show the applicable product price. QC-01 Professional Edition is currently listed at US$9.90 as a one-time purchase, not a subscription. Paddle acts as Merchant of Record for transactions processed through Paddle. Applicable taxes and the final amount are shown before payment."
   },
   {
     cnTitle:"8. 更新",

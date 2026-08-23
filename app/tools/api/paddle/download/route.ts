@@ -6,13 +6,6 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-type PaddleAdjustment = {
-  id?: string;
-  action?: string;
-  status?: string;
-  type?: string;
-};
-
 type PaddleTransaction = {
   id?: string;
   status?: string;
@@ -22,27 +15,19 @@ type PaddleTransaction = {
       id?: string;
     };
   }>;
-  adjustments?: PaddleAdjustment[];
+  adjustments_totals?: {
+    breakdown?: {
+      credit?: string;
+      refund?: string;
+      chargeback?: string;
+    };
+  };
 };
 
-function hasBlockingAdjustment(adjustments?: PaddleAdjustment[]) {
-  if (!Array.isArray(adjustments)) return false;
-
-  return adjustments.some((adjustment) => {
-    const action = adjustment.action || "";
-    const status = adjustment.status || "";
-
-    const blocksByAction =
-      action === "refund" ||
-      action === "chargeback" ||
-      action === "chargeback_warning";
-
-    const isActive =
-      status === "pending_approval" ||
-      status === "approved";
-
-    return blocksByAction && isActive;
-  });
+function amountIsPositive(value?: string) {
+  if (!value) return false;
+  const amount = Number(value);
+  return Number.isFinite(amount) && amount > 0;
 }
 
 async function verifyTransaction(transactionId: string) {
@@ -59,12 +44,10 @@ async function verifyTransaction(transactionId: string) {
     };
   }
 
-  // Include Paddle adjustments so refunded / disputed orders
-  // cannot keep downloading the paid product.
   const paddleResponse = await fetch(
     `https://api.paddle.com/transactions/${encodeURIComponent(
       transactionId
-    )}?include=adjustments`,
+    )}?include=adjustments_totals`,
     {
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -75,6 +58,9 @@ async function verifyTransaction(transactionId: string) {
   );
 
   if (!paddleResponse.ok) {
+    const body = await paddleResponse.text().catch(() => "");
+    console.error("Paddle transaction lookup failed:", paddleResponse.status, body);
+
     return {
       ok: false as const,
       response: Response.json(
@@ -113,8 +99,13 @@ async function verifyTransaction(transactionId: string) {
     };
   }
 
-  // Block refunded, refund-pending, or disputed transactions.
-  if (hasBlockingAdjustment(transaction.adjustments)) {
+  const breakdown = transaction.adjustments_totals?.breakdown;
+
+  const hasRefund =
+    amountIsPositive(breakdown?.refund) ||
+    amountIsPositive(breakdown?.chargeback);
+
+  if (hasRefund) {
     return {
       ok: false as const,
       response: Response.json(

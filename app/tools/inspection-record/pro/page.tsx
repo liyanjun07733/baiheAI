@@ -34,8 +34,8 @@ const packageItems = [
     text: "说明日常录入、资料维护、打印、查询与常见问题，让新用户不用培训也能开始使用。",
   },
   {
-    title: "示例数据 / Demo",
-    text: "用一组示例记录演示正确的录入、自动抽样、判定和打印流程。",
+    title: "首次使用说明 / Quick Start",
+    text: "提供简明的首次使用步骤，并配合正式 PDF 使用说明，帮助新用户快速开始。",
   },
   {
     title: "Version History",
@@ -180,7 +180,7 @@ export default function QC01ProPage() {
             <div className="text-xs font-bold tracking-[0.2em] text-blue-600">专业包 / PROFESSIONAL PACKAGE</div>
             <h2 className="mt-3 text-3xl font-black">购买后下载的是完整 ZIP 专业包</h2>
             <p className="mt-4 text-sm leading-7 text-slate-600">
-              我们采用 ZIP 作为标准交付格式，确保 Excel 工具、说明文件、示例和后续扩展内容一起交付。
+              我们采用 ZIP 作为标准交付格式，确保 Excel 工具、使用说明和版本记录一起交付。
               对未来带 VBA、UserForm 或按钮控件的 Interactive 版本，也能完整保留原始功能。
             </p>
           </div>
@@ -196,10 +196,10 @@ export default function QC01ProPage() {
           </div>
 
           <div className="mt-7 rounded-2xl bg-slate-950 p-6 font-mono text-xs leading-7 text-slate-300 md:p-7">
-            <div>BaiheAI_QC01_Professional.zip</div>
+            <div>BaiheAI_QC01_Pro_V2_1.zip</div>
             <div>├─ QC01_Professional.xlsx</div>
             <div>├─ 使用说明.pdf</div>
-            <div>├─ 示例数据.xlsx</div>
+            <div>├─ 首次使用说明.txt</div>
             <div>└─ Version_History.txt</div>
           </div>
         </div>
@@ -229,7 +229,7 @@ export default function QC01ProPage() {
               <div className="text-xs font-bold tracking-[0.15em] text-blue-700">适合购买 / GOOD FIT</div>
               <h2 className="mt-2 text-xl font-black">适合购买</h2>
               <div className="mt-5 space-y-3 text-sm leading-7 text-slate-700">
-                <p>✓ 工厂每天都在做 IQC / IPQC / OQC 检验记录。</p>
+                <p>✓ 工厂每天都在做 IQC / IPQC / FQC 检验记录。</p>
                 <p>✓ 需要保存历史，而不是算完一次就结束。</p>
                 <p>✓ 经常需要按货号、供应商、客户或日期查询。</p>
                 <p>✓ 需要给现场、主管、客户或审核人员打印正式结果。</p>
@@ -281,8 +281,8 @@ export default function QC01ProPage() {
               <div className="text-xs font-black text-blue-600">02 · CHECKOUT</div>
               <h3 className="mt-2 text-lg font-black">安全结账 / Secure checkout</h3>
               <p className="mt-3 text-sm leading-7 text-slate-600">
-                正式上线后，Paddle 作为 Merchant of Record 处理在线付款。实际可用支付方式会根据买家所在地区、设备和币种显示。<br />
-                When enabled, Paddle acts as Merchant of Record and processes the online payment. Available payment methods may vary by buyer location, device and currency.
+                Paddle 作为 Merchant of Record 处理本商店的在线付款。实际可用支付方式会根据买家所在地区、设备和币种显示。<br />
+                Paddle acts as Merchant of Record and processes online payments for this storefront. Available payment methods may vary by buyer location, device and currency.
               </p>
             </div>
 
@@ -340,7 +340,7 @@ export default function QC01ProPage() {
         <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 md:p-7">
           <div className="text-sm font-black text-slate-900">购买前请阅读 / Before Purchase</div>
           <p className="mt-2 text-xs leading-6 text-slate-500">
-            付款前请确认产品功能、版本、US$9.90 一次购买价格、ZIP 数字交付内容以及适用政策。正式支付启用后，结账页面会在付款前显示最终金额和适用税费。<br />
+            付款前请确认产品功能、版本、US$9.90 一次购买价格、ZIP 数字交付内容以及适用政策。结账页面会在付款前显示最终金额和适用税费。<br />
             Before purchase, please review the product features, version, US$9.90 one-time price, ZIP delivery contents and applicable policies. The final amount and any applicable taxes are shown before payment.
           </p>
           <div className="mt-4 flex flex-wrap gap-4 text-sm">
