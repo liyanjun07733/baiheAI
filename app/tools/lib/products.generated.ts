@@ -20,6 +20,29 @@ export type ProductDefinition = {
 
 export const PRODUCTS = [
   {
+    "slug": "pm01",
+    "code": "PM-01",
+    "name": "PM-01 Production Order Management Professional Edition",
+    "priceId": "pri_01m0qa28dxwsgfbqcg3b0b78hq",
+    "priceText": "US$9.90",
+    "version": "V1.0",
+    "fileName": "BaiheAI_PM01_Production_Order_Management_Pro_V1_0.zip",
+    "pagePath": "/product/pm01",
+    "description": "带 VBA 宏的 Excel 生产订单管理系统，用于客户/商品/员工资料、订单与生产录入、订单进度、产量统计、查询和进度看板。",
+    "descriptionEn": "Pre-built macro-enabled Excel production order management software for master data, order entry, production entry, progress tracking, output statistics, queries and dashboards.",
+    "highlights": [
+      "客户 / 商品 / 员工基础资料",
+      "订单录入与生产录入",
+      "订单进度与产量统计",
+      "订单查询与进度看板",
+      "VBA 宏与窗体操作",
+      "Windows / Microsoft Excel 桌面版"
+    ],
+    "enabled": true,
+    "bytes": 1051397,
+    "sha256": "890b46bd3e8a4fdddc50d61c5744838a9a9263a3b2dbf833372f216a9a980a5e"
+  },
+  {
     "slug": "qc01",
     "code": "QC-01",
     "name": "QC-01 Professional Edition",

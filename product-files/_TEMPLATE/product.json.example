@@ -1,10 +1,12 @@
 {
-  "code": "QC-02",
+  "slug": "your-product",
+  "code": "XX-01",
   "name": "Your Product Name",
   "priceId": "pri_xxxxxxxxxxxxxxxxxxxxxxxxx",
   "priceText": "US$19.90",
   "version": "V1.0",
   "file": "Your_Product.zip",
+  "pagePath": "/product/your-product",
   "description": "中文商品说明",
   "descriptionEn": "English product description",
   "highlights": [
@@ -12,5 +14,5 @@
     "功能 2",
     "功能 3"
   ],
-  "enabled": true
+  "enabled": false
 }
