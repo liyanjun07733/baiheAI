@@ -6,7 +6,6 @@ import { useCallback, useState } from "react";
 declare global {
   interface Window {
     Paddle?: {
-      Environment: { set: (environment: "sandbox") => void };
       Initialize: (options: {
         token: string;
         eventCallback?: (event: { name?: string }) => void;
@@ -30,16 +29,21 @@ declare global {
 
 const token = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN || "";
 const priceId = process.env.NEXT_PUBLIC_PADDLE_PRICE_ID || "";
-const configuredEnvironment = process.env.NEXT_PUBLIC_PADDLE_ENV || "";
 
 export default function PaddleBuyButton() {
   const [ready, setReady] = useState(false);
   const [message, setMessage] = useState("");
-  const isConfigured = Boolean(token && priceId);
-  const isSandbox = configuredEnvironment === "sandbox" || (!configuredEnvironment && process.env.NODE_ENV === "development");
+
+  // Live checkout only. This prevents accidentally publishing a Sandbox token.
+  const isConfigured = Boolean(
+    token &&
+      priceId &&
+      !token.startsWith("test_")
+  );
 
   const initializePaddle = useCallback(() => {
     if (!isConfigured) return;
+
     if (!window.Paddle) {
       setMessage("Paddle.js 还没有加载完成");
       return;
@@ -47,24 +51,24 @@ export default function PaddleBuyButton() {
 
     try {
       if (!window.__baihePaddleInitialized) {
-        if (isSandbox) window.Paddle.Environment.set("sandbox");
         window.Paddle.Initialize({
           token,
           eventCallback: (event) => {
             if (event?.name === "checkout.completed") {
-              setMessage("付款已完成，正在进入交付页面…");
+              setMessage("付款已完成，正在进入订单确认页面…");
             }
           },
         });
         window.__baihePaddleInitialized = true;
       }
+
       setReady(true);
       setMessage("");
     } catch (error) {
       console.error("Paddle initialization failed:", error);
       setMessage("支付组件初始化失败，请稍后重试");
     }
-  }, [isConfigured, isSandbox]);
+  }, [isConfigured]);
 
   const openCheckout = () => {
     if (!window.Paddle || !ready) {
@@ -72,7 +76,8 @@ export default function PaddleBuyButton() {
       return;
     }
 
-    const successUrl = `${window.location.origin}/tools/inspection-record/pro/success`;
+    const successUrl = `${window.location.origin}/inspection-record/pro/success`;
+
     window.Paddle.Checkout.open({
       items: [{ priceId, quantity: 1 }],
       settings: {
@@ -88,10 +93,16 @@ export default function PaddleBuyButton() {
   if (!isConfigured) {
     return (
       <>
-        <button type="button" disabled className="mt-5 w-full cursor-not-allowed rounded-xl bg-amber-300/70 px-5 py-3.5 text-sm font-black text-slate-800">
-          支付开放中 · US$9.90
+        <button
+          type="button"
+          disabled
+          className="mt-5 w-full cursor-not-allowed rounded-xl bg-amber-300/70 px-5 py-3.5 text-sm font-black text-slate-800"
+        >
+          正式支付配置中 · US$9.90
         </button>
-        <p className="mt-2 text-center text-xs text-slate-400">Digital checkout will be enabled after payment-provider approval.</p>
+        <p className="mt-2 text-center text-xs text-slate-400">
+          Live checkout configuration required.
+        </p>
       </>
     );
   }
@@ -104,16 +115,22 @@ export default function PaddleBuyButton() {
         onReady={initializePaddle}
         onError={() => setMessage("Paddle.js 加载失败，请检查网络")}
       />
+
       <button
         type="button"
         onClick={openCheckout}
         disabled={!ready}
-        className={`mt-5 w-full rounded-xl px-5 py-3.5 text-sm font-black transition ${ready ? "bg-amber-300 text-slate-950 hover:bg-amber-200" : "cursor-wait bg-white/10 text-slate-400"}`}
+        className={`mt-5 w-full rounded-xl px-5 py-3.5 text-sm font-black transition ${
+          ready
+            ? "bg-amber-300 text-slate-950 hover:bg-amber-200"
+            : "cursor-wait bg-white/10 text-slate-400"
+        }`}
       >
-        {ready ? `立即购买 · US$9.90${isSandbox ? " (Sandbox)" : ""}` : "正在连接支付…"}
+        {ready ? "立即购买 · US$9.90" : "正在连接支付…"}
       </button>
+
       <p className="mt-2 min-h-5 text-center text-xs text-slate-400">
-        {message || (isSandbox ? "Sandbox 测试结账 · 不会扣真实款项" : "One-time purchase · Digital delivery")}
+        {message || "One-time purchase · Secure checkout · Digital product"}
       </p>
     </>
   );
