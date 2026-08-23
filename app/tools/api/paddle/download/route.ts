@@ -6,6 +6,13 @@ import {
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+type PaddleAdjustment = {
+  id?: string;
+  action?: string;
+  status?: string;
+  type?: string;
+};
+
 type PaddleTransaction = {
   id?: string;
   status?: string;
@@ -15,7 +22,28 @@ type PaddleTransaction = {
       id?: string;
     };
   }>;
+  adjustments?: PaddleAdjustment[];
 };
+
+function hasBlockingAdjustment(adjustments?: PaddleAdjustment[]) {
+  if (!Array.isArray(adjustments)) return false;
+
+  return adjustments.some((adjustment) => {
+    const action = adjustment.action || "";
+    const status = adjustment.status || "";
+
+    const blocksByAction =
+      action === "refund" ||
+      action === "chargeback" ||
+      action === "chargeback_warning";
+
+    const isActive =
+      status === "pending_approval" ||
+      status === "approved";
+
+    return blocksByAction && isActive;
+  });
+}
 
 async function verifyTransaction(transactionId: string) {
   const apiKey = process.env.PADDLE_API_KEY;
@@ -31,8 +59,12 @@ async function verifyTransaction(transactionId: string) {
     };
   }
 
+  // Include Paddle adjustments so refunded / disputed orders
+  // cannot keep downloading the paid product.
   const paddleResponse = await fetch(
-    `https://api.paddle.com/transactions/${encodeURIComponent(transactionId)}`,
+    `https://api.paddle.com/transactions/${encodeURIComponent(
+      transactionId
+    )}?include=adjustments`,
     {
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -55,6 +87,7 @@ async function verifyTransaction(transactionId: string) {
   const payload = (await paddleResponse.json()) as {
     data?: PaddleTransaction;
   };
+
   const transaction = payload.data;
 
   if (!transaction || transaction.id !== transactionId) {
@@ -67,7 +100,6 @@ async function verifyTransaction(transactionId: string) {
     };
   }
 
-  // We only release the file once Paddle's server reports completed.
   if (transaction.status !== "completed") {
     return {
       ok: false as const,
@@ -77,6 +109,20 @@ async function verifyTransaction(transactionId: string) {
           status: transaction.status || "unknown",
         },
         { status: 409 }
+      ),
+    };
+  }
+
+  // Block refunded, refund-pending, or disputed transactions.
+  if (hasBlockingAdjustment(transaction.adjustments)) {
+    return {
+      ok: false as const,
+      response: Response.json(
+        {
+          error:
+            "This order has been refunded or disputed. Product download is no longer available.",
+        },
+        { status: 403 }
       ),
     };
   }
