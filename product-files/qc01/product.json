@@ -1,0 +1,20 @@
+{
+  "slug": "qc01",
+  "code": "QC-01",
+  "name": "QC-01 Professional Edition",
+  "priceId": "pri_01m0mwe8b43bh9an0b6vj40m27",
+  "priceText": "US$9.90",
+  "version": "V2.1",
+  "file": "BaiheAI_QC01_Pro_V2_1.zip",
+  "pagePath": "/inspection-record/pro",
+  "description": "面向工厂长期质量记录、AQL抽样、查询、打印与追溯的本地专业工具。",
+  "descriptionEn": "Pre-built factory quality inspection software for long-term records, AQL sampling, traceability, queries and printable reports.",
+  "highlights": [
+    "进料 / 过程 / 成品检验长期记录",
+    "AQL 自动判定",
+    "历史查询与质量看板",
+    "简版 / 完整版打印",
+    "Windows / Microsoft Excel 本地使用"
+  ],
+  "enabled": true
+}

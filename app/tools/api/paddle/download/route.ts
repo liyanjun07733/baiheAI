@@ -1,7 +1,4 @@
-import {
-  QC01_PACKAGE_BASE64,
-  QC01_PACKAGE_FILENAME,
-} from "../_qc01Package";
+import { SERVER_PRODUCTS } from "../_products.generated";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -30,11 +27,10 @@ function amountIsPositive(value?: string) {
   return Number.isFinite(amount) && amount > 0;
 }
 
-async function verifyTransaction(transactionId: string) {
+async function getVerifiedTransaction(transactionId: string) {
   const apiKey = process.env.PADDLE_API_KEY;
-  const expectedPriceId = process.env.NEXT_PUBLIC_PADDLE_PRICE_ID;
 
-  if (!apiKey || !expectedPriceId) {
+  if (!apiKey) {
     return {
       ok: false as const,
       response: Response.json(
@@ -79,10 +75,7 @@ async function verifyTransaction(transactionId: string) {
   if (!transaction || transaction.id !== transactionId) {
     return {
       ok: false as const,
-      response: Response.json(
-        { error: "Order not found" },
-        { status: 404 }
-      ),
+      response: Response.json({ error: "Order not found" }, { status: 404 }),
     };
   }
 
@@ -100,12 +93,11 @@ async function verifyTransaction(transactionId: string) {
   }
 
   const breakdown = transaction.adjustments_totals?.breakdown;
-
-  const hasRefund =
+  const hasRefundOrDispute =
     amountIsPositive(breakdown?.refund) ||
     amountIsPositive(breakdown?.chargeback);
 
-  if (hasRefund) {
+  if (hasRefundOrDispute) {
     return {
       ok: false as const,
       response: Response.json(
@@ -118,31 +110,35 @@ async function verifyTransaction(transactionId: string) {
     };
   }
 
-  const hasExpectedProduct =
-    Array.isArray(transaction.items) &&
-    transaction.items.some(
-      (item) =>
-        item.price?.id === expectedPriceId &&
-        (item.quantity ?? 0) > 0
-    );
+  const purchasedPriceIds = new Set(
+    (transaction.items || [])
+      .filter((item) => (item.quantity ?? 0) > 0)
+      .map((item) => item.price?.id)
+      .filter((value): value is string => Boolean(value))
+  );
 
-  if (!hasExpectedProduct) {
+  const purchasedProducts = SERVER_PRODUCTS.filter((product) =>
+    purchasedPriceIds.has(product.priceId)
+  );
+
+  if (purchasedProducts.length === 0) {
     return {
       ok: false as const,
       response: Response.json(
-        { error: "This order does not include QC-01 Professional Edition" },
+        { error: "This order does not contain a registered BaiheAI product" },
         { status: 403 }
       ),
     };
   }
 
-  return { ok: true as const, transaction };
+  return { ok: true as const, transaction, purchasedProducts };
 }
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const transactionId = url.searchParams.get("transaction_id")?.trim() || "";
   const mode = url.searchParams.get("mode") || "download";
+  const productSlug = url.searchParams.get("product")?.trim() || "";
 
   if (!/^txn_[a-z0-9]+$/i.test(transactionId)) {
     return Response.json(
@@ -151,26 +147,52 @@ export async function GET(request: Request) {
     );
   }
 
-  const verification = await verifyTransaction(transactionId);
+  const verification = await getVerifiedTransaction(transactionId);
   if (!verification.ok) return verification.response;
 
   if (mode === "status") {
     return Response.json({
       ready: true,
       transaction_id: transactionId,
-      product: "QC-01 Professional Edition",
+      products: verification.purchasedProducts.map((product) => ({
+        slug: product.slug,
+        code: product.code,
+        name: product.name,
+        version: product.version,
+        fileName: product.fileName,
+        pagePath: product.pagePath,
+        downloadUrl: `/api/paddle/download?transaction_id=${encodeURIComponent(
+          transactionId
+        )}&product=${encodeURIComponent(product.slug)}`,
+      })),
     });
   }
 
-  const fileBytes = new Uint8Array(
-    Buffer.from(QC01_PACKAGE_BASE64, "base64")
-  );
+  let product = productSlug
+    ? verification.purchasedProducts.find((item) => item.slug === productSlug)
+    : verification.purchasedProducts.length === 1
+      ? verification.purchasedProducts[0]
+      : undefined;
+
+  if (!product) {
+    return Response.json(
+      {
+        error:
+          verification.purchasedProducts.length > 1
+            ? "Multiple products are available. Specify the product parameter."
+            : "Requested product is not included in this order",
+      },
+      { status: 400 }
+    );
+  }
+
+  const fileBytes = new Uint8Array(Buffer.from(product.base64, "base64"));
 
   return new Response(fileBytes, {
     status: 200,
     headers: {
       "Content-Type": "application/zip",
-      "Content-Disposition": `attachment; filename="${QC01_PACKAGE_FILENAME}"`,
+      "Content-Disposition": `attachment; filename="${product.fileName.replace(/"/g, "")}"`,
       "Content-Length": String(fileBytes.byteLength),
       "Cache-Control": "private, no-store, max-age=0",
       "X-Content-Type-Options": "nosniff",
