@@ -3,12 +3,19 @@
 import Script from "next/script";
 import { useCallback, useState } from "react";
 
+type PaddleEvent = {
+  name?: string;
+  data?: {
+    transaction_id?: string;
+  };
+};
+
 declare global {
   interface Window {
     Paddle?: {
       Initialize: (options: {
         token: string;
-        eventCallback?: (event: { name?: string }) => void;
+        eventCallback?: (event: PaddleEvent) => void;
       }) => void;
       Checkout: {
         open: (options: {
@@ -18,7 +25,6 @@ declare global {
             variant?: "one-page" | "multi-page";
             theme?: "light" | "dark";
             locale?: "zh-Hans" | "en";
-            successUrl?: string;
           };
         }) => void;
       };
@@ -34,7 +40,6 @@ export default function PaddleBuyButton() {
   const [ready, setReady] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Live checkout only. This prevents accidentally publishing a Sandbox token.
   const isConfigured = Boolean(
     token &&
       priceId &&
@@ -55,7 +60,17 @@ export default function PaddleBuyButton() {
           token,
           eventCallback: (event) => {
             if (event?.name === "checkout.completed") {
-              setMessage("付款已完成，正在进入订单确认页面…");
+              const transactionId = event.data?.transaction_id;
+
+              if (transactionId) {
+                window.location.href =
+                  `/inspection-record/pro/success?transaction_id=${encodeURIComponent(
+                    transactionId
+                  )}`;
+                return;
+              }
+
+              setMessage("付款已完成，正在确认订单…");
             }
           },
         });
@@ -76,8 +91,6 @@ export default function PaddleBuyButton() {
       return;
     }
 
-    const successUrl = `${window.location.origin}/inspection-record/pro/success`;
-
     window.Paddle.Checkout.open({
       items: [{ priceId, quantity: 1 }],
       settings: {
@@ -85,7 +98,6 @@ export default function PaddleBuyButton() {
         variant: "one-page",
         theme: "light",
         locale: "zh-Hans",
-        successUrl,
       },
     });
   };
