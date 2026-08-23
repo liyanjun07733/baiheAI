@@ -24,7 +24,7 @@ export const SERVER_PRODUCTS = [
     "slug": "pm01",
     "code": "PM-01",
     "name": "PM-01 Production Order Management Professional Edition",
-    "priceId": "pri_01m0qa28dxwsgfbqcg3b0b78hq",
+    "priceId": "pri_01m0qa28dxwsgfbgcq3b0b78hq",
     "priceText": "US$9.90",
     "version": "V1.0",
     "fileName": "BaiheAI_PM01_Production_Order_Management_Pro_V1_0.zip",
