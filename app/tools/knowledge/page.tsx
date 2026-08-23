@@ -20,30 +20,68 @@ const categories = [
 export default function KnowledgeHome() {
   return (
     <main className="min-h-screen bg-[#f7f9fc] text-slate-950">
-      <section className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-12 md:px-8 md:py-16">
-          <Link href="/tools" className="text-sm font-bold text-slate-500 hover:text-blue-600">← 返回 Factory Tools</Link>
-          <div className="mt-7 text-xs font-black tracking-[0.2em] text-blue-600">FACTORY KNOWLEDGE BASE</div>
-          <h1 className="mt-3 text-4xl font-black">工厂实用知识库</h1>
-          <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600">
-            不追求理论堆砌，重点回答：现场遇到这个问题应该先看什么、怎么判断、怎么记录、怎么改善，以及怎么防止再次发生。
-          </p>
-        </div>
-      </section>
+      <style>{`
+        @keyframes knowledgePageEnter {
+          from {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
 
-      <section className="mx-auto max-w-7xl px-6 py-12 md:px-8 md:py-16">
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-          {categories.map(([slug,cn,en,desc],i)=>(
-            <Link key={slug} href={`/tools/knowledge/${slug}`} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg">
-              <div className="text-xs font-black text-blue-600">{String(i+1).padStart(2,"0")}</div>
-              <div className="mt-4 text-xs font-bold text-slate-400">{en}</div>
-              <h2 className="mt-1 text-lg font-black">{cn}</h2>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{desc}</p>
-              <div className="mt-5 text-sm font-bold text-blue-700">进入模块 →</div>
+        .knowledge-page-enter {
+          animation: knowledgePageEnter 260ms ease-out both;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .knowledge-page-enter {
+            animation: none;
+          }
+        }
+      `}</style>
+
+      <div className="knowledge-page-enter">
+        <section className="border-b border-slate-200 bg-white">
+          <div className="mx-auto max-w-7xl px-6 py-10 md:px-8 md:py-14">
+            <Link
+              href="/tools"
+              className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-black text-slate-700 shadow-sm transition duration-200 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 md:text-base"
+            >
+              <span aria-hidden="true" className="text-lg leading-none">←</span>
+              <span>返回 Factory Tools</span>
             </Link>
-          ))}
-        </div>
-      </section>
+
+            <div className="mt-8 text-xs font-black tracking-[0.2em] text-blue-600">
+              FACTORY KNOWLEDGE BASE
+            </div>
+            <h1 className="mt-3 text-4xl font-black">工厂实用知识库</h1>
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600">
+              不追求理论堆砌，重点回答：现场遇到这个问题应该先看什么、怎么判断、怎么记录、怎么改善，以及怎么防止再次发生。
+            </p>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-6 py-12 md:px-8 md:py-16">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            {categories.map(([slug,cn,en,desc],i)=>(
+              <Link
+                key={slug}
+                href={`/tools/knowledge/${slug}`}
+                className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-blue-200 hover:shadow-lg"
+              >
+                <div className="text-xs font-black text-blue-600">{String(i+1).padStart(2,"0")}</div>
+                <div className="mt-4 text-xs font-bold text-slate-400">{en}</div>
+                <h2 className="mt-1 text-lg font-black">{cn}</h2>
+                <p className="mt-3 text-sm leading-6 text-slate-600">{desc}</p>
+                <div className="mt-5 text-sm font-bold text-blue-700">进入模块 →</div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      </div>
     </main>
   );
 }

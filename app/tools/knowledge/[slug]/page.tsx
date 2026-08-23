@@ -114,16 +114,49 @@ export default async function KnowledgeCategoryPage({ params }: { params: Promis
 
   return (
     <main className="min-h-screen bg-[#f7f9fc] text-slate-950">
-      <section className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-6xl px-6 py-12 md:px-8 md:py-16">
-          <Link href="/tools/knowledge" className="text-sm font-bold text-slate-500 hover:text-blue-600">← 返回工厂知识库</Link>
-          <div className="mt-7 text-xs font-black tracking-[0.18em] text-blue-600">{item.en.toUpperCase()}</div>
-          <h1 className="mt-3 text-4xl font-black">{item.title}</h1>
-          <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600">{item.intro}</p>
-        </div>
-      </section>
+      <style>{`
+        @keyframes knowledgePageEnter {
+          from {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
 
-      <section className="mx-auto max-w-6xl px-6 py-12 md:px-8 md:py-16">
+        .knowledge-page-enter {
+          animation: knowledgePageEnter 260ms ease-out both;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .knowledge-page-enter {
+            animation: none;
+          }
+        }
+      `}</style>
+
+      <div className="knowledge-page-enter">
+        <section className="border-b border-slate-200 bg-white">
+          <div className="mx-auto max-w-6xl px-6 py-10 md:px-8 md:py-14">
+            <Link
+              href="/tools/knowledge"
+              className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-black text-slate-700 shadow-sm transition duration-200 hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 md:text-base"
+            >
+              <span aria-hidden="true" className="text-lg leading-none">←</span>
+              <span>返回工厂知识库</span>
+            </Link>
+
+            <div className="mt-8 text-xs font-black tracking-[0.18em] text-blue-600">
+              {item.en.toUpperCase()}
+            </div>
+            <h1 className="mt-3 text-4xl font-black">{item.title}</h1>
+            <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600">{item.intro}</p>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-6 py-12 md:px-8 md:py-16">
         <div className="grid gap-5 md:grid-cols-2">
           {item.sections.map((section,i)=>(
             <div key={section.title} className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
@@ -157,7 +190,8 @@ export default async function KnowledgeCategoryPage({ params }: { params: Promis
             内容重点是让普通工厂人员能够直接执行，而不是只讲理论。
           </p>
         </div>
-      </section>
+        </section>
+      </div>
     </main>
   );
 }
