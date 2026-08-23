@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const hiddenPrefixes = [
   "/consultation",
@@ -15,8 +15,26 @@ export default function MobileLeadBar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [siteChecked, setSiteChecked] = useState(false);
+  const [isFactoryTools, setIsFactoryTools] = useState(false);
 
-  if (hiddenPrefixes.some((prefix) => pathname.startsWith(prefix))) {
+  useEffect(() => {
+    const hostname = window.location.hostname.toLowerCase();
+
+    setIsFactoryTools(
+      hostname === "tools.baihediy.com" ||
+      pathname === "/tools" ||
+      pathname.startsWith("/tools/")
+    );
+    setSiteChecked(true);
+  }, [pathname]);
+
+  // 首次加载时先不显示，避免 tools 子域名出现底栏闪烁。
+  if (
+    !siteChecked ||
+    isFactoryTools ||
+    hiddenPrefixes.some((prefix) => pathname.startsWith(prefix))
+  ) {
     return null;
   }
 
