@@ -7,6 +7,7 @@ type PaddleEvent = {
   name?: string;
   data?: {
     transaction_id?: string;
+    status?: string;
   };
 };
 
@@ -25,6 +26,7 @@ declare global {
             variant?: "one-page" | "multi-page";
             theme?: "light" | "dark";
             locale?: "zh-Hans" | "en";
+            successUrl?: string;
           };
         }) => void;
       };
@@ -35,6 +37,18 @@ declare global {
 
 const token = process.env.NEXT_PUBLIC_PADDLE_CLIENT_TOKEN || "";
 const priceId = process.env.NEXT_PUBLIC_PADDLE_PRICE_ID || "";
+
+const STORAGE_KEY = "baiheai_qc01_pending_transaction";
+
+function rememberTransaction(transactionId?: string) {
+  if (!transactionId || typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, transactionId);
+    window.sessionStorage.setItem(STORAGE_KEY, transactionId);
+  } catch {
+    // Storage can be unavailable in restrictive browser modes.
+  }
+}
 
 export default function PaddleBuyButton() {
   const [ready, setReady] = useState(false);
@@ -59,21 +73,21 @@ export default function PaddleBuyButton() {
         window.Paddle.Initialize({
           token,
           eventCallback: (event) => {
+            // Paddle exposes the transaction ID as soon as checkout is loaded.
+            // Save it before the buyer leaves the page for any payment flow.
+            if (event?.name === "checkout.loaded") {
+              rememberTransaction(event.data?.transaction_id);
+            }
+
+            // Keep the latest transaction ID as a fallback.
+            // Fulfillment does NOT rely on this frontend event.
             if (event?.name === "checkout.completed") {
-              const transactionId = event.data?.transaction_id;
-
-              if (transactionId) {
-                window.location.href =
-                  `/inspection-record/pro/success?transaction_id=${encodeURIComponent(
-                    transactionId
-                  )}`;
-                return;
-              }
-
-              setMessage("付款已完成，正在确认订单…");
+              rememberTransaction(event.data?.transaction_id);
+              setMessage("付款流程已完成，正在进入订单确认页面…");
             }
           },
         });
+
         window.__baihePaddleInitialized = true;
       }
 
@@ -91,6 +105,9 @@ export default function PaddleBuyButton() {
       return;
     }
 
+    const successUrl =
+      `${window.location.origin}/inspection-record/pro/success`;
+
     window.Paddle.Checkout.open({
       items: [{ priceId, quantity: 1 }],
       settings: {
@@ -98,6 +115,9 @@ export default function PaddleBuyButton() {
         variant: "one-page",
         theme: "light",
         locale: "zh-Hans",
+        // Let Paddle handle the redirect. This is more reliable than
+        // manually redirecting from checkout.completed.
+        successUrl,
       },
     });
   };

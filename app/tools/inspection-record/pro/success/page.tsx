@@ -1,99 +1,151 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+const STORAGE_KEY = "baiheai_qc01_pending_transaction";
+
+function isMobileDevice() {
+  if (typeof navigator === "undefined") return false;
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+}
 
 export default function QC01PurchaseSuccessPage() {
   const [status, setStatus] = useState<
-    "checking" | "ready" | "downloading" | "error"
+    "checking" | "ready" | "error" | "missing"
   >("checking");
   const [message, setMessage] = useState(
-    "正在确认付款并准备下载… / Confirming payment and preparing your download…"
+    "正在确认 Paddle 最终付款状态… / Confirming final payment status…"
   );
+  const [downloadUrl, setDownloadUrl] = useState("");
+  const autoDownloadStarted = useRef(false);
 
   const transactionId = useMemo(() => {
     if (typeof window === "undefined") return "";
-    return new URLSearchParams(window.location.search).get("transaction_id") || "";
+
+    const params = new URLSearchParams(window.location.search);
+
+    const fromUrl =
+      params.get("transaction_id") ||
+      params.get("_ptxn") ||
+      "";
+
+    if (fromUrl) return fromUrl;
+
+    try {
+      return (
+        window.sessionStorage.getItem(STORAGE_KEY) ||
+        window.localStorage.getItem(STORAGE_KEY) ||
+        ""
+      );
+    } catch {
+      return "";
+    }
   }, []);
 
-  async function downloadPackage(auto = false) {
+  function clearStoredTransaction() {
+    try {
+      window.sessionStorage.removeItem(STORAGE_KEY);
+      window.localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // Ignore storage failures.
+    }
+  }
+
+  async function verifyOrder() {
     if (!transactionId) {
-      setStatus("error");
+      setStatus("missing");
       setMessage(
-        "没有收到订单编号。请保留付款确认信息并联系产品支持。 / Transaction ID is missing."
+        "没有找到本次订单编号。请保留 Paddle 付款邮件并联系产品支持。 / Transaction ID was not found."
       );
       return;
     }
 
-    setStatus("downloading");
-    setMessage(
-      auto
-        ? "正在验证订单… / Verifying your order…"
-        : "正在准备下载… / Preparing download…"
-    );
+    setStatus("checking");
 
-    // Paddle may need a few seconds to finalize some payment methods.
-    for (let attempt = 0; attempt < 8; attempt += 1) {
+    // WeChat Pay is a deferred-capture method. Paddle says capture can
+    // normally be quick but may take up to around 10 minutes.
+    for (let attempt = 0; attempt < 120; attempt += 1) {
       try {
-        const response = await fetch(
-          `/api/paddle/download?transaction_id=${encodeURIComponent(transactionId)}`,
+        const statusResponse = await fetch(
+          `/api/paddle/download?mode=status&transaction_id=${encodeURIComponent(
+            transactionId
+          )}`,
           { cache: "no-store" }
         );
 
-        if (response.ok) {
-          const blob = await response.blob();
-          const objectUrl = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = objectUrl;
-          link.download = "BaiheAI_QC01_Pro_V2_1.zip";
-          document.body.appendChild(link);
-          link.click();
-          link.remove();
-          URL.revokeObjectURL(objectUrl);
+        if (statusResponse.ok) {
+          const directDownload =
+            `/api/paddle/download?transaction_id=${encodeURIComponent(
+              transactionId
+            )}`;
 
+          setDownloadUrl(directDownload);
           setStatus("ready");
           setMessage(
-            "下载已开始。如果浏览器没有自动下载，请点击下方按钮。 / Your download has started."
+            "✅ 订单已确认，QC-01 Professional Package 已准备好。 / Order verified. Your product is ready."
           );
+
+          // Desktop: start the ZIP download automatically once.
+          // Mobile: keep a large manual download button because mobile
+          // browsers handle ZIP files differently.
+          if (!isMobileDevice() && !autoDownloadStarted.current) {
+            autoDownloadStarted.current = true;
+            window.setTimeout(() => {
+              const link = document.createElement("a");
+              link.href = directDownload;
+              link.download = "BaiheAI_QC01_Pro_V2_1.zip";
+              document.body.appendChild(link);
+              link.click();
+              link.remove();
+            }, 600);
+          }
+
+          clearStoredTransaction();
           return;
         }
 
-        if (response.status === 409 && attempt < 7) {
+        if (statusResponse.status === 409) {
           setMessage(
-            "付款已收到，Paddle 正在完成确认，请稍候… / Payment received. Waiting for final confirmation…"
+            "付款已经提交，正在等待 Paddle 最终确认。微信支付可能需要几分钟，请不要关闭页面。 / Waiting for Paddle to finish payment capture…"
           );
-          await new Promise((resolve) => setTimeout(resolve, 2500));
+          await new Promise((resolve) => setTimeout(resolve, 5000));
           continue;
         }
 
-        const data = await response.json().catch(() => ({}));
-        throw new Error(data?.error || "Unable to verify order");
-      } catch (error) {
-        console.error(error);
+        const body = await statusResponse.json().catch(() => ({}));
         setStatus("error");
         setMessage(
-          "订单验证暂时没有完成。请稍后点击“重新验证并下载”。 / Order verification is not complete yet."
+          `订单验证失败：${body?.error || "Unknown error"} / Order verification failed.`
+        );
+        return;
+      } catch (error) {
+        console.error(error);
+
+        if (attempt < 119) {
+          setMessage(
+            "网络暂时中断，系统正在继续确认订单… / Retrying order verification…"
+          );
+          await new Promise((resolve) => setTimeout(resolve, 5000));
+          continue;
+        }
+
+        setStatus("error");
+        setMessage(
+          "暂时无法连接订单验证服务，请稍后点击重新验证。 / Unable to verify the order right now."
         );
         return;
       }
     }
+
+    setStatus("error");
+    setMessage(
+      "付款确认时间较长。请保留 Paddle 付款邮件，稍后点击重新验证。 / Payment confirmation is taking longer than expected."
+    );
   }
 
   useEffect(() => {
-    if (!transactionId) {
-      setStatus("error");
-      setMessage(
-        "没有收到订单编号。请保留付款确认信息并联系产品支持。 / Transaction ID is missing."
-      );
-      return;
-    }
-
-    setStatus("ready");
-    const timer = window.setTimeout(() => {
-      downloadPackage(true);
-    }, 1200);
-
-    return () => window.clearTimeout(timer);
+    verifyOrder();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transactionId]);
 
@@ -105,38 +157,44 @@ export default function QC01PurchaseSuccessPage() {
         </div>
 
         <div className="mt-6 text-xs font-bold tracking-[0.16em] text-blue-600">
-          PAYMENT COMPLETED
+          PAYMENT & DELIVERY
         </div>
 
         <h1 className="mt-3 text-3xl font-black">
-          付款完成 / Payment Completed
+          付款确认与产品交付 / Payment & Delivery
         </h1>
 
-        <p className="mt-4 text-sm leading-7 text-slate-600">
-          感谢购买 QC-01 Professional Edition。系统会验证 Paddle 正式订单后自动提供 ZIP Professional Package。
-          <br />
-          Thank you for purchasing QC-01 Professional Edition. Your ZIP package is released only after the live Paddle transaction is verified.
-        </p>
-
         <div className="mt-7 rounded-2xl border border-blue-200 bg-blue-50 p-5">
-          <div className="text-sm font-black text-slate-900">
-            自动数字交付 / Automatic Digital Delivery
-          </div>
-          <p className="mt-2 text-sm leading-6 text-slate-600">{message}</p>
+          <p className="text-sm font-semibold leading-7 text-slate-700">
+            {message}
+          </p>
         </div>
 
-        <button
-          type="button"
-          onClick={() => downloadPackage(false)}
-          disabled={status === "downloading" || !transactionId}
-          className="mt-7 w-full rounded-xl bg-[#0f2747] px-5 py-3 text-sm font-black text-white disabled:cursor-wait disabled:opacity-60"
-        >
-          {status === "downloading"
-            ? "正在验证订单… / Verifying…"
-            : "重新验证并下载 ZIP / Verify & Download ZIP"}
-        </button>
+        {status === "ready" && downloadUrl && (
+          <a
+            href={downloadUrl}
+            className="mt-7 block w-full rounded-xl bg-emerald-600 px-5 py-4 text-sm font-black text-white hover:bg-emerald-700"
+          >
+            下载 QC-01 Professional ZIP / Download Product
+          </a>
+        )}
 
-        <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-center">
+        {(status === "error" || status === "missing") && (
+          <button
+            type="button"
+            onClick={verifyOrder}
+            className="mt-7 w-full rounded-xl bg-[#0f2747] px-5 py-3.5 text-sm font-black text-white"
+          >
+            重新验证订单 / Verify Again
+          </button>
+        )}
+
+        <div className="mt-6 text-xs leading-6 text-slate-400">
+          PC：订单确认后会尝试自动下载，同时保留下载按钮。<br />
+          Mobile：订单确认后显示下载按钮，由用户点击保存 ZIP。
+        </div>
+
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Link
             href="/inspection-record/pro"
             className="rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700"
