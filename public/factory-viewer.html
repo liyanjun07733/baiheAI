@@ -29,12 +29,19 @@
     <header class="top"><div class="logo">PM</div><div class="brand"><h1>生产物料管理系统</h1><small>订单 · BOM · 配件 · 验货 · 成品 · 库存自动联动</small></div><div class="top-actions"><span class="hide-small">网站只读版</span><button id="quickBatch" style="display:none">批量配件入库</button><button id="spreadsheetImport" style="display:none">智能表格导入</button><button id="openDataFolder" style="display:none">打开数据文件夹</button></div></header>
     <nav class="menu"><button data-go="dashboard">首页看板</button><button data-go="orders">订单</button><button data-go="qualityReports">成品验货</button><button data-go="pendingShipments">待出库</button><button data-go="finishedShipments">已出库</button><button data-go="inventory">配件库存</button><button data-go="query">货号查询</button><button id="printCurrentPage">打印当前页</button><span class="clock" id="clock"></span></nav>
     <div class="work"><aside class="side" id="side"></aside><main class="main"><div class="head" id="pageHead"></div><section class="body" id="content"></section></main></div>
-    <footer class="statusbar"><span>数据来源：生产物料管理.xlsx</span><span id="storageLocation">数据位置：正在读取</span><span id="saveStatus">系统就绪</span><span>BaiheAI Web Viewer v2.0.14</span></footer>
+    <footer class="statusbar"><span>数据来源：生产物料管理.xlsx</span><span id="storageLocation">数据位置：正在读取</span><span id="saveStatus">系统就绪</span><span>BaiheAI Web Viewer v2.0.17</span></footer>
   </div>
   <div class="modal hidden" id="modal"><div class="dialog"><div class="dialog-title"><span id="modalTitle"></span><button id="modalX">×</button></div><form id="modalForm" novalidate><div class="dialog-body" id="modalBody"></div><div class="dialog-foot"><span class="modal-save-message" id="modalSaveMessage"></span><button type="button" id="modalCancel">取消</button><button class="save" type="submit">保存</button></div></form></div></div>
   <input class="hidden" type="file" id="importFile" accept="application/json">
   <div class="toast" id="toast"></div>
-  <script src="/factory-live-data.js"></script>
+  <script>
+    document.write('<script src="/api/factory-live-data?t=' + Date.now() + '"><\/script>');
+  </script>
+  <script>
+    if (!window.MATERIAL_SYSTEM_SEED) {
+      document.write('<script src="/factory-live-data.js?t=' + Date.now() + '"><\/script>');
+    }
+  </script>
   <script>
   (()=>{
     'use strict';
@@ -56,7 +63,7 @@
     ];
     const NAV=[
       ['业务操作',null],['dashboard','▣','首页看板'],['orders','◎','订单管理'],['materialReceipts','↓','配件入库'],['qualityReports','▤','成品验货报告'],['finishedReceipts','✓','成品入库'],['pendingShipments','⇢','成品待出库'],['finishedShipments','↗','已出库'],['inventory','▦','配件库存'],['adjustments','±','库存调整'],
-      ['查询与资料',null],['query','⌕','货号查询'],['products','●','成品资料'],['boms','◆','产品资料 / BOM'],['qualityStandards','◇','成品检验标准'],['branding','▣','公司与系统设置'],['settings','⚙','数据备份与设置']
+      ['查询与资料',null],['query','⌕','货号查询'],['products','●','成品资料'],['boms','◆','产品资料 / BOM'],['qualityStandards','◇','成品检验标准']
     ];
     let db=load(),module='dashboard',search='',qualityViewId='';
     function migrate(data){const d=data||{};for(const k of ['products','boms','orders','materialReceipts','finishedReceipts','pendingShipments','finishedShipments','adjustments','inspectionStandards','specialInspectionStandards','qualityReports','activity'])if(!Array.isArray(d[k]))d[k]=[];return d}
@@ -210,7 +217,7 @@
       if(selected)drawQuery(selected);else document.getElementById('queryResult').innerHTML='<div class="empty">尚无成品资料，请先建立成品资料。</div>'
     }
     function drawQuery(code){const box=document.getElementById('queryResult'),boms=productBoms(code),stats=statMap(),orders=orderCalculations().filter(x=>x.productCode===code),pending=orders.reduce((a,x)=>a+x.remaining,0),receipts=(db.materialReceipts||[]).filter(r=>boms.some(b=>b.stockKey===r.stockKey)),finished=(db.finishedReceipts||[]).filter(r=>r.productCode===code);let productCapacity=Infinity;const rows=boms.map(b=>{const s=stats.get(b.stockKey)||{},ownNeed=pending*num(b.usageQty),ownShort=Math.max(ownNeed-num(s.onHand),0),support=Math.floor(Math.max(num(s.onHand),0)/num(b.usageQty));productCapacity=Math.min(productCapacity,support);return{b,s,ownNeed,ownShort,support}});if(!Number.isFinite(productCapacity))productCapacity=0;box.innerHTML=`<div class="cards"><div class="card"><div class="label">未完成订单需求</div><div class="value">${fmt(pending)}</div><div class="sub">${orders.length} 张相关订单</div></div><div class="card"><div class="label">按当前库存最多可生产</div><div class="value">${fmt(Math.min(pending,productCapacity))}</div><div class="sub">由最短缺配件决定</div></div><div class="card"><div class="label">BOM配件</div><div class="value">${boms.length}</div><div class="sub">含公用件 ${boms.filter(x=>x.attribute==='公用件').length} 项</div></div><div class="card"><div class="label">累计成品入库</div><div class="value">${fmt(finished.reduce((a,x)=>a+num(x.qty),0))}</div><div class="sub">${finished.length} 条记录</div></div></div><div class="panel" style="margin-top:12px"><div class="table-wrap" style="max-height:none"><table><thead><tr><th>配件货号</th><th>配件名称规格</th><th>单套用量</th><th>库存主料号</th><th>属性</th><th>累计入库</th><th>累计耗用</th><th>当前库存</th><th>本货号需求</th><th>本货号缺口</th><th>主料总缺口</th><th>可支持成品</th><th>调整净额</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x.b.materialCode)}</td><td>${esc(x.b.materialName)}</td><td class="num">${fmt(x.b.usageQty)}</td><td>${esc(x.b.stockKey)}</td><td>${statusBadge(x.b.attribute)}</td><td class="num">${fmt(x.s.totalIn)}</td><td class="num">${fmt(x.s.totalUsed)}</td><td class="num">${fmt(x.s.onHand)}</td><td class="num">${fmt(x.ownNeed)}</td><td class="num ${x.ownShort?'danger-text':''}">${fmt(x.ownShort)}</td><td class="num ${x.s.shortage?'danger-text':''}">${fmt(x.s.shortage)}</td><td class="num">${fmt(x.support)}</td><td class="num">${fmt(x.s.adjustment)}</td></tr>`).join('')||'<tr><td colspan="13" class="empty">该成品尚未建立BOM</td></tr>'}</tbody></table></div></div><div class="dash-grid"><div class="box"><h3>相关订单</h3><table><thead><tr><th>订单号</th><th>订单数量</th><th>已入库</th><th>未完成</th><th>优先可生产</th><th>状态</th></tr></thead><tbody>${orders.map(x=>`<tr><td>${esc(x.orderNo)}</td><td class="num">${fmt(x.orderQty)}</td><td class="num">${fmt(x.finished)}</td><td class="num">${fmt(x.remaining)}</td><td class="num">${fmt(x.canProduce)}</td><td>${statusBadge(x.status)}</td></tr>`).join('')}</tbody></table></div><div class="box"><h3>相关来料记录</h3><div class="table-wrap" style="max-height:270px"><table><thead><tr><th>日期</th><th>配件</th><th>主料号</th><th>数量</th><th>备注</th></tr></thead><tbody>${receipts.slice().reverse().map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.materialCode)}</td><td>${esc(x.stockKey)}</td><td class="num">${fmt(x.qty)}</td><td>${esc(x.remark)}</td></tr>`).join('')}</tbody></table></div></div></div>`}
-    function renderSettings(){pageHead('本机数据与接口设置','正式数据保存在电脑硬盘，表格导入和自动化通过受控接口进入系统');document.getElementById('content').innerHTML=`<div class="master-grid"><div class="box"><h3>电脑硬盘自动保存</h3><p class="note">订单、库存、报告、公司设置和照片在点击保存时直接写入 BaiheAI_Data\\system_data.json；系统每天自动保留一个历史版本，最多10份。</p><div class="tools"><button class="btn primary" id="settingsOpenData">打开数据文件夹</button><button class="btn" id="backup">另存JSON备份</button><button class="btn" id="restore">导入旧版备份</button></div></div><div class="box"><h3>智能表格导入接口</h3><p class="note">桌面程序已能安全读取 xlsx、xls、xlsm 和 csv，显示工作表、表头及数据预览。后续可根据你提供的临时表格建立字段规则，确认后写入成品、BOM、订单、入库或验货位置。</p><button class="btn primary" id="settingsSpreadsheetImport">读取临时表格</button></div><div class="box"><h3>当前数据</h3><p>成品资料：<b>${db.products.length}</b>　BOM：<b>${db.boms.length}</b></p><p>订单：<b>${db.orders.length}</b>　配件入库：<b>${db.materialReceipts.length}</b></p><p>成品入库：<b>${db.finishedReceipts.length}</b>　验货报告：<b>${(db.qualityReports||[]).length}</b></p></div><div class="box"><h3>恢复原始Excel数据</h3><p class="note">会清除目前录入的全部数据并恢复到原始表格状态，执行前的硬盘数据仍有当日自动历史版本。</p><button class="btn warn" id="reset">恢复原始数据</button></div></div>`;document.getElementById('backup').onclick=backup;document.getElementById('restore').onclick=()=>document.getElementById('importFile').click();document.getElementById('reset').onclick=resetData;document.getElementById('settingsOpenData').onclick=()=>window.materialDesktop?.openStorage();document.getElementById('settingsSpreadsheetImport').onclick=openSpreadsheetImport}
+    function renderSettings(){if(READ_ONLY_WEB){module='dashboard';renderSide();return renderDashboard()}pageHead('本机数据与接口设置','正式数据保存在电脑硬盘，表格导入和自动化通过受控接口进入系统');document.getElementById('content').innerHTML=`<div class="master-grid"><div class="box"><h3>电脑硬盘自动保存</h3><p class="note">订单、库存、报告、公司设置和照片在点击保存时直接写入 BaiheAI_Data\\system_data.json；系统每天自动保留一个历史版本，最多10份。</p><div class="tools"><button class="btn primary" id="settingsOpenData">打开数据文件夹</button><button class="btn" id="backup">另存JSON备份</button><button class="btn" id="restore">导入旧版备份</button></div></div><div class="box"><h3>智能表格导入接口</h3><p class="note">桌面程序已能安全读取 xlsx、xls、xlsm 和 csv，显示工作表、表头及数据预览。后续可根据你提供的临时表格建立字段规则，确认后写入成品、BOM、订单、入库或验货位置。</p><button class="btn primary" id="settingsSpreadsheetImport">读取临时表格</button></div><div class="box"><h3>当前数据</h3><p>成品资料：<b>${db.products.length}</b>　BOM：<b>${db.boms.length}</b></p><p>订单：<b>${db.orders.length}</b>　配件入库：<b>${db.materialReceipts.length}</b></p><p>成品入库：<b>${db.finishedReceipts.length}</b>　验货报告：<b>${(db.qualityReports||[]).length}</b></p></div><div class="box"><h3>恢复原始Excel数据</h3><p class="note">会清除目前录入的全部数据并恢复到原始表格状态，执行前的硬盘数据仍有当日自动历史版本。</p><button class="btn warn" id="reset">恢复原始数据</button></div></div>`;document.getElementById('backup').onclick=backup;document.getElementById('restore').onclick=()=>document.getElementById('importFile').click();document.getElementById('reset').onclick=resetData;document.getElementById('settingsOpenData').onclick=()=>window.materialDesktop?.openStorage();document.getElementById('settingsSpreadsheetImport').onclick=openSpreadsheetImport}
     function showModal(title,body,onSave,wide=true){const modal=document.getElementById('modal'),dialog=document.querySelector('.dialog');document.getElementById('modalTitle').textContent=title;document.getElementById('modalBody').innerHTML=body;document.querySelector('.dialog-foot .save').textContent='保存';dialog.style.width=wide?'min(880px,97vw)':'min(620px,96vw)';dialog.style.transform='translate(0px,0px)';modal.classList.remove('hidden');document.getElementById('modalForm').onsubmit=e=>{e.preventDefault();onSave(new FormData(e.target),e.target)};requestAnimationFrame(()=>{try{window.focus()}catch(e){}const first=document.querySelector('#modalBody input:not([readonly]):not([disabled]),#modalBody select:not([disabled]),#modalBody textarea:not([disabled]),#modalBody button:not([disabled])');if(first){try{first.focus({preventScroll:true})}catch(e){first.focus()}}});setTimeout(()=>{try{window.focus()}catch(e){}},80)}
     function closeModal(){document.getElementById('modal').classList.add('hidden');document.getElementById('modalBody').innerHTML='';const dialog=document.querySelector('.dialog');if(dialog)dialog.style.transform='translate(0px,0px)'}
     function field(label,name,value='',type='text',extra='',full=false){return `<div class="field ${full?'full':''}"><label>${label}</label><input name="${name}" type="${type}" value="${esc(value)}" ${extra}></div>`}
@@ -470,7 +477,7 @@
       setTimeout(()=>document.querySelector('#modalBody input,#modalBody select')?.focus(),30);
     }
     function applyBranding(){const s=db.settings||{},systemName=s.systemName||'生产物料管理系统',subtitle=s.systemSubtitle||'订单 · BOM · 配件 · 验货 · 成品 · 库存自动联动',company=s.companyName||'';document.title=systemName;const h=document.querySelector('.brand h1'),small=document.querySelector('.brand small'),topName=document.querySelector('.top-actions .hide-small'),footer=document.querySelector('.statusbar span:last-child'),sideTitle=document.querySelector('.side-title');if(h)h.textContent=systemName;if(small)small.textContent=subtitle;if(topName)topName.textContent=company||'本机单机版';if(footer)footer.textContent=`${company?company+' · ':''}Material v1.3`;if(sideTitle)sideTitle.textContent=`${company||'生产物料'}功能`}
-    function renderBranding(){const s=db.settings||{};pageHead('公司与系统设置','这里只设置一次，系统顶部、浏览器标题、状态栏和所有正式验货报告会统一更新');document.getElementById('content').innerHTML=`<div class="master-grid"><form class="box" id="brandingForm"><h3>统一公司资料</h3><div class="callout">修改并保存后立即全系统生效，不需要逐份修改验货报告。以前已经保存的报告再次打开或重新下载时，也会使用新的公司名称。</div><div class="form-grid">${field('公司中文名称 <span class="required">*</span>','companyName',s.companyName||'','text','required')}${field('Company Name（英文）','companyNameEn',s.companyNameEn||'')}${textArea('公司地址 / 电话 / 邮箱','companyAddress',s.companyAddress||'')}${field('系统显示名称 <span class="required">*</span>','systemName',s.systemName||'生产物料管理系统','text','required')}${field('系统副标题','systemSubtitle',s.systemSubtitle||'订单 · BOM · 配件 · 验货 · 成品 · 库存自动联动','text','',true)}</div><div class="tools" style="margin-top:14px"><button class="btn primary" type="submit">保存并应用到整个系统</button></div></form><div class="branding-preview"><div class="preview-top"><h2 id="previewSystemName"></h2><p id="previewSubtitle"></p></div><div class="preview-report"><h3 id="previewCompany"></h3><p id="previewCompanyEn"></p><p id="previewAddress"></p><hr><b>成品验货报告</b><p>FINAL PRODUCT INSPECTION REPORT</p></div></div></div>`;const form=document.getElementById('brandingForm'),draw=()=>{document.getElementById('previewSystemName').textContent=form.elements.systemName.value||'生产物料管理系统';document.getElementById('previewSubtitle').textContent=form.elements.systemSubtitle.value;document.getElementById('previewCompany').textContent=form.elements.companyName.value||'公司名称';document.getElementById('previewCompanyEn').textContent=form.elements.companyNameEn.value;document.getElementById('previewAddress').textContent=form.elements.companyAddress.value};form.oninput=draw;draw();form.onsubmit=e=>{e.preventDefault();const data=new FormData(form);db.settings={...db.settings,companyName:String(data.get('companyName')).trim(),companyNameEn:String(data.get('companyNameEn')||'').trim(),companyAddress:String(data.get('companyAddress')||'').trim(),systemName:String(data.get('systemName')).trim()||'生产物料管理系统',systemSubtitle:String(data.get('systemSubtitle')||'').trim()};log(`更新公司与系统设置：${db.settings.companyName}`);save();applyBranding();toast('公司名称和系统名称已全局更新')}}
+    function renderBranding(){if(READ_ONLY_WEB){module='dashboard';renderSide();return renderDashboard()}const s=db.settings||{};pageHead('公司与系统设置','这里只设置一次，系统顶部、浏览器标题、状态栏和所有正式验货报告会统一更新');document.getElementById('content').innerHTML=`<div class="master-grid"><form class="box" id="brandingForm"><h3>统一公司资料</h3><div class="callout">修改并保存后立即全系统生效，不需要逐份修改验货报告。以前已经保存的报告再次打开或重新下载时，也会使用新的公司名称。</div><div class="form-grid">${field('公司中文名称 <span class="required">*</span>','companyName',s.companyName||'','text','required')}${field('Company Name（英文）','companyNameEn',s.companyNameEn||'')}${textArea('公司地址 / 电话 / 邮箱','companyAddress',s.companyAddress||'')}${field('系统显示名称 <span class="required">*</span>','systemName',s.systemName||'生产物料管理系统','text','required')}${field('系统副标题','systemSubtitle',s.systemSubtitle||'订单 · BOM · 配件 · 验货 · 成品 · 库存自动联动','text','',true)}</div><div class="tools" style="margin-top:14px"><button class="btn primary" type="submit">保存并应用到整个系统</button></div></form><div class="branding-preview"><div class="preview-top"><h2 id="previewSystemName"></h2><p id="previewSubtitle"></p></div><div class="preview-report"><h3 id="previewCompany"></h3><p id="previewCompanyEn"></p><p id="previewAddress"></p><hr><b>成品验货报告</b><p>FINAL PRODUCT INSPECTION REPORT</p></div></div></div>`;const form=document.getElementById('brandingForm'),draw=()=>{document.getElementById('previewSystemName').textContent=form.elements.systemName.value||'生产物料管理系统';document.getElementById('previewSubtitle').textContent=form.elements.systemSubtitle.value;document.getElementById('previewCompany').textContent=form.elements.companyName.value||'公司名称';document.getElementById('previewCompanyEn').textContent=form.elements.companyNameEn.value;document.getElementById('previewAddress').textContent=form.elements.companyAddress.value};form.oninput=draw;draw();form.onsubmit=e=>{e.preventDefault();const data=new FormData(form);db.settings={...db.settings,companyName:String(data.get('companyName')).trim(),companyNameEn:String(data.get('companyNameEn')||'').trim(),companyAddress:String(data.get('companyAddress')||'').trim(),systemName:String(data.get('systemName')).trim()||'生产物料管理系统',systemSubtitle:String(data.get('systemSubtitle')||'').trim()};log(`更新公司与系统设置：${db.settings.companyName}`);save();applyBranding();toast('公司名称和系统名称已全局更新')}}
     function openFormalReportDetails(id){const r=db.qualityReports.find(x=>x.id===id);if(!r)return;showModal('当前报告的客户、PO与AQL信息',`<div class="callout">公司名称不需要在这里逐份修改，统一在左侧“公司与系统设置”中维护。</div><div class="form-grid">${field('客户名称 Customer','customerName',r.customerName||'')}${field('客户PO','customerPO',r.customerPO||'')}${field('产品规格 / 图纸号','specification',r.specification||'')}${field('检验水平','samplingLevel',r.samplingLevel||'General Level II')}${field('AQL Critical','aqlCritical',r.aqlCritical||'0')}${field('AQL Major','aqlMajor',r.aqlMajor||'2.5')}${field('AQL Minor','aqlMinor',r.aqlMinor||'4.0')}${field('Critical 不良数','criticalDefects',r.criticalDefects||0,'number','min="0"')}${field('Major 不良数','majorDefects',r.majorDefects||0,'number','min="0"')}${field('Minor 不良数','minorDefects',r.minorDefects??r.defectQty??0,'number','min="0"')}${field('批准人 Approved by','approver',r.approver||'')}</div>`,data=>{Object.assign(r,{customerName:String(data.get('customerName')||''),customerPO:String(data.get('customerPO')||''),specification:String(data.get('specification')||''),samplingLevel:String(data.get('samplingLevel')||''),aqlCritical:String(data.get('aqlCritical')||''),aqlMajor:String(data.get('aqlMajor')||''),aqlMinor:String(data.get('aqlMinor')||''),criticalDefects:num(data.get('criticalDefects')),majorDefects:num(data.get('majorDefects')),minorDefects:num(data.get('minorDefects')),approver:String(data.get('approver')||'')});log(`补充正式报告资料 ${r.reportNo}`);save();closeModal();render();toast('当前报告资料已保存')},false)}
     function renderQualityReportView(id){const r=(db.qualityReports||[]).find(x=>x.id===id);if(!r){qualityViewId='';return renderQualityReports()}pageHead('正式验货报告',`${r.reportNo} · ${r.orderNo} · ${r.productCode}`,`<button class="btn" id="backQuality">← 返回报告目录</button><button class="btn" id="editQuality">编辑检验内容</button><button class="btn" id="companySettings">全局公司设置</button><button class="btn" id="formalDetails">客户/PO/AQL</button><button class="btn primary" id="downloadFormal">下载正式报告</button><button class="btn primary" id="printQuality">打印预览</button>`);document.getElementById('content').innerHTML=formalReportMarkup(r);document.getElementById('backQuality').onclick=()=>{qualityViewId='';render()};document.getElementById('editQuality').onclick=()=>openQualityReport(r.id);document.getElementById('companySettings').onclick=()=>go('branding');document.getElementById('formalDetails').onclick=()=>openFormalReportDetails(r.id);document.getElementById('downloadFormal').onclick=()=>downloadFormalReport(r.id);document.getElementById('printQuality').onclick=()=>openQualityPrintPreview(r)}
     function go(m){module=m;search='';qualityViewId='';renderSide();applyBranding();render()}
@@ -774,43 +781,121 @@
       const body='<div class="callout"><b>桌面表格接口已成功读取文件。</b> 当前阶段先进行安全预览，不会未经确认直接修改正式数据库。后续根据实际临时表格建立字段匹配规则后，可一键写入对应模块。</div><div class="form-grid">'+field('文件名称','importFileName',book.fileName,'text','readonly')+field('工作表','importSheet',sheet.name,'text','readonly')+field('数据行数','importRows',sheet.rowCount,'number','readonly')+selectField('系统识别的目标位置','importTarget',targets.map(x=>[x,importTargetLabel(x)]),target)+'</div><div class="formal-section">表头和前8行预览</div>'+preview+'<div class="callout warn-callout" style="margin-top:10px">下一步导入规则会包含：字段自动匹配、必填检查、重复数据提示、导入前预览、人工确认和错误回退。</div>';
       showModal('智能表格导入接口',body,()=>{closeModal();toast('表格接口读取正常；尚未写入正式数据')},true);document.querySelector('.dialog-foot .save').textContent='确认预览';
     }
-    function applyBranding(){const s=db.settings||{},systemName=s.systemName||'生产物料管理系统',subtitle=s.systemSubtitle||'订单 · BOM · 配件 · 验货 · 成品 · 库存自动联动',company=s.companyName||'';document.title=systemName;const h=document.querySelector('.brand h1'),small=document.querySelector('.brand small'),topName=document.querySelector('.top-actions .hide-small'),footer=document.querySelector('.statusbar span:last-child'),sideTitle=document.querySelector('.side-title');if(h)h.textContent=systemName;if(small)small.textContent=subtitle;if(topName)topName.textContent=(company?company+' · ':'')+'网站只读版';if(footer)footer.textContent=(company?company+' · ':'')+'Web Viewer v2.0.14';if(sideTitle)sideTitle.textContent=(company||'生产物料')+'功能'}
+    function applyBranding(){const s=db.settings||{},systemName=s.systemName||'生产物料管理系统',subtitle=s.systemSubtitle||'订单 · BOM · 配件 · 验货 · 成品 · 库存自动联动',company=s.companyName||'';document.title=systemName;const h=document.querySelector('.brand h1'),small=document.querySelector('.brand small'),topName=document.querySelector('.top-actions .hide-small'),footer=document.querySelector('.statusbar span:last-child'),sideTitle=document.querySelector('.side-title');if(h)h.textContent=systemName;if(small)small.textContent=subtitle;if(topName)topName.textContent=(company?company+' · ':'')+'网站只读版';if(footer)footer.textContent=(company?company+' · ':'')+'Web Viewer v2.0.17';if(sideTitle)sideTitle.textContent=(company||'生产物料')+'功能'}
 
     (function installModalInteraction(){const modal=document.getElementById('modal'),dialog=modal.querySelector('.dialog'),title=modal.querySelector('.dialog-title');let drag=null;modal.setAttribute('tabindex','-1');title.style.cursor='move';title.style.userSelect='none';modal.addEventListener('pointerdown',()=>{try{window.focus()}catch(e){}});title.addEventListener('pointerdown',e=>{if(e.button!==0||e.target.closest('button'))return;const rect=dialog.getBoundingClientRect();drag={startX:e.clientX,startY:e.clientY,baseX:rect.left-(window.innerWidth-rect.width)/2,baseY:rect.top-(window.innerHeight-rect.height)/2};try{title.setPointerCapture(e.pointerId)}catch(err){}e.preventDefault()});title.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.startX,dy=e.clientY-drag.startY,rect=dialog.getBoundingClientRect(),halfW=rect.width/2,halfH=rect.height/2,maxX=Math.max(0,window.innerWidth/2-40),maxY=Math.max(0,window.innerHeight/2-35);const x=Math.max(-maxX,Math.min(maxX,drag.baseX+dx)),y=Math.max(-maxY,Math.min(maxY,drag.baseY+dy));dialog.style.transform=`translate(${x}px,${y}px)`});const stop=e=>{if(!drag)return;drag=null;try{title.releasePointerCapture(e.pointerId)}catch(err){}};title.addEventListener('pointerup',stop);title.addEventListener('pointercancel',stop)})();
 
-    document.getElementById('modalX').onclick=closeModal;document.getElementById('modalCancel').onclick=closeModal;document.getElementById('modal').onclick=e=>{if(e.target.id==='modal')closeModal()};document.getElementById('quickBatch').onclick=openBatchReceipt;document.getElementById('spreadsheetImport').onclick=openSpreadsheetImport;document.getElementById('openDataFolder').onclick=()=>window.materialDesktop?.openStorage();document.getElementById('printCurrentPage').onclick=printCurrentView;document.getElementById('importFile').onchange=e=>{if(e.target.files[0])importBackup(e.target.files[0]);e.target.value=''};document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});setInterval(()=>document.getElementById('clock').textContent=new Date().toLocaleString('zh-CN'),1000);document.getElementById('clock').textContent=new Date().toLocaleString('zh-CN');const storageLocation=document.getElementById('storageLocation');if(DESKTOP_MODE)storageLocation.textContent='数据位置：'+window.materialDesktop.storagePath();else storageLocation.textContent='数据来源：桌面系统发布快照';
+    document.getElementById('modalX').onclick=closeModal;document.getElementById('modalCancel').onclick=closeModal;document.getElementById('modal').onclick=e=>{if(e.target.id==='modal')closeModal()};document.getElementById('quickBatch').onclick=openBatchReceipt;document.getElementById('spreadsheetImport').onclick=openSpreadsheetImport;document.getElementById('openDataFolder').onclick=()=>window.materialDesktop?.openStorage();document.getElementById('printCurrentPage').onclick=printCurrentView;document.getElementById('importFile').onchange=e=>{if(e.target.files[0])importBackup(e.target.files[0]);e.target.value=''};document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});setInterval(()=>document.getElementById('clock').textContent=new Date().toLocaleString('zh-CN'),1000);document.getElementById('clock').textContent=new Date().toLocaleString('zh-CN');const storageLocation=document.getElementById('storageLocation');if(DESKTOP_MODE)storageLocation.textContent='数据位置：'+window.materialDesktop.storagePath();else{
+      const published=window.MATERIAL_SYSTEM_PUBLISHED_AT;
+      storageLocation.textContent=published
+        ?'网站数据更新时间：'+new Date(published).toLocaleString('zh-CN')
+        :'数据来源：网站备用快照';
+    }
     window.__MATERIAL_TEST__={materialStats,orderCalculations,groupedUsage,statMap,finishedMap,finishedShipmentMap,pendingShipmentMap,finishedStockRows,standardsFor,addDefaultStandards,orderQualitySummary,nextReportNo,filterRows,formalReportMarkup,printPreviewDocument,openQualityPrintPreview,printCurrentView,samplingPlan,aqlAcceptancePlan,makeAqlPlanSet,readInspectionItemsV15,readSpecialTestsV15,defectTotalsV15,evaluateQualityV15,specialTestDecisionV15,save,desktopMode:DESKTOP_MODE,go,render,openQualityReport,renderQualityReportView,setSearch:v=>{search=String(v||'')},setModule:v=>{module=v},setFilter:(m,k,v)=>{(filterStates[m]||(filterStates[m]={}))[k]=v},getDB:()=>db,setDB:v=>{db=migrate(v)}};
+
+    function isReadOnlyQueryControl(el){
+      if(!el || !(el instanceof HTMLElement))return false;
+      if(el.id==='search' || el.matches('input[type="search"]'))return true;
+      if(el.closest('.filters'))return true;
+      if(el.closest('.query-top') && !el.closest('form'))return true;
+      if(el.closest('.query-product-search') && !el.closest('form'))return true;
+      if(el.closest('.smart-picker') && !el.closest('#modal') && !el.closest('form'))return true;
+      if(el.matches('input[type="checkbox"],input[type="radio"]') && !el.closest('#modal'))return true;
+      return false;
+    }
+
+    function isReadOnlyAllowedButton(btn){
+      const text=(btn.textContent||'').replace(/\s+/g,'').trim();
+      if(btn.id==='modalX' || btn.id==='modalCancel')return true;
+      return /(查询|搜索|筛选|查看|打印|保存PDF|保存为PDF|PDF|导出|下载|返回|物料|详情|预览|关闭|取消)/.test(text);
+    }
 
     function enforceWebsiteReadOnly(){
       if(!READ_ONLY_WEB)return;
-      const roots=[document.getElementById('pageHead'),document.getElementById('content')].filter(Boolean);
-      const writeText=/(新增|新建|添加|编辑|删除|保存|提交|确认出库|撤销出库|导入待出库|成品入库|配件入库|库存调整|批量|补充默认|生成验货报告|上传|移除|恢复备份|导入备份|重置)/;
-      const allowText=/(查看|打印|保存PDF|保存为PDF|导出|下载|返回|物料|查询|搜索|筛选|详情|预览)/;
-      roots.forEach(root=>{
-        root.querySelectorAll('button').forEach(btn=>{
-          const text=(btn.textContent||'').replace(/\s+/g,'').trim();
-          const attrs=[...btn.attributes].map(a=>a.name).join(' ');
-          const attrWrite=/(data-edit|data-delete|data-remove|data-undo|data-add|data-create|data-save|data-ship|data-import)/i.test(attrs);
-          const qualityCreate=btn.hasAttribute('data-quality-order');
-          if((attrWrite||qualityCreate||writeText.test(text))&&!allowText.test(text)){
+
+      // Every action inside the working area is hidden unless it is strictly a read/query/print/export action.
+      [document.getElementById('pageHead'),document.getElementById('content'),document.getElementById('modal')]
+        .filter(Boolean)
+        .forEach(root=>{
+          root.querySelectorAll('button').forEach(btn=>{
+            if(isReadOnlyAllowedButton(btn)){
+              btn.disabled=false;
+              btn.style.display='';
+              btn.style.opacity='';
+              btn.style.cursor='';
+              return;
+            }
             btn.disabled=true;
-            btn.title='网站只读模式：请在桌面系统中操作';
-            btn.style.opacity='.42';
-            btn.style.cursor='not-allowed';
-          }
+            btn.style.display='none';
+            btn.setAttribute('aria-hidden','true');
+            btn.title='网站只读模式：此操作只能在桌面系统中完成';
+          });
+
+          root.querySelectorAll('input,select,textarea').forEach(el=>{
+            if(isReadOnlyQueryControl(el)){
+              el.disabled=false;
+              if(el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) el.readOnly=false;
+              el.style.pointerEvents='';
+              el.style.opacity='';
+              return;
+            }
+
+            if(el instanceof HTMLInputElement){
+              if(el.type==='file'){
+                el.disabled=true;
+                el.style.display='none';
+              }else if(el.type==='checkbox' || el.type==='radio'){
+                el.disabled=true;
+              }else{
+                el.readOnly=true;
+                el.setAttribute('aria-readonly','true');
+              }
+            }else{
+              el.disabled=true;
+            }
+            el.style.cursor='default';
+          });
+
+          root.querySelectorAll('[contenteditable="true"]').forEach(el=>{
+            el.setAttribute('contenteditable','false');
+          });
         });
-      });
+
+      const save=document.querySelector('#modalForm .save');
+      if(save){save.disabled=true;save.style.display='none'}
     }
+
+    function blockWebsiteEditEvent(e){
+      if(!READ_ONLY_WEB)return;
+      const el=e.target;
+      if(!(el instanceof HTMLElement))return;
+      if(!el.matches('input,select,textarea,[contenteditable]'))return;
+      if(isReadOnlyQueryControl(el))return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }
+
+    ['beforeinput','paste','drop'].forEach(type=>{
+      document.addEventListener(type,blockWebsiteEditEvent,true);
+    });
+    document.addEventListener('change',e=>{
+      if(!READ_ONLY_WEB)return;
+      const el=e.target;
+      if(!(el instanceof HTMLElement))return;
+      if(el.matches('input,select,textarea') && !isReadOnlyQueryControl(el)){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        enforceWebsiteReadOnly();
+      }
+    },true);
+
     const __readonlyObserver=new MutationObserver(()=>enforceWebsiteReadOnly());
     __readonlyObserver.observe(document.body,{childList:true,subtree:true});
     document.addEventListener('submit',e=>{
       if(!READ_ONLY_WEB)return;
-      const title=(document.getElementById('modalTitle')?.textContent||'');
-      if(!/(分析|查看|预览)/.test(title)){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        alert('网站为只读模式，请在电脑端 BaiheAI Material System 中修改数据。');
-      }
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      alert('网站为只读模式：这里只能查询、筛选、查看、打印和下载。数据修改请在电脑端 BaiheAI Material System 中完成。');
     },true);
 
     renderSide();applyBranding();render();enforceWebsiteReadOnly();save();
