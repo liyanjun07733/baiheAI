@@ -1,3 +1,4 @@
+// v2.0.19 factory access switch
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
