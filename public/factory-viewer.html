@@ -29,7 +29,7 @@
     <header class="top"><div class="logo">PM</div><div class="brand"><h1>生产物料管理系统</h1><small>订单 · BOM · 配件 · 验货 · 成品 · 库存自动联动</small></div><div class="top-actions"><span class="hide-small">网站只读版</span><button id="quickBatch" style="display:none">批量配件入库</button><button id="spreadsheetImport" style="display:none">智能表格导入</button><button id="openDataFolder" style="display:none">打开数据文件夹</button></div></header>
     <nav class="menu"><button data-go="dashboard">首页看板</button><button data-go="orders">订单</button><button data-go="qualityReports">成品验货</button><button data-go="pendingShipments">待出库</button><button data-go="finishedShipments">已出库</button><button data-go="inventory">配件库存</button><button data-go="query">货号查询</button><button id="printCurrentPage">打印当前页</button><span class="clock" id="clock"></span></nav>
     <div class="work"><aside class="side" id="side"></aside><main class="main"><div class="head" id="pageHead"></div><section class="body" id="content"></section></main></div>
-    <footer class="statusbar"><span>数据来源：生产物料管理.xlsx</span><span id="storageLocation">数据位置：正在读取</span><span id="saveStatus">系统就绪</span><span>BaiheAI Web Viewer v2.0.17</span></footer>
+    <footer class="statusbar"><span>数据来源：BaiheAI Desktop</span><span id="storageLocation">数据位置：正在读取</span><span id="saveStatus">网站只读</span><span>BaiheAI Web Viewer v2.0.18</span></footer>
   </div>
   <div class="modal hidden" id="modal"><div class="dialog"><div class="dialog-title"><span id="modalTitle"></span><button id="modalX">×</button></div><form id="modalForm" novalidate><div class="dialog-body" id="modalBody"></div><div class="dialog-foot"><span class="modal-save-message" id="modalSaveMessage"></span><button type="button" id="modalCancel">取消</button><button class="save" type="submit">保存</button></div></form></div></div>
   <input class="hidden" type="file" id="importFile" accept="application/json">
@@ -74,7 +74,18 @@
       const seed=migrate(deep(window.MATERIAL_SYSTEM_SEED));seed.activity=[{time:new Date().toLocaleString('zh-CN'),text:'从生产物料管理.xlsx 建立本机系统'}];return seed;
     }
     function save(){
-      if(READ_ONLY_WEB){const status=document.getElementById('saveStatus');if(status)status.textContent='网站只读 · 数据由桌面端发布';return false;}
+      if(READ_ONLY_WEB){
+        const status=document.getElementById('saveStatus');
+        if(status){
+          const published=window.MATERIAL_SYSTEM_PUBLISHED_AT;
+          status.textContent=published
+            ?'最后更新：'+new Date(published).toLocaleString('zh-CN')
+            :'网站只读 · 当前为备用数据';
+          status.style.fontWeight='700';
+          status.style.color=published?'#087443':'#8b5e00';
+        }
+        return false;
+      }
       try{if(STORAGE_LOAD_FAILED)throw new Error('原数据文件读取失败，保护模式已阻止覆盖写入');const raw=JSON.stringify(db);if(DESKTOP_MODE){const result=window.materialDesktop.saveData(raw);if(!result?.ok)throw new Error(result?.error||'本机数据库写入失败')}else localStorage.setItem(STORE_KEY,raw)}
       catch(error){
         const full=!DESKTOP_MODE&&error&&(/quota|exceed/i.test(error.name||'')||/quota|空间|容量/i.test(error.message||''));
@@ -781,7 +792,7 @@
       const body='<div class="callout"><b>桌面表格接口已成功读取文件。</b> 当前阶段先进行安全预览，不会未经确认直接修改正式数据库。后续根据实际临时表格建立字段匹配规则后，可一键写入对应模块。</div><div class="form-grid">'+field('文件名称','importFileName',book.fileName,'text','readonly')+field('工作表','importSheet',sheet.name,'text','readonly')+field('数据行数','importRows',sheet.rowCount,'number','readonly')+selectField('系统识别的目标位置','importTarget',targets.map(x=>[x,importTargetLabel(x)]),target)+'</div><div class="formal-section">表头和前8行预览</div>'+preview+'<div class="callout warn-callout" style="margin-top:10px">下一步导入规则会包含：字段自动匹配、必填检查、重复数据提示、导入前预览、人工确认和错误回退。</div>';
       showModal('智能表格导入接口',body,()=>{closeModal();toast('表格接口读取正常；尚未写入正式数据')},true);document.querySelector('.dialog-foot .save').textContent='确认预览';
     }
-    function applyBranding(){const s=db.settings||{},systemName=s.systemName||'生产物料管理系统',subtitle=s.systemSubtitle||'订单 · BOM · 配件 · 验货 · 成品 · 库存自动联动',company=s.companyName||'';document.title=systemName;const h=document.querySelector('.brand h1'),small=document.querySelector('.brand small'),topName=document.querySelector('.top-actions .hide-small'),footer=document.querySelector('.statusbar span:last-child'),sideTitle=document.querySelector('.side-title');if(h)h.textContent=systemName;if(small)small.textContent=subtitle;if(topName)topName.textContent=(company?company+' · ':'')+'网站只读版';if(footer)footer.textContent=(company?company+' · ':'')+'Web Viewer v2.0.17';if(sideTitle)sideTitle.textContent=(company||'生产物料')+'功能'}
+    function applyBranding(){const s=db.settings||{},systemName=s.systemName||'生产物料管理系统',subtitle=s.systemSubtitle||'订单 · BOM · 配件 · 验货 · 成品 · 库存自动联动',company=s.companyName||'';document.title=systemName;const h=document.querySelector('.brand h1'),small=document.querySelector('.brand small'),topName=document.querySelector('.top-actions .hide-small'),footer=document.querySelector('.statusbar span:last-child'),sideTitle=document.querySelector('.side-title');if(h)h.textContent=systemName;if(small)small.textContent=subtitle;if(topName)topName.textContent=(company?company+' · ':'')+'网站只读版';if(footer)footer.textContent=(company?company+' · ':'')+'Web Viewer v2.0.18';if(sideTitle)sideTitle.textContent=(company||'生产物料')+'功能'}
 
     (function installModalInteraction(){const modal=document.getElementById('modal'),dialog=modal.querySelector('.dialog'),title=modal.querySelector('.dialog-title');let drag=null;modal.setAttribute('tabindex','-1');title.style.cursor='move';title.style.userSelect='none';modal.addEventListener('pointerdown',()=>{try{window.focus()}catch(e){}});title.addEventListener('pointerdown',e=>{if(e.button!==0||e.target.closest('button'))return;const rect=dialog.getBoundingClientRect();drag={startX:e.clientX,startY:e.clientY,baseX:rect.left-(window.innerWidth-rect.width)/2,baseY:rect.top-(window.innerHeight-rect.height)/2};try{title.setPointerCapture(e.pointerId)}catch(err){}e.preventDefault()});title.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.startX,dy=e.clientY-drag.startY,rect=dialog.getBoundingClientRect(),halfW=rect.width/2,halfH=rect.height/2,maxX=Math.max(0,window.innerWidth/2-40),maxY=Math.max(0,window.innerHeight/2-35);const x=Math.max(-maxX,Math.min(maxX,drag.baseX+dx)),y=Math.max(-maxY,Math.min(maxY,drag.baseY+dy));dialog.style.transform=`translate(${x}px,${y}px)`});const stop=e=>{if(!drag)return;drag=null;try{title.releasePointerCapture(e.pointerId)}catch(err){}};title.addEventListener('pointerup',stop);title.addEventListener('pointercancel',stop)})();
 
