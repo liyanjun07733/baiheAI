@@ -22,12 +22,24 @@
     @media(max-width:900px){.dialog.wide .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.sampling-box{grid-template-columns:repeat(3,minmax(110px,1fr))}}@media(max-width:650px){.dialog.wide .form-grid{grid-template-columns:1fr}.dialog{max-height:calc(100vh - 10px)}.modal{padding:5px}.sampling-box{grid-template-columns:1fr 1fr}.product-main-upload{grid-template-columns:1fr}.formal-head-grid{grid-template-columns:1fr}.formal-product-photo,.formal-photo-placeholder{margin:auto}}
     @media print{.top,.menu,.side,.statusbar,.head,.filters,.actions,.no-print{display:none!important}.app,.work,.main{display:block;height:auto}.body{padding:0}.panel{border:0;box-shadow:none}.table-wrap{max-height:none;overflow:visible}th{position:static}.inspection-report{border:0;padding:0;max-width:none}.inspection-report table{page-break-inside:auto}.inspection-report tr{page-break-inside:avoid}.photo-grid img{max-height:230px}}
     .qc-two-part{display:grid;gap:12px}.qc-section{border:1px solid #b6c8d6;border-radius:8px;background:#fff;overflow:hidden}.qc-section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;background:#eaf3f9;border-bottom:1px solid #b6c8d6}.qc-section-head h3{margin:0;font-size:15px;color:#174d78}.qc-section-head p{margin:2px 0 0;font-size:12px;color:#526b7d}.qc-table{table-layout:fixed}.qc-table th{white-space:normal;padding:7px 5px;line-height:1.25;text-align:center}.qc-table td{padding:5px}.qc-table input,.qc-table select{display:block;width:100%;min-width:0;padding:5px 4px}.qc-table input[type=number]{text-align:center}.inspection-qc-table{min-width:1040px}.inspection-qc-table th:nth-child(1){width:112px}.inspection-qc-table th:nth-child(2){width:235px}.inspection-qc-table th:nth-child(3){width:95px}.inspection-qc-table th:nth-child(4){width:72px}.inspection-qc-table th:nth-child(5){width:65px}.inspection-qc-table th:nth-child(6){width:58px}.inspection-qc-table th:nth-child(7){width:58px}.inspection-qc-table th:nth-child(8){width:58px}.inspection-qc-table th:nth-child(9){width:250px}.inspection-qc-table th:nth-child(10){width:38px}.special-qc-table{min-width:1160px}.special-qc-table th:nth-child(1){width:112px}.special-qc-table th:nth-child(2){width:250px}.special-qc-table th:nth-child(3){width:100px}.special-qc-table th:nth-child(4){width:72px}.special-qc-table th:nth-child(5){width:62px}.special-qc-table th:nth-child(6){width:62px}.special-qc-table th:nth-child(7){width:78px}.special-qc-table th:nth-child(8){width:68px}.special-qc-table th:nth-child(9){width:66px}.special-qc-table th:nth-child(10){width:250px}.special-qc-table th:nth-child(11){width:38px}.remove-inspection,.remove-special{width:25px;height:25px;border:0;border-radius:4px;background:#fce7e7;color:#b52b2b;font-size:18px;line-height:1}.qc-locked{background:#edf2f5!important;color:#405767;text-align:center}.qc-count-critical{background:#ffe8e8!important}.qc-count-major{background:#fff0dc!important}.qc-count-minor{background:#fff9d9!important}.aql-live-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}.aql-card{border:1px solid #b7c6d1;border-radius:7px;padding:8px 10px;background:#fff}.aql-card strong{display:block;font-size:15px}.aql-card .aql-numbers{display:flex;gap:12px;margin-top:5px;font-size:12px}.aql-card .aql-numbers b{font-size:16px;color:#174d78}.aql-card.pass{border-color:#4f9d69;background:#eefaf2}.aql-card.ng{border-color:#c34d4d;background:#fff0f0}.aql-card.hold{border-color:#c9962a;background:#fff9e8}.qc-final-line{display:grid;grid-template-columns:1fr auto;align-items:center;gap:14px;border:2px solid #174d78;border-radius:8px;padding:9px 12px;background:#f4f9fc}.qc-final-line strong{font-size:24px}.qc-help{font-size:12px;line-height:1.5;color:#4e6575}.qc-zero{display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap}.qc-zero input{display:inline-block;width:auto}.modal-save-message{margin-right:auto;align-self:center;color:#476273;font-size:12px}.modal-save-message.error{color:#b42318;font-weight:700}.dialog-foot .save:disabled{opacity:.65;cursor:wait}.report-aql-table td,.report-aql-table th{text-align:center}.report-aql-table td:first-child{text-align:left}.report-aql-result{font-weight:700}.report-aql-result.pass{color:#15803d}.report-aql-result.ng{color:#b91c1c}.report-aql-result.hold{color:#a16207}.formal-note{font-size:10px;color:#555;margin:5px 0}.qc-dialog-legend{display:flex;flex-wrap:wrap;gap:7px 14px;font-size:12px;margin-top:6px}.qc-dialog-legend span:before{content:'';display:inline-block;width:10px;height:10px;margin-right:4px;border-radius:2px;vertical-align:-1px}.qc-dialog-legend .critical:before{background:#ffd0d0}.qc-dialog-legend .major:before{background:#ffe1ba}.qc-dialog-legend .minor:before{background:#fff1a8}@media(max-width:800px){.aql-live-grid{grid-template-columns:1fr}.qc-final-line{grid-template-columns:1fr}.qc-section-head{align-items:flex-start;flex-direction:column}}@media print{.report-aql-table{page-break-inside:avoid}}
-  </style>
+  
+    /* Web read-only: Packing List module (display + print only) */
+    .packing-print{max-width:1080px;margin:auto;background:#fff;color:#111;font-family:Arial,"Microsoft YaHei",sans-serif;line-height:1.28;font-weight:500;font-variant-numeric:tabular-nums;padding:18px}
+    .packing-print table,.packing-print thead,.packing-print tbody,.packing-print tr,.packing-print th,.packing-print td{background:#fff!important;background-image:none!important}
+    .packing-print .pl-doc-head{display:grid;grid-template-columns:minmax(0,61%) minmax(285px,39%);gap:20px;align-items:start;margin:0 0 14px}
+    .packing-print .pl-head-left{min-height:150px;display:flex;flex-direction:column}.packing-print .pl-company{text-align:center;margin:0}
+    .packing-print .pl-company h2{line-height:1.15;margin:0 0 3px;font-weight:800;white-space:nowrap}.packing-print .pl-company h3{line-height:1.15;margin:0;font-weight:700;white-space:nowrap}
+    .packing-print .pl-title{text-align:center;margin:auto 0 0}.packing-print .pl-title h1{font-size:25px;letter-spacing:7px;line-height:1.05;margin:0;font-weight:900}.packing-print .pl-title h2{font-size:21px;line-height:1.1;margin:6px 0 0;display:inline-block;border-bottom:2.2px solid #111;padding:0 20px 6px;font-weight:900}
+    .packing-print .pl-meta{font-size:11px;margin:0;font-weight:600}.packing-print .pl-page{text-align:right;font-size:10.5px;margin:0 0 22px;font-weight:700}.packing-print .pl-line{display:grid;grid-template-columns:130px minmax(120px,1fr);gap:10px;align-items:end;margin:7px 0}.packing-print .pl-label{line-height:1.1;font-weight:700}.packing-print .pl-value{border-bottom:1.35px solid #111;min-height:21px;padding:1px 2px 2px;font-size:10.6px;font-weight:700}
+    .packing-print table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:10.2px;margin-top:3px;font-weight:500}.packing-print thead th{position:static;background:#fff!important;color:#111!important;border-top:1.7px solid #111;border-bottom:1.7px solid #111;border-left:0!important;border-right:0!important;text-align:center;font-weight:800;line-height:1.15;padding:6px 3px}.packing-print tbody td{border-bottom:1px solid #777;border-left:0!important;border-right:0!important;padding:8px 5px 7px;vertical-align:top;line-height:1.28;background:#fff!important;white-space:normal}.packing-print td.num{text-align:right}.packing-print .pl-item-code{font-weight:900;font-size:11.6px;margin-top:4px}.packing-print .pl-po{font-size:11.4px;font-weight:900}.packing-print .pl-carton-count{font-size:14px;font-weight:900}.packing-print .pl-qty-total{font-size:12.2px;font-weight:900;margin-top:5px}.packing-print .pl-secondary{font-size:9.4px;font-weight:600;color:#333}.packing-print .pl-logistics{font-size:9.6px;font-weight:600;color:#222}.packing-print .pl-main-value{font-weight:800;font-size:11.2px;margin-top:5px}.packing-print .pl-packrule{font-size:9px;color:#333;margin-top:3px;font-weight:600}
+    .packing-print .pl-total{display:grid;grid-template-columns:1.55fr 1fr 1fr .8fr;gap:12px;border-top:2px dashed #222;margin-top:9px;padding-top:10px;font-size:11.2px;font-weight:800;align-items:baseline}.packing-print .pl-total span:nth-child(n+2){text-align:right}.packing-print .pl-footer{text-align:center;margin-top:34px}.packing-print .pl-footer h3{font-size:13.5px;margin:0;font-weight:800}.packing-print .pl-footer p{font-size:10.5px;margin:3px 0 0;font-weight:600}.packing-print .packing-note{font-size:9px;color:#333;margin-top:10px}.packing-print col.pl-c-package{width:10%}.packing-print col.pl-c-item{width:16%}.packing-print col.pl-c-desc{width:17%}.packing-print col.pl-c-qty{width:21%}.packing-print col.pl-c-weight{width:18%}.packing-print col.pl-c-cbm{width:9%}.packing-print col.pl-c-dim{width:9%}
+    @media print{.packing-print,.packing-print *{background:#fff!important;background-image:none!important;box-shadow:none!important}.packing-print{max-width:none!important;width:100%!important;overflow:visible!important;padding:0!important}.packing-print .pl-doc-head,.packing-print tr{break-inside:avoid}.packing-print .pl-footer{margin-top:28px}}
+</style>
 </head>
 <body>
   <div class="app">
     <header class="top"><div class="logo">PM</div><div class="brand"><h1>生产物料管理系统</h1><small>订单 · BOM · 配件 · 验货 · 成品 · 库存自动联动</small></div><div class="top-actions"><span class="hide-small">网站只读版</span><button id="quickBatch" style="display:none">批量配件入库</button><button id="spreadsheetImport" style="display:none">智能表格导入</button><button id="openDataFolder" style="display:none">打开数据文件夹</button></div></header>
-    <nav class="menu"><button data-go="dashboard">首页看板</button><button data-go="orders">订单</button><button data-go="qualityReports">成品验货</button><button data-go="pendingShipments">待出库</button><button data-go="finishedShipments">已出库</button><button data-go="inventory">配件库存</button><button data-go="query">货号查询</button><button id="printCurrentPage">打印当前页</button><span class="clock" id="clock"></span></nav>
+    <nav class="menu"><button data-go="dashboard">首页看板</button><button data-go="orders">订单</button><button data-go="qualityReports">成品验货</button><button data-go="pendingShipments">待出库</button><button data-go="packingLists">装箱单</button><button data-go="finishedShipments">已出库</button><button data-go="inventory">配件库存</button><button data-go="query">货号查询</button><button id="printCurrentPage">打印当前页</button><span class="clock" id="clock"></span></nav>
     <div class="work"><aside class="side" id="side"></aside><main class="main"><div class="head" id="pageHead"></div><section class="body" id="content"></section></main></div>
     <footer class="statusbar"><span>数据来源：BaiheAI Desktop</span><span id="storageLocation">数据位置：正在读取</span><span id="saveStatus">网站只读</span><span>BaiheAI Web Viewer v2.0.19</span></footer>
   </div>
@@ -66,7 +78,7 @@
       {item:'标识与包装',standard:'货号、标签、数量、配件及包装符合订单要求',method:'目视/点数',sampleMode:'MAIN',defaultSample:3}
     ];
     const NAV=[
-      ['业务操作',null],['dashboard','▣','首页看板'],['orders','◎','订单管理'],['materialReceipts','↓','配件入库'],['qualityReports','▤','成品验货报告'],['finishedReceipts','✓','成品入库'],['pendingShipments','⇢','成品待出库'],['finishedShipments','↗','已出库'],['inventory','▦','配件库存'],['adjustments','±','库存调整'],
+      ['业务操作',null],['dashboard','▣','首页看板'],['orders','◎','订单管理'],['materialReceipts','↓','配件入库'],['qualityReports','▤','成品验货报告'],['finishedReceipts','✓','成品入库'],['pendingShipments','⇢','成品待出库'],['packingLists','▧','装箱单'],['finishedShipments','↗','已出库'],['inventory','▦','配件库存'],['adjustments','±','库存调整'],
       ['查询与资料',null],['query','⌕','货号查询'],['products','●','成品资料'],['boms','◆','产品资料 / BOM'],['qualityStandards','◇','成品检验标准']
     ];
     let db=load(),module='dashboard',search='',qualityViewId='';
@@ -797,6 +809,109 @@
       showModal('智能表格导入接口',body,()=>{closeModal();toast('表格接口读取正常；尚未写入正式数据')},true);document.querySelector('.dialog-foot .save').textContent='确认预览';
     }
     function applyBranding(){const s=db.settings||{},systemName=s.systemName||'生产物料管理系统',subtitle=s.systemSubtitle||'订单 · BOM · 配件 · 验货 · 成品 · 库存自动联动',company=s.companyName||'';document.title=systemName;const h=document.querySelector('.brand h1'),small=document.querySelector('.brand small'),topName=document.querySelector('.top-actions .hide-small'),footer=document.querySelector('.statusbar span:last-child'),sideTitle=document.querySelector('.side-title');if(h)h.textContent=systemName;if(small)small.textContent=subtitle;if(topName)topName.textContent=(company?company+' · ':'')+'网站只读版';if(footer)footer.textContent=(company?company+' · ':'')+'Web Viewer v2.0.19';if(sideTitle)sideTitle.textContent=(company||'生产物料')+'功能'}
+
+    // ===== Web read-only Packing List module: added on top of the last stable viewer =====
+    function packingListTotals(rec){
+      const items=rec?.items||[];
+      return{
+        qty:items.reduce((a,x)=>a+num(x.shipQty),0),
+        cartons:items.reduce((a,x)=>a+num(x.cartonCount),0),
+        nw:items.reduce((a,x)=>a+num(x.totalNW),0),
+        gw:items.reduce((a,x)=>a+num(x.totalGW),0),
+        cbm:items.reduce((a,x)=>a+num(x.totalCbm),0)
+      }
+    }
+    function packingCompanyFontSize(text,base=19,min=10.5){
+      const str=String(text||'').trim();if(!str)return base;
+      let units=0;for(const ch of str){if(/[\u4e00-\u9fff]/.test(ch))units+=1.75;else if(/[MW@%&]/.test(ch))units+=1.35;else if(/[A-Z0-9]/.test(ch))units+=1.05;else if(/\s/.test(ch))units+=.45;else units+=.85}
+      const size=units<=34?base:base*(34/units);return Math.max(min,Math.min(base,size)).toFixed(2)
+    }
+    function packingCompanyCnFontSize(text,base=13.5,min=10){
+      const str=String(text||'').trim();if(!str)return base;
+      let units=0;for(const ch of str)units+=/[\u4e00-\u9fff]/.test(ch)?1.75:.9;
+      const size=units<=40?base:base*(40/units);return Math.max(min,Math.min(base,size)).toFixed(2)
+    }
+    function packingListMarkup(rec){
+      const s=db.settings||{},t=packingListTotals(rec),items=rec?.items||[];
+      return `<div class="packing-print">
+        <div class="pl-doc-head">
+          <div class="pl-head-left"><div class="pl-company">
+            <h2 style="font-size:${packingCompanyFontSize(s.companyName||'',19,10.5)}px">${esc(s.companyName||'')}</h2>
+            <h3 style="font-size:${packingCompanyCnFontSize(s.companyNameEn||'',13.5,10)}px">${esc(s.companyNameEn||'')}</h3>
+          </div><div class="pl-title"><h1>装 箱 单</h1><h2>PACKING LIST</h2></div></div>
+          <div class="pl-meta"><div class="pl-page">PACKING LIST</div>
+            <div class="pl-line"><span class="pl-label">发票编号<br>Invoice</span><span class="pl-value">${esc(rec.invoiceNo||'')}</span></div>
+            <div class="pl-line"><span class="pl-label">日　期<br>Invoice Date</span><span class="pl-value">${esc(rec.packingDate||'')}</span></div>
+            <div class="pl-line"><span class="pl-label">售货合约号码<br>P/O or S/C NO.</span><span class="pl-value">${esc(rec.poReference||'')}</span></div>
+          </div>
+        </div>
+        <table><colgroup><col class="pl-c-package"><col class="pl-c-item"><col class="pl-c-desc"><col class="pl-c-qty"><col class="pl-c-weight"><col class="pl-c-cbm"><col class="pl-c-dim"></colgroup>
+          <thead><tr><th>件数<br>Package</th><th>货号<br>Item #</th><th>品名<br>Item Description</th><th>数量<br>QUANTITY</th><th>净重/毛重<br>Net/Gross Wt</th><th>体积(CBM)<br>CBM</th><th>尺码(cm)<br>CTN DIM</th></tr></thead>
+          <tbody>${items.map(x=>`<tr>
+            <td class="num"><div class="pl-carton-count">${fmt(x.cartonCount)}</div>${num(x.partialQty)>0?`<div class="pl-packrule">${fmt(x.fullCartons)} FULL + 1 PARTIAL</div>`:''}</td>
+            <td><div class="pl-item-code">${esc(x.productCode)}</div><div class="pl-po">P.O ${esc(x.orderNo)}</div></td>
+            <td>${esc(x.productName)}</td>
+            <td class="num"><div class="pl-secondary">@ ${fmt(x.cartonPackQty)} PCS/CTN</div><div class="pl-qty-total">${fmt(x.shipQty)} PCS</div><div class="pl-packrule pl-secondary">${esc(x.packingRule||'')}</div></td>
+            <td class="num"><div class="pl-logistics">${num(x.cartonNWKg).toFixed(2)} / ${num(x.cartonGWKg).toFixed(2)} KGS/CTN</div><div class="pl-main-value">N.W. ${num(x.totalNW).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div><div class="pl-main-value" style="margin-top:2px">G.W. ${num(x.totalGW).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></td>
+            <td class="num"><div class="pl-logistics">${num(x.cbmPerCarton).toFixed(4)} /CTN</div><div class="pl-main-value">${num(x.totalCbm).toFixed(2)} TOTAL</div></td>
+            <td class="num">${fmt(x.cartonLengthCm)}×${fmt(x.cartonWidthCm)}×${fmt(x.cartonHeightCm)}</td>
+          </tr>`).join('')}</tbody>
+        </table>
+        <div class="pl-total"><span>Packed in ${fmt(t.cartons)} CARTONS</span><span>N.W. ${t.nw.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} KGS</span><span>G.W. ${t.gw.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})} KGS</span><span>${t.cbm.toFixed(2)} CBM</span></div>
+        ${rec.remark?`<div class="packing-note"><b>Remark:</b> ${esc(rec.remark)}</div>`:''}
+        <div class="pl-footer"><h3 style="white-space:nowrap;font-size:${packingCompanyFontSize(s.companyName||'',13.5,9.5)}px">${esc(s.companyName||'')}</h3><p style="white-space:nowrap;font-size:${packingCompanyCnFontSize(s.companyNameEn||'',10.5,9)}px">${esc(s.companyNameEn||'')}</p></div>
+      </div>`
+    }
+    function renderPackingLists(){
+      const rows=filterRows([...(db.packingLists||[])].reverse());
+      pageHead('装箱单','网站只读查看：显示桌面系统已经保存并同步的装箱单；网页不会新增、删除或修改装箱数据。');
+      const html=rows.length?`<table><thead><tr><th>装箱单号</th><th>日期</th><th>客户</th><th>PO / S.C.</th><th>货号</th><th>ITEM数</th><th>出货数量</th><th>外箱数</th><th>净重 NW</th><th>毛重 GW</th><th>CBM</th><th>状态</th><th>查看</th></tr></thead><tbody>${rows.map(x=>{
+        const t=packingListTotals(x),codes=[...new Set((x.items||[]).map(i=>i.productCode).filter(Boolean))].join(', ');
+        return `<tr><td><b>${esc(x.packingNo||'')}</b></td><td>${esc(x.packingDate||'')}</td><td>${esc(x.customerName||'')}</td><td>${esc(x.poReference||'')}</td><td>${esc(codes)}</td><td class="num"><b>${(x.items||[]).length}</b></td><td class="num">${fmt(t.qty)}</td><td class="num"><b>${fmt(t.cartons)}</b></td><td class="num">${t.nw.toFixed(2)} KG</td><td class="num">${t.gw.toFixed(2)} KG</td><td class="num">${t.cbm.toFixed(2)}</td><td>${statusBadge(x.status||'已保存')}</td><td class="actions"><button data-pl-view="${esc(x.id)}">查看整张</button></td></tr>`
+      }).join('')}</tbody></table>`:'<div class="empty">桌面系统目前还没有同步可显示的装箱单。</div>';
+      listShell(rows,html,'搜索装箱单号、PO、客户、货号...');
+      document.querySelectorAll('[data-pl-view]').forEach(b=>b.onclick=()=>viewPackingList(b.dataset.plView));
+      enforceWebsiteReadOnly();
+    }
+    function viewPackingList(id){
+      const rec=(db.packingLists||[]).find(x=>String(x.id)===String(id));if(!rec)return;
+      pageHead('装箱单详情',`${rec.packingNo||''} · ${rec.packingDate||''}`,`<button class="btn" id="plBack">← 返回装箱单目录</button><button class="btn primary" id="plPrint">打印 / 保存PDF</button>`);
+      document.getElementById('content').innerHTML=`<div class="panel" style="background:#fff">${packingListMarkup(rec)}</div>`;
+      document.getElementById('plBack').onclick=()=>{module='packingLists';search='';render()};
+      document.getElementById('plPrint').onclick=()=>window.print();
+      enforceWebsiteReadOnly();
+    }
+    // Final data migration override: keep all old modules and initialize packingLists only.
+    function migrate(data){
+      const d=data||{};
+      for(const k of ['products','boms','orders','materialReceipts','finishedReceipts','pendingShipments','finishedShipments','adjustments','inspectionStandards','specialInspectionStandards','qualityReports','packingLists','activity'])if(!Array.isArray(d[k]))d[k]=[];
+      for(const r of d.finishedShipments)if(!r.status)r.status='已出库';
+      if(!d.settings||typeof d.settings!=='object'||Array.isArray(d.settings))d.settings={};
+      d.settings={companyName:'',companyNameEn:'',companyAddress:'',systemName:'生产物料管理系统',systemSubtitle:'订单 · BOM · 配件 · 验货 · 成品 · 库存自动联动',...d.settings};
+      return d
+    }
+    // Final renderer override: same stable routes + packingLists.
+    function render(){
+      let result;
+      if(module==='dashboard')result=renderDashboard();
+      else if(module==='orders')result=renderOrders();
+      else if(module==='materialReceipts')result=renderMaterialReceipts();
+      else if(module==='qualityReports')result=renderQualityReports();
+      else if(module==='finishedReceipts')result=renderFinishedReceipts();
+      else if(module==='pendingShipments')result=renderPendingShipments();
+      else if(module==='packingLists')result=renderPackingLists();
+      else if(module==='finishedShipments')result=renderFinishedShipments();
+      else if(module==='inventory')result=renderInventory();
+      else if(module==='adjustments')result=renderAdjustments();
+      else if(module==='query')result=renderQuery();
+      else if(module==='products')result=renderProducts();
+      else if(module==='boms')result=renderBoms();
+      else if(module==='qualityStandards')result=renderQualityStandards();
+      else if(module==='branding')result=renderBranding();
+      else result=renderSettings();
+      if(module==='qualityReports'&&!qualityViewId)installListEnhancements(lastFilteredRows,exportQualityReports);
+      return result
+    }
 
     (function installModalInteraction(){const modal=document.getElementById('modal'),dialog=modal.querySelector('.dialog'),title=modal.querySelector('.dialog-title');let drag=null;modal.setAttribute('tabindex','-1');title.style.cursor='move';title.style.userSelect='none';modal.addEventListener('pointerdown',()=>{try{window.focus()}catch(e){}});title.addEventListener('pointerdown',e=>{if(e.button!==0||e.target.closest('button'))return;const rect=dialog.getBoundingClientRect();drag={startX:e.clientX,startY:e.clientY,baseX:rect.left-(window.innerWidth-rect.width)/2,baseY:rect.top-(window.innerHeight-rect.height)/2};try{title.setPointerCapture(e.pointerId)}catch(err){}e.preventDefault()});title.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.startX,dy=e.clientY-drag.startY,rect=dialog.getBoundingClientRect(),halfW=rect.width/2,halfH=rect.height/2,maxX=Math.max(0,window.innerWidth/2-40),maxY=Math.max(0,window.innerHeight/2-35);const x=Math.max(-maxX,Math.min(maxX,drag.baseX+dx)),y=Math.max(-maxY,Math.min(maxY,drag.baseY+dy));dialog.style.transform=`translate(${x}px,${y}px)`});const stop=e=>{if(!drag)return;drag=null;try{title.releasePointerCapture(e.pointerId)}catch(err){}};title.addEventListener('pointerup',stop);title.addEventListener('pointercancel',stop)})();
 
