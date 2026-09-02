@@ -79,7 +79,7 @@
     ];
     const NAV=[
       ['业务操作',null],['dashboard','▣','首页看板'],['orders','◎','订单管理'],['materialReceipts','↓','配件入库'],['qualityReports','▤','成品验货报告'],['finishedReceipts','✓','成品入库'],['pendingShipments','⇢','成品待出库'],['packingLists','▧','装箱单'],['finishedShipments','↗','已出库'],['inventory','▦','配件库存'],['adjustments','±','库存调整'],
-      ['查询与资料',null],['query','⌕','货号查询'],['products','●','成品资料'],['boms','◆','产品资料 / BOM'],['qualityStandards','◇','成品检验标准']
+      ['查询与资料',null],['query','⌕','货号查询'],['products','●','成品资料'],['packingMasters','▥','产品包装资料'],['boms','◆','产品资料 / BOM'],['qualityStandards','◇','成品检验标准']
     ];
     let db=load(),module='dashboard',search='',qualityViewId='';
     function migrate(data){const d=data||{};for(const k of ['products','boms','orders','materialReceipts','finishedReceipts','pendingShipments','finishedShipments','adjustments','inspectionStandards','specialInspectionStandards','qualityReports','activity'])if(!Array.isArray(d[k]))d[k]=[];return d}
@@ -436,6 +436,7 @@
       finishedReceipts:[['productCode','全部成品货号']],
       pendingShipments:[['productCode','全部成品货号']],
       packingLists:[['status','全部状态']],
+      packingMasters:[['productCode','全部成品货号']],
       finishedShipments:[['productCode','全部成品货号'],['batchNo','全部出库批次'],['status','全部状态']],
       inventory:[['attribute','全部物料属性'],['status','全部库存状态']],
       adjustments:[['type','全部调整类型'],['stockKey','全部库存主料号']],
@@ -458,7 +459,7 @@
       });lastFilteredRows=result;return result;
     }
     function rowKey(row,index){return String(row.id||row.stockKey||row.code||`${module}-${index}`)}
-    function moduleExporter(){return({orders:exportOrders,materialReceipts:exportMaterial,qualityReports:exportQualityReports,finishedReceipts:exportFinished,pendingShipments:exportPendingShipments,packingLists:exportPackingLists,finishedShipments:exportFinishedShipments,inventory:exportInventory,adjustments:exportAdjustments,products:exportProducts,boms:exportBoms})[module]}
+    function moduleExporter(){return({orders:exportOrders,materialReceipts:exportMaterial,qualityReports:exportQualityReports,finishedReceipts:exportFinished,pendingShipments:exportPendingShipments,packingLists:exportPackingLists,finishedShipments:exportFinishedShipments,inventory:exportInventory,adjustments:exportAdjustments,products:exportProducts,packingMasters:exportPackingMasters,boms:exportBoms})[module]}
 
     function listShell(rows,html,placeholder='输入关键字查询...'){
       document.getElementById('content').innerHTML=`<div class="panel"><div class="filters"><input id="search" type="search" placeholder="${esc(placeholder)}" value="${esc(search)}"><span class="count">筛选后 ${rows.length} 条</span></div><div class="table-wrap">${html}</div></div>`;
@@ -916,10 +917,23 @@
       document.getElementById('plPrint').onclick=()=>window.print();
       enforceWebsiteReadOnly();
     }
+    // Product packing master: website read-only display. Data already travels in the full desktop snapshot.
+    function packingMasterCartonCbm(x){return Math.max(0,num(x?.cartonLengthCm))*Math.max(0,num(x?.cartonWidthCm))*Math.max(0,num(x?.cartonHeightCm))/1000000}
+    function packingMasterUnitCbm(x){const q=Math.max(0,num(x?.cartonPackQty));return q>0?packingMasterCartonCbm(x)/q:0}
+    function packingMasterCartonNW(x){return Math.max(0,num(x?.unitWeightKg))*Math.max(0,num(x?.cartonPackQty))}
+    function exportPackingMasters(rows){csv(['成品货号','品名','产品重量KG/PCS','每内盒装量','每外箱内盒数','每箱装量','长cm','宽cm','高cm','CBM/CTN','CBM/PCS','整箱NW KG（自动）','整箱GW KG（手填）','备注'],rows.map(x=>[x.productCode,x.productName,x.unitWeightKg,x.innerPackQty,x.innerBoxesPerCarton,x.cartonPackQty,x.cartonLengthCm,x.cartonWidthCm,x.cartonHeightCm,packingMasterCartonCbm(x).toFixed(4),packingMasterUnitCbm(x).toFixed(6),packingMasterCartonNW(x).toFixed(2),x.cartonGWKg,x.remark||'']),'产品包装资料')}
+    function renderPackingMasters(){
+      let rows=filterRows([...(db.packingMasters||[])].sort((a,b)=>String(a.productCode).localeCompare(String(b.productCode),'zh-CN')));
+      pageHead('产品包装资料','来自桌面系统同步的包装标准。网站仅查看，不会修改桌面数据。整箱净重 NW = 产品重量 × 每箱装量；CBM 按外箱尺寸自动计算。',`<button class="btn" id="exportPackingMaster">导出 CSV</button>`);
+      const html=rows.length?`<table><thead><tr><th>成品货号</th><th>品名</th><th>产品重量 KG/PCS</th><th>每内盒装量</th><th>每外箱内盒数</th><th>每箱装量</th><th>纸箱尺寸 cm</th><th>CBM/CTN</th><th>CBM/PCS</th><th>整箱净重 NW KG</th><th>整箱毛重 GW KG</th><th>备注</th></tr></thead><tbody>${rows.map(x=>`<tr><td><b>${esc(x.productCode)}</b></td><td>${esc(x.productName||product(x.productCode)?.name||'')}</td><td class="num">${fmt(x.unitWeightKg)}</td><td class="num">${num(x.innerPackQty)?fmt(x.innerPackQty):'—'}</td><td class="num">${num(x.innerBoxesPerCarton)?fmt(x.innerBoxesPerCarton):'—'}</td><td class="num"><b>${fmt(x.cartonPackQty)}</b></td><td>${fmt(x.cartonLengthCm)} × ${fmt(x.cartonWidthCm)} × ${fmt(x.cartonHeightCm)}</td><td class="num">${packingMasterCartonCbm(x).toFixed(4)}</td><td class="num">${packingMasterUnitCbm(x).toFixed(6)}</td><td class="num"><b>${packingMasterCartonNW(x).toFixed(2)}</b></td><td class="num">${fmt(x.cartonGWKg)}</td><td>${esc(x.remark||'')}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">当前同步数据中还没有产品包装资料。</div>';
+      listShell(rows,html,'搜索货号、品名、箱规...');
+      const b=document.getElementById('exportPackingMaster');if(b)b.onclick=()=>exportPackingMasters(rows);
+    }
+
     // Final data migration override: keep all old modules and initialize packingLists only.
     function migrate(data){
       const d=data||{};
-      for(const k of ['products','boms','orders','materialReceipts','finishedReceipts','pendingShipments','finishedShipments','adjustments','inspectionStandards','specialInspectionStandards','qualityReports','packingLists','activity'])if(!Array.isArray(d[k]))d[k]=[];
+      for(const k of ['products','boms','orders','materialReceipts','finishedReceipts','pendingShipments','finishedShipments','adjustments','inspectionStandards','specialInspectionStandards','qualityReports','packingMasters','packingLists','activity'])if(!Array.isArray(d[k]))d[k]=[];
       for(const r of d.finishedShipments)if(!r.status)r.status='已出库';
       if(!d.settings||typeof d.settings!=='object'||Array.isArray(d.settings))d.settings={};
       d.settings={companyName:'',companyNameEn:'',companyAddress:'',systemName:'生产物料管理系统',systemSubtitle:'订单 · BOM · 配件 · 验货 · 成品 · 库存自动联动',...d.settings};
@@ -940,6 +954,7 @@
       else if(module==='adjustments')result=renderAdjustments();
       else if(module==='query')result=renderQuery();
       else if(module==='products')result=renderProducts();
+      else if(module==='packingMasters')result=renderPackingMasters();
       else if(module==='boms')result=renderBoms();
       else if(module==='qualityStandards')result=renderQualityStandards();
       else if(module==='branding')result=renderBranding();
