@@ -435,6 +435,7 @@
       qualityReports:[['productCode','全部成品货号'],['result','全部验货结论'],['inspector','全部检验员']],
       finishedReceipts:[['productCode','全部成品货号']],
       pendingShipments:[['productCode','全部成品货号']],
+      packingLists:[['status','全部状态']],
       finishedShipments:[['productCode','全部成品货号'],['batchNo','全部出库批次'],['status','全部状态']],
       inventory:[['attribute','全部物料属性'],['status','全部库存状态']],
       adjustments:[['type','全部调整类型'],['stockKey','全部库存主料号']],
@@ -457,7 +458,7 @@
       });lastFilteredRows=result;return result;
     }
     function rowKey(row,index){return String(row.id||row.stockKey||row.code||`${module}-${index}`)}
-    function moduleExporter(){return({orders:exportOrders,materialReceipts:exportMaterial,qualityReports:exportQualityReports,finishedReceipts:exportFinished,pendingShipments:exportPendingShipments,finishedShipments:exportFinishedShipments,inventory:exportInventory,adjustments:exportAdjustments,products:exportProducts,boms:exportBoms})[module]}
+    function moduleExporter(){return({orders:exportOrders,materialReceipts:exportMaterial,qualityReports:exportQualityReports,finishedReceipts:exportFinished,pendingShipments:exportPendingShipments,packingLists:exportPackingLists,finishedShipments:exportFinishedShipments,inventory:exportInventory,adjustments:exportAdjustments,products:exportProducts,boms:exportBoms})[module]}
 
     function listShell(rows,html,placeholder='输入关键字查询...'){
       document.getElementById('content').innerHTML=`<div class="panel"><div class="filters"><input id="search" type="search" placeholder="${esc(placeholder)}" value="${esc(search)}"><span class="count">筛选后 ${rows.length} 条</span></div><div class="table-wrap">${html}</div></div>`;
@@ -862,16 +863,50 @@
         <div class="pl-footer"><h3 style="white-space:nowrap;font-size:${packingCompanyFontSize(s.companyName||'',13.5,9.5)}px">${esc(s.companyName||'')}</h3><p style="white-space:nowrap;font-size:${packingCompanyCnFontSize(s.companyNameEn||'',10.5,9)}px">${esc(s.companyNameEn||'')}</p></div>
       </div>`
     }
+    function recalcPackingSnapshotItem(item){
+      const x=deep(item||{}),shipQty=Math.max(0,num(x.shipQty)),packQty=Math.max(0,num(x.cartonPackQty));
+      if(!packQty)return x;
+      const fullCartons=Math.floor(shipQty/packQty),partialQty=shipQty-fullCartons*packQty,cartonCount=fullCartons+(partialQty>0?1:0);
+      const cbmPerCarton=num(x.cartonLengthCm)*num(x.cartonWidthCm)*num(x.cartonHeightCm)/1000000,totalCbm=cartonCount*cbmPerCarton;
+      const unitWeight=Math.max(0,num(x.unitWeightKg)),cartonNW=unitWeight>0?unitWeight*packQty:Math.max(0,num(x.cartonNWKg)),cartonGW=Math.max(0,num(x.cartonGWKg));
+      const partialNW=partialQty>0?(unitWeight>0?partialQty*unitWeight:cartonNW*(partialQty/packQty)):0,totalNW=unitWeight>0?shipQty*unitWeight:fullCartons*cartonNW+partialNW;
+      const tare=Math.max(cartonGW-cartonNW,0),partialGW=partialQty>0?partialNW+tare:0,totalGW=fullCartons*cartonGW+partialGW;
+      return{...x,shipQty,fullCartons,partialQty,cartonCount,cbmPerCarton,unitCbm:cbmPerCarton/packQty,totalCbm,totalNW,totalGW}
+    }
+    function consolidatedPackingItems(records){
+      const rows=(records||[]).filter(Boolean),latestBySource=new Map(),noSource=[];
+      rows.forEach(rec=>{const stamp=Date.parse(rec.updatedAt||rec.createdAt||rec.packingDate||'')||0;(rec.items||[]).forEach(item=>{const cloned={...recalcPackingSnapshotItem(item),_packingStamp:stamp},sourceId=String(item.sourcePendingId||'').trim();if(!sourceId){noSource.push(cloned);return}const prev=latestBySource.get(sourceId);if(!prev||stamp>=prev._packingStamp)latestBySource.set(sourceId,cloned)})});
+      const seen=new Set(),ordered=[];rows.forEach(rec=>(rec.items||[]).forEach(item=>{const sourceId=String(item.sourcePendingId||'').trim();if(!sourceId||seen.has(sourceId))return;const latest=latestBySource.get(sourceId);if(latest){const clean={...latest};delete clean._packingStamp;ordered.push(clean);seen.add(sourceId)}}));
+      noSource.forEach(x=>{const clean={...x};delete clean._packingStamp;ordered.push(clean)});return ordered
+    }
+    function consolidatedPackingHeader(records,title='PACKING LIST'){
+      const rows=(records||[]).filter(Boolean),dates=[...new Set(rows.map(x=>x.packingDate).filter(Boolean))],invoices=[...new Set(rows.map(x=>x.invoiceNo).filter(Boolean))],pos=[...new Set(rows.flatMap(x=>(x.items||[]).map(i=>i.orderNo).filter(Boolean)))],customers=[...new Set(rows.map(x=>x.customerName).filter(Boolean))];
+      return{packingNo:title,packingDate:dates.length===1?dates[0]:(dates.length?`${dates[0]} ~ ${dates[dates.length-1]}`:today()),invoiceNo:invoices.length===1?invoices[0]:(invoices.length?invoices.join(', '):''),poReference:pos.join(', '),customerName:customers.length===1?customers[0]:(customers.length?customers.join(' / '):''),remark:'',items:consolidatedPackingItems(rows)}
+    }
+    function openWebPackingPrintPreview(title,content){
+      const w=window.open('','_blank');if(!w)return alert('浏览器阻止了打印窗口，请允许此网站弹出窗口后再试。');
+      w.document.open();w.document.write(printPreviewDocument(title,content));w.document.close();
+    }
+    function printPackingListBatch(records,title='总装箱单'){
+      const rows=(records||[]).filter(Boolean);if(!rows.length)return alert('没有可打印的装箱单。');
+      const totalItems=rows.reduce((a,r)=>a+(r.items||[]).length,0),allPackingNos=rows.map(r=>r.packingNo).filter(Boolean).join(', '),rec=consolidatedPackingHeader(rows,title);
+      const content=`<div class="packing-batch-caption" style="font-size:10px;color:#555;margin:0 0 8px">来源装箱单：${esc(allPackingNos)}　|　共 ${rows.length} 张记录 / ${totalItems} 个 ITEM</div>${packingListMarkup(rec)}`;
+      openWebPackingPrintPreview(`${title}_${totalItems}ITEM`,content)
+    }
+    function printSelectedPackingLists(){
+      const set=selectedByModule.packingLists||(selectedByModule.packingLists=new Set()),rows=(db.packingLists||[]).filter(x=>set.has(String(x.id))||set.has(x.id));
+      if(!rows.length)return alert('请先在装箱单目录左侧勾选需要合并打印的装箱单。');printPackingListBatch(rows,'勾选装箱单合并')
+    }
+    function exportPackingLists(rows){csv(['装箱单号','日期','客户','PO/S.C.','ITEM数','出货数量','外箱数','净重NW KG','毛重GW KG','CBM','状态'],rows.map(x=>{const t=packingListTotals(x);return[x.packingNo,x.packingDate,x.customerName||'',x.poReference||'',(x.items||[]).length,t.qty,t.cartons,t.nw.toFixed(2),t.gw.toFixed(2),t.cbm.toFixed(2),x.status||'已保存']}),'装箱单目录')}
     function renderPackingLists(){
       const rows=filterRows([...(db.packingLists||[])].reverse());
-      pageHead('装箱单','网站只读查看：显示桌面系统已经保存并同步的装箱单；网页不会新增、删除或修改装箱数据。');
-      const html=rows.length?`<table><thead><tr><th>装箱单号</th><th>日期</th><th>客户</th><th>PO / S.C.</th><th>货号</th><th>ITEM数</th><th>出货数量</th><th>外箱数</th><th>净重 NW</th><th>毛重 GW</th><th>CBM</th><th>状态</th><th>查看</th></tr></thead><tbody>${rows.map(x=>{
-        const t=packingListTotals(x),codes=[...new Set((x.items||[]).map(i=>i.productCode).filter(Boolean))].join(', ');
-        return `<tr><td><b>${esc(x.packingNo||'')}</b></td><td>${esc(x.packingDate||'')}</td><td>${esc(x.customerName||'')}</td><td>${esc(x.poReference||'')}</td><td>${esc(codes)}</td><td class="num"><b>${(x.items||[]).length}</b></td><td class="num">${fmt(t.qty)}</td><td class="num"><b>${fmt(t.cartons)}</b></td><td class="num">${t.nw.toFixed(2)} KG</td><td class="num">${t.gw.toFixed(2)} KG</td><td class="num">${t.cbm.toFixed(2)}</td><td>${statusBadge(x.status||'已保存')}</td><td class="actions"><button data-pl-view="${esc(x.id)}">查看整张</button></td></tr>`
-      }).join('')}</tbody></table>`:'<div class="empty">桌面系统目前还没有同步可显示的装箱单。</div>';
+      pageHead('装箱单','网站只读查看：可搜索、筛选、合并打印和导出数据；网页不会新增、删除或修改装箱数据。',`<button class="btn" id="printSelectedPackingLists">合并打印勾选</button><button class="btn" id="printAllPackingLists">合并打印全部</button><button class="btn" id="exportPackingLists">导出目录 CSV</button>`);
+      const html=rows.length?`<table><thead><tr><th>装箱单号</th><th>日期</th><th>客户</th><th>PO / S.C.</th><th>货号</th><th>ITEM数</th><th>出货数量</th><th>外箱数</th><th>净重 NW</th><th>毛重 GW</th><th>CBM</th><th>状态</th><th>查看</th></tr></thead><tbody>${rows.map(x=>{const t=packingListTotals(x),codes=[...new Set((x.items||[]).map(i=>i.productCode).filter(Boolean))].join(', ');return `<tr><td><b>${esc(x.packingNo||'')}</b></td><td>${esc(x.packingDate||'')}</td><td>${esc(x.customerName||'')}</td><td>${esc(x.poReference||'')}</td><td>${esc(codes)}</td><td class="num"><b>${(x.items||[]).length}</b></td><td class="num">${fmt(t.qty)}</td><td class="num"><b>${fmt(t.cartons)}</b></td><td class="num">${t.nw.toFixed(2)} KG</td><td class="num">${t.gw.toFixed(2)} KG</td><td class="num">${t.cbm.toFixed(2)}</td><td>${statusBadge(x.status||'已保存')}</td><td class="actions"><button data-pl-view="${esc(x.id)}">查看整张</button></td></tr>`}).join('')}</tbody></table>`:'<div class="empty">桌面系统目前还没有同步可显示的装箱单。</div>';
       listShell(rows,html,'搜索装箱单号、PO、客户、货号...');
-      document.querySelectorAll('[data-pl-view]').forEach(b=>b.onclick=()=>viewPackingList(b.dataset.plView));
-      enforceWebsiteReadOnly();
+      document.getElementById('printSelectedPackingLists').onclick=printSelectedPackingLists;
+      document.getElementById('printAllPackingLists').onclick=()=>printPackingListBatch(rows,'全部装箱单');
+      document.getElementById('exportPackingLists').onclick=()=>exportPackingLists(rows);
+      document.querySelectorAll('[data-pl-view]').forEach(b=>b.onclick=()=>viewPackingList(b.dataset.plView));enforceWebsiteReadOnly();
     }
     function viewPackingList(id){
       const rec=(db.packingLists||[]).find(x=>String(x.id)===String(id));if(!rec)return;
