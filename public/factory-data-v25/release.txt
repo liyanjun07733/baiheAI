@@ -1,0 +1,4 @@
+BaiheAI Factory Data Viewer
+Target route: https://www.baihediy.com/factory-data
+Baseline: V2.5 accepted
+Publish ID: WEB-20260927160435-0CF46E
