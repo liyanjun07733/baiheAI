@@ -1,0 +1,3 @@
+BaiheAI Factory Data Viewer
+Version: V2.6.3 Mobile Menu Fix
+Publish ID: WEB-20260927171142-C8CD62
