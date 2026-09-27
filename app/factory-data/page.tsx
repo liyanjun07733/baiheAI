@@ -5,6 +5,6 @@ export const metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function FactoryDataPage() {
-  redirect("/factory-data-viewer-v26.html");
+export default function FactoryDataPage(){
+  redirect("/factory-data-viewer-v261.html");
 }
