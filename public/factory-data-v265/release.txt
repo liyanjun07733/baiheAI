@@ -1,0 +1,3 @@
+BaiheAI Factory Data Viewer
+Version: V2.6.5 CSS Mobile
+Publish ID: WEB-20260927173115-DAD34C
