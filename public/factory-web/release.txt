@@ -1,4 +1,0 @@
-BaiheAI Factory Web Viewer
-Baseline: V2.5 Dashboard Permission Fix
-Publish ID: WEB-20260927154309-6960FC
-Published data generated from BaiheAI Central PostgreSQL
