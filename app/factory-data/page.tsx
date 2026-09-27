@@ -1,16 +1,10 @@
+import { redirect } from "next/navigation";
+
 export const metadata = {
-  title: "生产物料管理系统 | BaiheAI",
-  description: "BaiheAI Material System - Read Only Viewer",
+  title: "BaiheAI Factory Data",
+  robots: { index: false, follow: false },
 };
 
 export default function FactoryDataPage() {
-  return (
-    <main style={{ margin: 0, padding: 0, width: "100%", height: "100vh", overflow: "hidden" }}>
-      <iframe
-        src="/factory-data-viewer-v25.html"
-        title="BaiheAI Material System"
-        style={{ width: "100%", height: "100%", border: 0, display: "block" }}
-      />
-    </main>
-  );
+  redirect("/factory-data-viewer-v26.html");
 }

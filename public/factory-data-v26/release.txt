@@ -1,0 +1,4 @@
+BaiheAI Factory Data Viewer
+Version: V2.6 Mobile Standalone
+Target: https://www.baihediy.com/factory-data
+Publish ID: WEB-20260927163718-8F3E33
