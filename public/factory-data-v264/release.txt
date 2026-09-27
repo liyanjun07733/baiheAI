@@ -1,0 +1,3 @@
+BaiheAI Factory Data Viewer
+Version: V2.6.4 Mobile Drawer Fix
+Publish ID: WEB-20260927171951-1E9062
