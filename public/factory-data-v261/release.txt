@@ -1,3 +1,3 @@
 BaiheAI Factory Data Viewer
 Version: V2.6.1 Mobile HTML Fix
-Publish ID: WEB-20260927164839-9AF93F
+Publish ID: WEB-20260927165459-6DD519
