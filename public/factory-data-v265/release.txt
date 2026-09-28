@@ -1,3 +1,3 @@
 BaiheAI Factory Data Viewer
-Version: V2.6.5 CSS Mobile
-Publish ID: WEB-20260928021841-44E737
+Version: V2.6.10 Access Gate
+Publish ID: WEB-20260928031203-AE1D3C
