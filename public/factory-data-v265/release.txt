@@ -1,3 +1,3 @@
 BaiheAI Factory Data Viewer
 Version: V2.6.10 Access Gate
-Publish ID: WEB-20260928032742-229EC3
+Publish ID: WEB-20260928094344-08F291
