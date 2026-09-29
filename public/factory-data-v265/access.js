@@ -1,1 +1,1 @@
-window.BAIHEAI_FACTORY_ACCESS={"enabled":true,"updatedAt":"2026-09-29T06:49:40.774Z","source":"desktop"};
+window.BAIHEAI_FACTORY_ACCESS={"enabled":false,"reason":"manually-closed","message":"工厂数据查看暂时关闭","updatedAt":"2026-09-29T08:23:51.261Z","source":"desktop"};
