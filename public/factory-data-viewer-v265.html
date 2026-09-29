@@ -3711,7 +3711,7 @@ function qr239Paint(){
   $('qr239Add')&&($('qr239Add').onclick=()=>qualityModal());$('qr240ExportCsv')&&($('qr240ExportCsv').onclick=qr240ExportCsv);$('qr240ExportJson')&&($('qr240ExportJson').onclick=qr240ExportArchive);$('qr240ImportJson')&&($('qr240ImportJson').onclick=()=>{$('qr240ImportFile').click();qr240CloseMenu()});$('qr240ImportFile')&&($('qr240ImportFile').onchange=async e=>{const f=e.target.files?.[0];e.target.value='';if(f)await qr240ImportArchive(f)});
   document.querySelectorAll('[data-qr239]').forEach(tr=>tr.onclick=()=>{const left=document.querySelector('.qr239-list'),keep=left?left.scrollTop:0;qr239SelectedId=String(tr.dataset.qr239||'');qr239ZoomMode='fit';qr239Paint();requestAnimationFrame(()=>{const next=document.querySelector('.qr239-list');if(next)next.scrollTop=keep})});qr239BindSplitter();qr239BindReader(selected);
 }
-renderQuality=async function(){await Promise.all([loadWs('qualityReports',''),loadOrders(false),loadProducts(false),loadWs('companyProfiles','',false).catch(()=>null)]);qr239Paint()};
+renderQuality=async function(){await Promise.all([loadWs('qualityReports',''),loadOrders(false),loadProducts(false),loadWs('packingMasters','',false).catch(()=>null),loadWs('companyProfiles','',false).catch(()=>null)]);/* BAIHEAI-WEB-QC-SPEC-FINAL-OVERRIDE-20260929 */qr239Paint()};
 /* ===== end 2.3.40 ===== */
 
 
