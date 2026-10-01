@@ -9,6 +9,7 @@
 <html lang="zh-CN">
 <head>
 <!-- BAIHEAI WEB VIEWER V3.2 CURRENT-A MIRROR READONLY -->
+<!-- BAIHEAI WEB VIEWER V3.2 ONLINE DATA PATH FIX / FACTORY-DATA-V265 -->
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BaiheAI Factory</title>
 <!-- 2.3.17-PURCHASE-TEMPLATE-CUSTOM-BLOCKS -->
@@ -725,15 +726,15 @@ button.fr2520-qc-pending:hover{background:#ffe9b8;border-color:#d7a841;color:#7e
   <div class="shell"><aside id="sidebar" class="side"></aside><main class="main"><div id="globalError" class="global-error hidden"></div><section id="page"></section></main></div>
 </div>
 <div id="modal" class="modal hidden"><div id="dialog" class="dialog"><div class="dhead"><h3 id="modalTitle"></h3><button id="modalX" class="x">×</button></div><form id="modalForm"><div id="modalBody" class="dbody"></div><div class="dfoot"><button type="button" id="modalCancel" class="btn">取消</button><button id="modalSave" class="btn primary" type="submit">保存</button></div></form></div></div>
-<script src="/data/latest.js"></script>
+<script src="/factory-data-v265/data/latest.js"></script>
 <script id="baiheWebSnapshotAdapter">
 (()=>{
 'use strict';
 
 function webMedia(v){
   if(typeof v==='string'){
-    if(v.startsWith('/media/'))return location.origin+v;
-    if(v.startsWith('media/'))return location.origin+'/'+v;
+    if(v.startsWith('/media/'))return location.origin+'/factory-data-v265'+v;
+    if(v.startsWith('media/'))return location.origin+'/factory-data-v265/'+v;
     return v;
   }
   if(Array.isArray(v))return v.map(webMedia);
