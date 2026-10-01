@@ -10,6 +10,7 @@
 <head>
 <!-- BAIHEAI WEB VIEWER V3.2 CURRENT-A MIRROR READONLY -->
 <!-- BAIHEAI WEB VIEWER V3.2 ONLINE DATA PATH FIX / FACTORY-DATA-V265 -->
+<!-- BAIHEAI V3.2 D-PACKING-PHOTO FINAL FIX 20261001 -->
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>BaiheAI Factory</title>
 <!-- 2.3.17-PURCHASE-TEMPLATE-CUSTOM-BLOCKS -->
@@ -3302,7 +3303,18 @@ renderProducts=renderProductsPhoto2333;
 META.products=['成品资料','主页面只显示产品身份基础资料；展开查看完整产品与包装档案，需要时可打印详细产品资料报告'];
 
 function pd2360PhotoData(v){
-  if(!v)return'';if(typeof v==='string')return /^data:image\//i.test(v)?v:'';const d=String(v?.data||v?.url||'');return /^data:image\//i.test(d)?d:''
+  if(!v)return'';
+  const d=String(typeof v==='string'?v:(v?.data||v?.url||'')).trim();
+  if(!d)return'';
+  if(/^data:image\//i.test(d))return d;
+  if(/^\/factory-data-v265\/media\//i.test(d))return d;
+  if(/^\/media\//i.test(d))return '/factory-data-v265'+d;
+  if(/^media\//i.test(d))return '/factory-data-v265/'+d;
+  try{
+    const u=new URL(d,location.origin);
+    if(u.origin===location.origin&&u.pathname.startsWith('/factory-data-v265/media/'))return u.href;
+  }catch(_){}
+  return'';
 }
 function pd2360PackPhotos(pm){return Array.isArray(pm?.packingPhotos)?pm.packingPhotos.slice(0,3).map(x=>({name:String(x?.name||''),data:pd2360PhotoData(x)})).filter(x=>x.data):[]}
 function pd2360InfoValue(v,suffix=''){const z=String(v??'').trim();return z?`${esc(z)}${suffix}`:'—'}
