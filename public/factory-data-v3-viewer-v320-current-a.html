@@ -886,25 +886,377 @@ const accepted=r=>{
   const s=String(r?.iqcResult||r?.iqcStatus||'').trim();
   return !s||['合格','PASS','让步接收','CONCESSION ACCEPT','已接收','旧数据'].includes(s);
 };
-const groupedUsage=(code)=>{
+/* BAIHEAI-WEB-CURRENT-DATA-ALGO-R1.3z2-20261008 */
+const wsNum=n;
+const receiptAccepted=accepted;
+let groupedUsageFromData,materialStatsFromData;
+function finishedMapFromData(data,excludeId=''){
+  const m=new Map();for(const r of data.finishedReceipts||[]){if(String(r.id)===String(excludeId))continue;const k=`${r.orderNo}|${r.productCode}`;m.set(k,(m.get(k)||0)+wsNum(r.qty))}return m;
+}
+const INTERNAL_STOCK_SUPPLIER_R13Z='内部库存 / Internal Stock';
+function isInternalStockPurchaseR13z(p){return !!p?.internalStock||String(p?.sourceType||'').toUpperCase()==='INTERNAL'||String(p?.supplier||'').trim().toLowerCase()==='内部库存 / internal stock'}
+function isActiveInternalStockPurchaseR13z(p){return isInternalStockPurchaseR13z(p)&&String(p?.internalStockStatus||'ACTIVE').toUpperCase()!=='REVERSED'&&String(p?.status||'')!=='已撤销'}
+function internalUsageKeyR13z(orderNo,stockKey){return `${String(orderNo||'')}\u001f${String(stockKey||'')}`}
+function internalGrossUsageMapR13z(data,excludeFinishedId=''){
+  const out=new Map();
+  for(const r of data.finishedReceipts||[]){
+    if(String(r.id)===String(excludeFinishedId)||!r.orderNo)continue;
+    const usage=Array.isArray(r.materialUsageSnapshot)&&r.materialUsageSnapshot.length
+      ?r.materialUsageSnapshot.map(x=>[String(x.stockKey||x.materialCode||''),wsNum(x.usageQty)])
+      :[...groupedUsageFromData(data,r.productCode).entries()];
+    for(const [stockKey,u] of usage){
+      if(!stockKey||u<=0)continue;
+      const k=internalUsageKeyR13z(r.orderNo,stockKey);
+      out.set(k,(out.get(k)||0)+wsNum(r.qty)*u);
+    }
+  }
+  return out;
+}
+function internalAllocationCoverageForGrossR13z(data,grossMap){
+  const events=new Map();
+  for(const p of data.purchaseOrders||[]){
+    if(!isActiveInternalStockPurchaseR13z(p))continue;
+    for(const x of p.items||[]){
+      const orderNo=String(x.orderNo||''),stockKey=String(x.stockKey||x.materialCode||'');
+      if(!orderNo||!stockKey||wsNum(x.qty)<=0)continue;
+      const k=internalUsageKeyR13z(orderNo,stockKey),a=events.get(k)||[];
+      a.push({purchaseId:String(p.id||''),lineId:String(x.lineId||''),qty:wsNum(x.qty),base:Math.max(0,wsNum(x.internalBaseUsedQty)),at:String(x.internalAllocatedAt||p.createdAt||'')});
+      events.set(k,a);
+    }
+  }
+  const stateByKey=new Map(),consumedByPurchase=new Map(),consumedByLine=new Map();
+  for(const [k,a] of events){
+    const gross=Math.max(0,wsNum(grossMap.get(k))),queue=[];let cursor=0,covered=0;
+    a.sort((x,y)=>x.base-y.base||x.at.localeCompare(y.at)||x.lineId.localeCompare(y.lineId));
+    const consume=amount=>{let rem=Math.max(0,amount);for(const q of queue){if(rem<=1e-9)break;if(q.remain<=1e-9)continue;const c=Math.min(q.remain,rem);q.remain-=c;rem-=c;covered+=c;consumedByLine.set(q.lineId,(consumedByLine.get(q.lineId)||0)+c);consumedByPurchase.set(q.purchaseId,(consumedByPurchase.get(q.purchaseId)||0)+c)}};
+    for(const e of a){
+      const target=Math.min(gross,Math.max(cursor,e.base));
+      if(target>cursor){consume(target-cursor);cursor=target}
+      queue.push({...e,remain:e.qty});
+    }
+    if(gross>cursor){consume(gross-cursor);cursor=gross}
+    const outstanding=queue.reduce((s,q)=>s+Math.max(0,q.remain),0);
+    stateByKey.set(k,{gross,covered:Math.min(gross,covered),outstanding,allocated:a.reduce((s,x)=>s+x.qty,0)});
+  }
+  return{stateByKey,consumedByPurchase,consumedByLine};
+}
+function internalAllocationStateR13z(data,excludeFinishedId=''){return internalAllocationCoverageForGrossR13z(data,internalGrossUsageMapR13z(data,excludeFinishedId))}
+function internalOutstandingForOrderStockR13z(data,orderNo,stockKey,excludeFinishedId=''){const s=internalAllocationStateR13z(data,excludeFinishedId).stateByKey.get(internalUsageKeyR13z(orderNo,stockKey));return Math.max(0,wsNum(s?.outstanding))}
+
+// BAIHEAI-BOM-CORE-R1-20261004 BEGIN
+;(()=>{
+'use strict';
+
+function bhBomText(v){ return String(v ?? '').trim(); }
+function bhBomIsCommon(b){
+  return !!bhBomText(b?.commonPartId) || bhBomText(b?.attribute)==='公用件';
+}
+function bhBomNewGroup(type,id,stockKey,materialCode,materialName,master=null){
+  return {
+    id:bhBomText(id),
+    type,
+    commonPartId:(type==='MASTER'||type==='ORPHAN')?bhBomText(id):'',
+    stockKey:bhBomText(stockKey)||bhBomText(materialCode),
+    materialCode:bhBomText(materialCode)||bhBomText(stockKey),
+    materialName:bhBomText(materialName),
+    master,
+    products:new Set(),
+    aliasStocks:new Set(),
+    aliasCodes:new Set(),
+    boms:[]
+  };
+}
+function bhBomAdd(g,b){
+  if(!g||!b)return;
+  const pc=bhBomText(b.productCode),sk=bhBomText(b.stockKey||b.materialCode),mc=bhBomText(b.materialCode);
+  if(pc)g.products.add(pc);
+  if(sk)g.aliasStocks.add(sk);
+  if(mc)g.aliasCodes.add(mc);
+  g.boms.push(b);
+}
+function bhBomIndex(data){
+  const boms=Array.isArray(data?.boms)?data.boms:[];
+  const masters=Array.isArray(data?.commonParts)?data.commonParts:[];
+  const groups=new Map(),byMasterId=new Map(),bomGroup=new Map();
+
+  // Formal common-part masters.
+  for(const m of masters){
+    const id=bhBomText(m.id);if(!id)continue;
+    const g=bhBomNewGroup('MASTER',id,m.stockKey||m.materialCode,m.materialCode,m.materialName,m);
+    for(const link of Array.isArray(m.links)?m.links:[]){
+      const pc=bhBomText(link?.productCode);if(pc)g.products.add(pc);
+    }
+    if(g.stockKey)g.aliasStocks.add(g.stockKey);
+    if(g.materialCode)g.aliasCodes.add(g.materialCode);
+    groups.set(`M:${id}`,g);byMasterId.set(id,g);
+  }
+
+  // Explicit commonPartId BOM rows are authoritative.
+  for(const b of boms){
+    const cid=bhBomText(b.commonPartId);if(!cid)continue;
+    let g=byMasterId.get(cid);
+    if(!g){
+      const k=`O:${cid}`;
+      g=groups.get(k);
+      if(!g){
+        g=bhBomNewGroup('ORPHAN',cid,b.stockKey||b.materialCode,b.materialCode,b.materialName,null);
+        groups.set(k,g);
+      }
+    }
+    bhBomAdd(g,b);bomGroup.set(b,g);
+  }
+
+  // Attach old attribute=公用件 rows only when there is a strong identity match:
+  // same stockKey OR same materialCode with an explicit/master group.
+  const explicit=[...groups.values()].filter(g=>g.type==='MASTER'||g.type==='ORPHAN');
+  for(const b of boms){
+    if(bomGroup.has(b)||bhBomText(b.attribute)!=='公用件')continue;
+    const sk=bhBomText(b.stockKey||b.materialCode),mc=bhBomText(b.materialCode);
+    let hit=null,tie=false;
+    for(const g of explicit){
+      const match=(sk&&(sk===g.stockKey||g.aliasStocks.has(sk)))||(mc&&(mc===g.materialCode||g.aliasCodes.has(mc)));
+      if(!match)continue;
+      if(hit&&hit!==g){tie=true;break}
+      hit=g;
+    }
+    if(hit&&!tie){
+      bhBomAdd(hit,b);bomGroup.set(b,hit);continue;
+    }
+    // Unmatched legacy common parts still form one public pool by old stockKey.
+    const key=`L:${sk||mc}`;
+    let g=groups.get(key);
+    if(!g){
+      g=bhBomNewGroup('LEGACY',sk||mc,sk||mc,mc,b.materialName,null);
+      groups.set(key,g);
+    }
+    bhBomAdd(g,b);bomGroup.set(b,g);
+  }
+
+  const byPartId=new Map(),byProductStock=new Map(),byProductCode=new Map();
+  const stockOwners=new Map(),codeOwners=new Map(),byGroupId=new Map();
+  for(const g of groups.values()){
+    byGroupId.set(g.id,g);
+    if(g.commonPartId)byPartId.set(g.commonPartId,g);
+    for(const b of g.boms){
+      const pc=bhBomText(b.productCode),sk=bhBomText(b.stockKey||b.materialCode),mc=bhBomText(b.materialCode);
+      if(pc&&sk)byProductStock.set(`${pc}\u0000${sk}`,g);
+      if(pc&&mc)byProductCode.set(`${pc}\u0000${mc}`,g);
+    }
+    for(const sk of g.aliasStocks){
+      if(!stockOwners.has(sk))stockOwners.set(sk,new Set());
+      stockOwners.get(sk).add(g.id);
+    }
+    for(const mc of g.aliasCodes){
+      if(!codeOwners.has(mc))codeOwners.set(mc,new Set());
+      codeOwners.get(mc).add(g.id);
+    }
+  }
+  const byUniqueStock=new Map(),byUniqueCode=new Map();
+  for(const [k,set] of stockOwners)if(set.size===1)byUniqueStock.set(k,byGroupId.get([...set][0]));
+  for(const [k,set] of codeOwners)if(set.size===1)byUniqueCode.set(k,byGroupId.get([...set][0]));
+  return {boms,groups:[...groups.values()],bomGroup,byPartId,byProductStock,byProductCode,byUniqueStock,byUniqueCode,byGroupId};
+}
+function bhBomResolveRow(data,b,index=null){
+  if(!b||!bhBomIsCommon(b))return null;
+  const ix=index||bhBomIndex(data);
+  return ix.bomGroup.get(b)||ix.byPartId.get(bhBomText(b.commonPartId))||null;
+}
+function bhBomResolveMaterial(data,rec,index=null){
+  const ix=index||bhBomIndex(data),
+        pc=bhBomText(rec?.productCode||rec?.orderProductCode),
+        sk=bhBomText(rec?.stockKey||rec?.materialCode),
+        mc=bhBomText(rec?.materialCode),
+        cid=bhBomText(rec?.commonPartId);
+  if(cid&&ix.byPartId.has(cid))return ix.byPartId.get(cid);
+  if(pc&&sk&&ix.byProductStock.has(`${pc}\u0000${sk}`))return ix.byProductStock.get(`${pc}\u0000${sk}`);
+  if(pc&&mc&&ix.byProductCode.has(`${pc}\u0000${mc}`))return ix.byProductCode.get(`${pc}\u0000${mc}`);
+  if(sk&&ix.byUniqueStock.has(sk))return ix.byUniqueStock.get(sk);
+  if(mc&&ix.byUniqueCode.has(mc))return ix.byUniqueCode.get(mc);
+  return null;
+}
+function bhBomUsageDetails(data,productCode,index=null){
+  const ix=index||bhBomIndex(data),pc=bhBomText(productCode),out=new Map();
+
+  // Dedicated parts keep normal summing behavior.
+  for(const b of ix.boms){
+    if(bhBomText(b.productCode)!==pc||bhBomIsCommon(b))continue;
+    const sk=bhBomText(b.stockKey||b.materialCode),u=Math.max(0,wsNum(b.usageQty));
+    if(!sk||!(u>0))continue;
+    const key=`D:${sk}`,old=out.get(key)||{key,stockKey:sk,usage:0,isCommon:false,group:null,
+      materialCode:bhBomText(b.materialCode)||sk,materialName:bhBomText(b.materialName),attribute:bhBomText(b.attribute)||'专用件'};
+    old.usage+=u;out.set(key,old);
+  }
+
+  // Common parts: if a product has explicit commonPartId rows AND matching old rows,
+  // explicit rows win and old rows are treated as migration duplicates.
+  for(const g of ix.groups){
+    const rows=g.boms.filter(b=>bhBomText(b.productCode)===pc);
+    if(!rows.length)continue;
+    const explicit=rows.filter(b=>!!bhBomText(b.commonPartId));
+    const chosen=explicit.length?explicit:rows;
+    let usage=0;
+    for(const b of chosen)usage+=Math.max(0,wsNum(b.usageQty));
+    if(!(usage>0))continue;
+    out.set(`C:${g.id}`,{
+      key:`C:${g.id}`,stockKey:g.stockKey,usage,isCommon:true,group:g,
+      materialCode:g.materialCode||bhBomText(chosen[0]?.materialCode),
+      materialName:g.materialName||bhBomText(chosen[0]?.materialName),
+      attribute:'公用件'
+    });
+  }
+  return out;
+}
+function bhBomCanonicalStock(data,rec,index=null){
+  const g=bhBomResolveMaterial(data,rec,index);
+  return g?.stockKey||bhBomText(rec?.stockKey||rec?.materialCode);
+}
+function bhBomHistoricalUsage(data,r,index=null){
+  const ix=index||bhBomIndex(data),snap=Array.isArray(r?.materialUsageSnapshot)?r.materialUsageSnapshot:[];
+  if(snap.length){
+    const m=new Map();
+    for(const s of snap){
+      const g=bhBomResolveMaterial(data,{...s,productCode:r.productCode},ix);
+      const key=g?.stockKey||bhBomText(s.stockKey||s.materialCode);if(!key)continue;
+      m.set(key,(m.get(key)||0)+Math.max(0,wsNum(s.usageQty)));
+    }
+    return m;
+  }
   const m=new Map();
-  for(const b of D.boms||[]){
-    if(String(b.productCode)!==String(code))continue;
-    const key=String(b.stockKey||b.materialCode||'').trim();
+  for(const x of bhBomUsageDetails(data,r?.productCode,ix).values())m.set(x.stockKey,(m.get(x.stockKey)||0)+x.usage);
+  return m;
+}
+function bhBomSnapshot(data,productCode){
+  const ix=bhBomIndex(data),out=[];
+  for(const x of bhBomUsageDetails(data,productCode,ix).values()){
+    out.push({
+      stockKey:x.stockKey,usageQty:x.usage,attribute:x.attribute,
+      materialCode:x.materialCode,materialName:x.materialName,
+      commonIdentity:x.group?.id||'',commonPartId:x.group?.commonPartId||''
+    });
+  }
+  return out;
+}
+
+// Canonical BOM usage used by order material calculation, shortages and production capacity.
+groupedUsageFromData=function(data,productCode){
+  const m=new Map();
+  for(const x of bhBomUsageDetails(data,productCode).values()){
+    m.set(x.stockKey,(m.get(x.stockKey)||0)+x.usage);
+  }
+  return m;
+};
+
+// BAIHEAI INTERNAL STOCK COVERAGE CONSISTENCY R1.3z1
+// One physical pool for a common part; legacy aliases are folded into the same canonical stockKey.
+materialStatsFromData=function(data,baseOrders=[],excludeFinishedId=''){
+  const ix=bhBomIndex(data),masters=new Map();
+
+  for(const b of data.boms||[]){
+    const g=bhBomResolveRow(data,b,ix),key=g?.stockKey||bhBomText(b.stockKey||b.materialCode);
     if(!key)continue;
-    m.set(key,(m.get(key)||0)+n(b.usageQty));
+    if(!masters.has(key))masters.set(key,{
+      stockKey:key,materialName:g?.materialName||b.materialName||'',
+      attribute:g?'公用件':(b.attribute||'专用件'),codes:new Set(),products:new Set(),
+      commonIdentity:g?.id||'',commonPartId:g?.commonPartId||'',commonType:g?.type||''
+    });
+    const x=masters.get(key);x.codes.add(b.materialCode||'');x.products.add(b.productCode||'');
+    if(g||b.attribute==='公用件')x.attribute='公用件';
   }
-  return m;
-};
-const finishedMap=(exclude='')=>{
-  const m=new Map();
-  for(const r of D.finishedReceipts||[]){
-    if(String(r.id)===String(exclude))continue;
-    const k=`${r.orderNo||''}|${r.productCode||''}`;
-    m.set(k,(m.get(k)||0)+n(r.qty));
+
+  const received=new Map(),used=new Map(),adjusted=new Map(),demand=new Map();
+  for(const r of data.materialReceipts||[]){
+    if(!receiptAccepted(r))continue;
+    const key=bhBomCanonicalStock(data,r,ix);if(!key)continue;
+    received.set(key,(received.get(key)||0)+wsNum(r.qty));
   }
-  return m;
+  const grossInternalUsage=new Map(),unlinkedUsed=new Map();
+  for(const r of data.finishedReceipts||[]){
+    if(String(r.id)===String(excludeFinishedId))continue;
+    for(const [key,u] of bhBomHistoricalUsage(data,r,ix)){
+      const q=wsNum(r.qty)*u;if(!q)continue;
+      if(r.orderNo){const k=internalUsageKeyR13z(r.orderNo,key);grossInternalUsage.set(k,(grossInternalUsage.get(k)||0)+q)}
+      else unlinkedUsed.set(key,(unlinkedUsed.get(key)||0)+q);
+    }
+  }
+  const internalCoverage=internalAllocationCoverageForGrossR13z(data,grossInternalUsage).stateByKey,internalAllocated=new Map();
+  for(const [pair,state] of internalCoverage){
+    const stockKey=String(pair).split('\u001f').slice(1).join('\u001f');
+    if(stockKey)internalAllocated.set(stockKey,(internalAllocated.get(stockKey)||0)+Math.max(0,wsNum(state?.outstanding)));
+  }
+  for(const [key,q] of unlinkedUsed)used.set(key,(used.get(key)||0)+q);
+  for(const [pair,gross] of grossInternalUsage){
+    const stockKey=String(pair).split('\u001f').slice(1).join('\u001f'),covered=Math.min(gross,wsNum(internalCoverage.get(pair)?.covered));
+    used.set(stockKey,(used.get(stockKey)||0)+Math.max(0,gross-covered));
+  }
+  for(const a of data.adjustments||[]){
+    const key=bhBomCanonicalStock(data,a,ix);if(!key)continue;
+    const impact=a.impact!==undefined?wsNum(a.impact):
+      (String(a.type||'').match(/盘亏|报废|损耗|减少/)?-Math.abs(wsNum(a.qty)):Math.abs(wsNum(a.qty)));
+    adjusted.set(key,(adjusted.get(key)||0)+impact);
+  }
+
+  const fm=finishedMapFromData(data,excludeFinishedId);
+  for(const o of baseOrders){
+    const remain=Math.max(wsNum(o.order_qty)-wsNum(fm.get(`${o.order_no}|${o.product_code}`)),0);
+    for(const x of bhBomUsageDetails(data,o.product_code,ix).values()){
+      demand.set(x.stockKey,(demand.get(x.stockKey)||0)+remain*x.usage);
+    }
+  }
+
+  return [...masters.values()].map(m=>{
+    const totalIn=wsNum(received.get(m.stockKey)),totalUsed=wsNum(used.get(m.stockKey)),
+          adjustment=wsNum(adjusted.get(m.stockKey)),onHand=totalIn-totalUsed+adjustment,
+          need=wsNum(demand.get(m.stockKey)),internalQty=Math.max(0,wsNum(internalAllocated.get(m.stockKey))),
+          uncoveredDemand=Math.max(need-internalQty,0),shortage=Math.max(uncoveredDemand-onHand,0);
+    return {...m,codes:[...m.codes].filter(Boolean),products:[...m.products].filter(Boolean),
+      totalIn,totalUsed,adjustment,onHand,demand:need,internalAllocated:internalQty,uncoveredDemand,
+      shortage,surplus:Math.max(onHand-uncoveredDemand,0),status:onHand<0?'负库存':shortage>0?'缺料':'正常'};
+  });
 };
+
+// R1.3f: keep the canonical finishedReceiptCreate implementation defined above.
+// Warehouse receipt and finished-goods inspection are independent.
+
+console.log('[BaiheAI] BOM Core R1 loaded: unified common identity + no migration duplicate demand + future usage snapshots');
+})();
+// BAIHEAI-BOM-CORE-R1-20261004 END
+// BAIHEAI ORDER MATERIAL SINGLE SOURCE OF TRUTH R1.3z2
+// Common/free stock is automatically allocated to unfinished orders by:
+// due date -> order priority -> order number. Explicit Internal Stock stays bound
+// to its own order first. Order list, dashboard and material detail all read this plan.
+function orderMaterialAllocationCompareR13z2(a,b){
+  const ad=String(a?.due_date||'').trim()||'9999-12-31',bd=String(b?.due_date||'').trim()||'9999-12-31';
+  return ad.localeCompare(bd)||Number(a?.priority||0)-Number(b?.priority||0)||String(a?.order_no||'').localeCompare(String(b?.order_no||''),'zh-CN',{numeric:true})||String(a?.created_at||'').localeCompare(String(b?.created_at||''));
+}
+function orderMaterialAllocationPlanR13z2(data,base){
+  const fm=finishedMapFromData(data),statsRows=materialStatsFromData(data,base),stats=new Map(statsRows.map(x=>[String(x.stockKey),x])),available=new Map(statsRows.map(x=>[String(x.stockKey),Math.max(0,wsNum(x.onHand))])),internalState=internalAllocationStateR13z(data),ordersById=new Map(),materialsById=new Map();
+  const source=base.slice().sort(orderMaterialAllocationCompareR13z2);
+  let rank=0;
+  for(const r of source){
+    rank++;
+    const orderQty=wsNum(r.order_qty),finished=wsNum(fm.get(`${r.order_no}|${r.product_code}`)),remaining=Math.max(orderQty-finished,0),usage=groupedUsageFromData(data,r.product_code),materials=[];let anomaly='',canProduce=0;
+    if(finished>orderQty+1e-9)anomaly='成品入库超订单';
+    else if(remaining>0&&!usage.size)anomaly='未完成订单未建BOM';
+    let cap=remaining>0&&usage.size?Infinity:0;
+    for(const [key,uRaw] of usage){
+      const u=Math.max(0,wsNum(uRaw));if(!(u>0))continue;
+      const st=stats.get(String(key))||{},need=remaining*u,internalOutstanding=Math.max(0,wsNum(internalState.stateByKey.get(internalUsageKeyR13z(r.order_no,key))?.outstanding)),internalAllocated=Math.min(need,internalOutstanding),needAfterInternal=Math.max(0,need-internalAllocated),freeBefore=Math.max(0,wsNum(available.get(String(key)))),stockAllocated=Math.min(needAfterInternal,freeBefore),allocated=Math.min(need,internalAllocated+stockAllocated),shortage=Math.max(0,need-allocated),freeAfter=Math.max(0,freeBefore-stockAllocated);
+      available.set(String(key),freeAfter);
+      cap=Math.min(cap,Math.floor((allocated/u)+1e-9));
+      materials.push({stock_key:String(key),material_name:st.materialName||'',attribute:st.attribute||'专用件',usage_qty:u,need_qty:need,internal_allocated:internalAllocated,stock_allocated:stockAllocated,allocated_qty:allocated,warehouse_available_before:freeBefore,warehouse_available_after:freeAfter,on_hand:wsNum(st.onHand),shortage,surplus:Math.max(0,allocated-need)});
+    }
+    if(remaining>0&&usage.size)canProduce=Math.max(0,Math.min(remaining,Number.isFinite(cap)?cap:0));
+    const missingItems=materials.filter(x=>x.shortage>1e-9).sort((a,b)=>b.shortage-a.shortage||String(a.stock_key).localeCompare(String(b.stock_key),'zh-CN',{numeric:true}));
+    const status=anomaly?'异常':remaining<=0?'已完成':missingItems.length===0?'物料可完成':'缺料';
+    const order={id:r.id,priority:Number(r.priority),order_no:r.order_no,product_code:r.product_code,product_name:r.product_name,order_qty:orderQty,due_date:r.due_date||'',remark:r.remark||'',row_version:Number(r.row_version),created_at:r.created_at,updated_at:r.updated_at,finished,remaining,can_produce:canProduce,missing_count:missingItems.length,missing_items:missingItems.map(x=>({stock_key:x.stock_key,material_name:x.material_name,attribute:x.attribute,shortage:x.shortage,need_qty:x.need_qty,allocated_qty:x.allocated_qty})),status,anomaly,material_allocation_rank:rank,material_allocation_basis:'交期优先 → 订单优先级 → 订单号'};
+    ordersById.set(String(r.id),order);materialsById.set(String(r.id),materials);
+  }
+  return{ordersById,materialsById,available,stats};
+}
+
+
+const groupedUsage=(code)=>groupedUsageFromData(D,code);
+const finishedMap=(exclude='')=>finishedMapFromData(D,exclude);
 const shippedMap=()=>{
   const m=new Map();
   for(const r of D.finishedShipments||[]){
@@ -924,80 +1276,15 @@ const pendingMap=(exclude='')=>{
   return m;
 };
 function materialStats(excludeFinishedId=''){
-  const masters=new Map();
-  for(const b of D.boms||[]){
-    const key=String(b.stockKey||b.materialCode||'').trim();
-    if(!key)continue;
-    if(!masters.has(key))masters.set(key,{
-      stockKey:key,materialName:b.materialName||'',attribute:b.attribute||'专用件',
-      codes:new Set(),products:new Set()
-    });
-    const x=masters.get(key);
-    x.codes.add(b.materialCode||'');x.products.add(b.productCode||'');
-    if(b.attribute==='公用件')x.attribute='公用件';
-  }
-  const received=new Map(),used=new Map(),adjusted=new Map(),demand=new Map();
-  for(const r of D.materialReceipts||[]){
-    if(!accepted(r))continue;
-    const key=String(r.stockKey||r.materialCode||'');
-    received.set(key,(received.get(key)||0)+n(r.qty));
-  }
-  for(const r of D.finishedReceipts||[]){
-    if(String(r.id)===String(excludeFinishedId))continue;
-    for(const [key,u] of groupedUsage(r.productCode))
-      used.set(key,(used.get(key)||0)+n(r.qty)*u);
-  }
-  for(const a of D.adjustments||[]){
-    const key=String(a.stockKey||a.materialCode||'');
-    const impact=a.impact!==undefined?n(a.impact):
-      (/盘亏|报废|损耗|减少/.test(String(a.type||''))?-Math.abs(n(a.qty)):Math.abs(n(a.qty)));
-    adjusted.set(key,(adjusted.get(key)||0)+impact);
-  }
-  const fm=finishedMap(excludeFinishedId);
-  for(const o of ORDERS_BASE){
-    const remain=Math.max(n(o.order_qty)-n(fm.get(`${o.order_no}|${o.product_code}`)),0);
-    for(const [key,u] of groupedUsage(o.product_code))
-      demand.set(key,(demand.get(key)||0)+remain*u);
-  }
-  return [...masters.values()].map(m=>{
-    const totalIn=n(received.get(m.stockKey)),totalUsed=n(used.get(m.stockKey)),
-      adjustment=n(adjusted.get(m.stockKey)),onHand=totalIn-totalUsed+adjustment,
-      need=n(demand.get(m.stockKey)),shortage=Math.max(need-onHand,0);
-    return {...m,codes:[...m.codes].filter(Boolean),products:[...m.products].filter(Boolean),
-      totalIn,totalUsed,adjustment,onHand,demand:need,shortage,
-      surplus:Math.max(onHand-need,0),status:onHand<0?'负库存':shortage>0?'缺料':'正常'};
-  });
+  return materialStatsFromData(D,ORDERS_BASE,excludeFinishedId);
+}
+function currentAllocationPlan(){
+  return orderMaterialAllocationPlanR13z2(D,ORDERS_BASE);
 }
 function calculatedOrders(){
-  const fm=finishedMap(),stocks=materialStats(),available=new Map(stocks.map(x=>[x.stockKey,n(x.onHand)]));
-  const source=ORDERS_BASE.map((o,index)=>({...o,_index:index}))
-    .sort((a,b)=>Number(a.priority)-Number(b.priority)||a._index-b._index);
-  const out=[];
-  for(const r of source){
-    const orderQty=n(r.order_qty),finished=n(fm.get(`${r.order_no}|${r.product_code}`)),
-      remaining=Math.max(orderQty-finished,0),usage=groupedUsage(r.product_code);
-    let canProduce=0,missingCount=0,anomaly='';
-    if(finished>orderQty+1e-9)anomaly='成品入库超订单';
-    else if(remaining>0&&!usage.size)anomaly='未完成订单未建BOM';
-    if(remaining>0&&usage.size){
-      let cap=Infinity;
-      for(const [key,u] of usage){
-        const stock=Math.max(0,n(available.get(key)));
-        if(u>0)cap=Math.min(cap,Math.floor((stock/u)+1e-9));
-        if(stock+1e-9<remaining*u)missingCount++;
-      }
-      canProduce=Math.max(0,Math.min(remaining,Number.isFinite(cap)?cap:0));
-      for(const [key,u] of usage)available.set(key,n(available.get(key))-canProduce*u);
-    }
-    const status=anomaly?'异常':remaining<=0?'已完成':canProduce>=remaining?'物料可完成':'缺料';
-    out.push({
-      id:r.id,priority:Number(r.priority),order_no:r.order_no,product_code:r.product_code,
-      product_name:r.product_name,order_qty:orderQty,due_date:r.due_date||'',remark:r.remark||'',
-      row_version:Number(r.row_version||1),created_at:r.created_at,updated_at:r.updated_at,
-      finished,remaining,can_produce:canProduce,missing_count:missingCount,status,anomaly
-    });
-  }
-  return out.sort((a,b)=>Number(a.priority)-Number(b.priority)||String(a.created_at||'').localeCompare(String(b.created_at||'')));
+  const plan=currentAllocationPlan();
+  return ORDERS_BASE.map(r=>plan.ordersById.get(String(r.id))).filter(Boolean)
+    .sort((a,b)=>Number(a.priority)-Number(b.priority)||String(a.created_at||'').localeCompare(String(b.created_at||'')));
 }
 function finishedStock(){
   const received=new Map(),shipped=shippedMap(),pending=pendingMap();
@@ -1031,15 +1318,11 @@ function dashboard(){
   };
 }
 function orderMaterials(id){
-  const order=calculatedOrders().find(x=>String(x.id)===String(id));
+  const plan=currentAllocationPlan(),order=plan.ordersById.get(String(id));
   if(!order)return null;
-  const stats=new Map(materialStats().map(x=>[x.stockKey,x])),materials=[];
-  for(const [key,usage] of groupedUsage(order.product_code)){
-    const st=stats.get(key)||{},need=order.remaining*usage,onHand=n(st.onHand),shortage=Math.max(need-onHand,0);
-    materials.push({stock_key:key,material_name:st.materialName||'',usage_qty:usage,need_qty:need,on_hand:onHand,shortage,surplus:Math.max(onHand-need,0)});
-  }
-  return {order,materials};
+  return {order,materials:plan.materialsById.get(String(id))||[],allocationBasis:order.material_allocation_basis};
 }
+
 function queryData(code){
   const prod=PRODUCTS.find(x=>String(x.code)===String(code))||null;
   if(!prod)return {product:null};
