@@ -3161,7 +3161,8 @@ const purchaseModalBeforeSupplier2321=purchaseModal;purchaseModal=async function
 const renderBeforeSupplier2321=render;render=async function(m){if(m==='suppliers')return renderSuppliers();return renderBeforeSupplier2321(m)};
 /* ===== end 2.3.21 Supplier Master ===== */
 
-$('loginBtn').onclick=login;$('username').onkeydown=e=>{if(e.key==='Enter')$('password').focus()};$('password').onkeydown=e=>{if(e.key==='Enter')login()};window.addEventListener('focus',async()=>{if(user){await sync()}});initialize();
+/* BAIHEAI-WEB-AUTO-ENTER-READONLY-20261008 */
+$('loginBtn').onclick=login;$('username').onkeydown=e=>{if(e.key==='Enter')$('password').focus()};$('password').onkeydown=e=>{if(e.key==='Enter')login()};window.addEventListener('focus',async()=>{if(user){await sync()}});initialize().then(async()=>{if(window.BAIHE_WEB_READONLY&&!user){try{const r=await api.login({username:'webviewer',password:''});if(r?.ok){await enter(r.user);return}loginError(r?.error||'网站只读模式自动进入失败')}catch(e){loginError(e?.message||String(e))}}});
 
 /* ===== 2.3.22 BOM Part Profile / 产品资料BOM档案 ===== */
 function bomText2322(v){return String(v??'').trim()||'—'}
