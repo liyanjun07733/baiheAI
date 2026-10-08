@@ -22146,8 +22146,12 @@ const writeWords=[
 ];
 function guard(){
   if(!window.BAIHE_WEB_READONLY)return;
+  /* BAIHEAI-WEB-READONLY-NAV-GUARD-FIX-20261008 */
   document.querySelectorAll('#appView button').forEach(b=>{
     if(b.id==='logoutBtn')return;
+    // Navigation buttons are read-only navigation, not write actions.
+    // Keep them visible even when their module name contains a write-like word such as “库存调整”.
+    if(b.closest?.('#sidebar') || b.matches?.('.nav,[data-nav],[data-module]'))return;
     const t=String(b.textContent||'').replace(/\s+/g,'').trim();
     if(writeWords.some(w=>t.startsWith(w)||t===w))b.style.display='none';
   });
