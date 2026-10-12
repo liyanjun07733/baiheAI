@@ -1,4 +1,4 @@
-﻿import { redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 
 export const metadata = {
   title: "BaiheAI Factory Data",
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function FactoryDataPage() {
-  redirect("/factory-data-v3-viewer-v320-current-a.html");
+  redirect("/factory-data-v3-viewer-v321-pd15.html");
 }
