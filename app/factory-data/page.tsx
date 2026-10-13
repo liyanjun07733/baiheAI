@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function FactoryDataPage() {
-  redirect("/factory-data-v3-viewer-v321e-pd15.html");
+  redirect("/factory-data-v3-viewer-v321f-pd15.html");
 }
